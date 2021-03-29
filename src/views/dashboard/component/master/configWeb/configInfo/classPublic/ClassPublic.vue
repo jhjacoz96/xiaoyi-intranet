@@ -10,7 +10,7 @@
           Permite gestionar la clasificación de publicaciones de adultos mayores
         </div>
       </template>
-      vf
+      
     </base-material-card>
   </v-container>
 </template>
