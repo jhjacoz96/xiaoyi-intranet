@@ -32,7 +32,7 @@
         width="300"
       >
         <v-card-text>
-          <strong class="mb-3 d-inline-block">SIDEBAR FILTERS</strong>
+          <strong class="mb-3 d-inline-block">COLOR  DE SIDEBAR</strong>
 
           <v-item-group v-model="color">
             <v-item
@@ -59,7 +59,7 @@
             no-gutters
           >
             <v-col cols="auto">
-              Dark Mode
+              Modo Dark
             </v-col>
 
             <v-spacer />
@@ -81,7 +81,7 @@
             no-gutters
           >
             <v-col cols="auto">
-              Sidebar Image
+              Imagen en Sidebar
             </v-col>
 
             <v-spacer />
@@ -98,7 +98,7 @@
 
           <v-divider class="my-4 secondary" />
 
-          <strong class="mb-3 d-inline-block">IMAGES</strong>
+          <strong class="mb-3 d-inline-block">IMAGEN PARA EL SIDERBAR</strong>
 
           <v-item-group
             v-model="image"
@@ -126,7 +126,7 @@
             </v-item>
           </v-item-group>
 
-          <v-btn
+          <!-- <v-btn
             block
             class="mb-3"
             color="success"
@@ -151,9 +151,9 @@
             Documentation
           </v-btn>
 
-          <div class="my-12" />
+          <div class="my-12" /> -->
 
-          <div>
+          <!-- <div>
             <strong class="mb-3 d-inline-block">THANK YOU FOR SHARING!</strong>
           </div>
 
@@ -177,7 +177,7 @@
           >
             <v-icon>mdi-facebook</v-icon>
             - 50
-          </v-btn>
+          </v-btn> -->
         </v-card-text>
       </v-card>
     </v-menu>

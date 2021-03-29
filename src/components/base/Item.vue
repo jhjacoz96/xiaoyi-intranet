@@ -6,7 +6,6 @@
     :to="item.to"
     :active-class="`primary ${!isDark ? 'black' : 'white'}--text`"
   >
-
     <v-list-item-icon v-if="item.icon">
       <v-icon v-text="item.icon" />
     </v-list-item-icon>

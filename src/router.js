@@ -24,6 +24,21 @@ export default new Router({
         },
         // Pages
         {
+          name: 'Maestros básicos',
+          path: 'maestros-basicos',
+          component: () => import('@/views/dashboard/component/master/basic/Basic'),
+        },
+        {
+          name: 'Configuración de contenido en el sítio web',
+          path: 'configuracion-web',
+          component: () => import('@/views/dashboard/component/master/configWeb/ConfigWeb'),
+        },
+        {
+          name: 'Clasificación de publicación',
+          path: 'configuracion-web/publicacion',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ClassPublic'),
+        },
+        {
           name: 'User Profile',
           path: 'pages/user',
           component: () => import('@/views/dashboard/pages/UserProfile'),

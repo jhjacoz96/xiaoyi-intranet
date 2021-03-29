@@ -6,7 +6,7 @@
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
     :src="barImage"
-    mobile-break-point="960"
+    mobile-breakpoint="960"
     app
     width="260"
     v-bind="$attrs"
@@ -104,9 +104,27 @@
     data: () => ({
       items: [
         {
-          icon: 'mdi-view-dashboard',
-          title: 'dashboard',
+          icon: 'mdi-home',
+          title: 'Incio',
+          group: '',
           to: '/intranet',
+        },
+        {
+          icon: 'mdi-cog',
+          title: 'Información inicial',
+          group: '',
+          children: [
+            {
+              icon: 'mdi-file-cog-outline',
+              title: 'Maestros básicos',
+              to: 'intranet/maestros-basicos',
+            },
+            {
+              icon: 'mdi-file-cog-outline',
+              title: 'Configurar sítio web',
+              to: 'intranet/configuracion-web',
+            },
+          ],
         },
         {
           icon: 'mdi-account',
@@ -158,9 +176,10 @@
         return {
           avatar: true,
           title: 'Usuario',
+          group: '',
           children: [
             {
-              to: '/intranet/pages/user',
+              to: 'intranet/pages/user',
               title: 'Perfil',
               icon: 'mdi-account',
             },
