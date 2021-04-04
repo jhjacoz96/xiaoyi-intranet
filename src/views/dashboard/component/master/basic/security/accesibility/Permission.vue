@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Permisos
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar los permisos para los distintos roles
             </div>
           </v-col>
         </v-row>
@@ -40,28 +40,7 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -123,18 +102,18 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
+                  <v-text-field
+                    v-model="editedItem.nombre"
+                    label="Nombre"
+                    outlined
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Nombre"
+                    v-model="editedItem.ruta"
+                    label="Ruta"
                     outlined
                   />
                 </v-col>
@@ -146,14 +125,6 @@
                     label="Descripción"
                     outlined
                     name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
                   />
                 </v-col>
               </v-row>
@@ -215,7 +186,6 @@
   export default {
     data () {
       return {
-        tab: null,
         search: '',
         dialog: false,
         dialogDelete: false,
@@ -223,18 +193,16 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
-          {
             text: 'Nombre',
             value: 'nombre',
           },
           {
             text: 'Descripción',
             value: 'descripcion',
+          },
+          {
+            text: 'Ruta',
+            value: 'ruta',
           },
           {
             text: 'Acción',
@@ -245,35 +213,31 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
+            nombre: 'Configurar datos basicos',
             descripcion: 'test descripcion',
-            viewType: false,
+            ruta: '/intranet/configuracion-basica',
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
+            nombre: 'Configurar sítio web',
             descripcion: 'test descripcion',
-            viewType: true,
+            ruta: '/intranet/configuracion-web',
           },
         ],
         editedItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
+          ruta: '',
         },
         defaultItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
+          ruta: '',
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar permiso' : 'Editar permiso'
       },
     },
     watch: {
@@ -285,10 +249,6 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         // this.editedItem = Object.assign({}, item)

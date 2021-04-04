@@ -22,22 +22,22 @@
       </v-row>
     </v-container> -->
     <v-subheader>
-      Sección de adutos mayores
+      Sección de publicaciones
     </v-subheader>
     <v-container fluid>
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Clasificación de publiaciones"
+            title="Tipos de publiaciones"
             icon="mdi-36px mdi-"
-            to="/intranet/configuracion-web/publicacion"
+            to="/intranet/configuracion-web/tipo-publicacion"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Publicaciones"
             icon="mdi-36px mdi-google-maps"
-            to="/intranet"
+            to="configuracion-web/publicaciones"
           />
         </v-col>
       </v-row>
@@ -49,16 +49,16 @@
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Clasificación de recursos"
+            title="Tipo de recursos"
             icon="mdi-36px mdi-google-maps"
-            to="/intranet"
+            to="/intranet/configuracion-web/tipo-recurso"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Recursos"
             icon="mdi-36px mdi-google-maps"
-            to="/intranet"
+            to="/intranet/configuracion-web/recursos"
           />
         </v-col>
         <v-col cols="3">

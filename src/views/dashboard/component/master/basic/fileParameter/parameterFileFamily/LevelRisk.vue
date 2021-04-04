@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Nivel de riesgo
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar los rangos de valores para esvaluar los riesgos
             </div>
           </v-col>
         </v-row>
@@ -40,28 +40,13 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
+          <template v-slot:item.color="{ item }">
+            <v-avatar
+              size="36"
+              :color="item.color"
             />
           </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -123,15 +108,6 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
                   <v-text-field
                     v-model="editedItem.nombre"
                     label="Nombre"
@@ -141,19 +117,23 @@
                 <v-col
                   cols="12"
                 >
-                  <v-textarea
-                    v-model="editedItem.descripcion"
-                    label="Descripción"
+                  <v-text-field
+                    v-model="editedItem.valor"
+                    label="Nombre"
                     outlined
-                    name="input-7-4"
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
+                  <label class="font-weight-light text-h5">Asignar color</label>
+                  <v-color-picker
+                    v-model="editedItem.color"
+                    dot-size="25"
+                    swatches-max-height="200"
+                    hide-mode-switch
+                    hide-canvas
+                    mode="hexa"
                   />
                 </v-col>
               </v-row>
@@ -215,7 +195,6 @@
   export default {
     data () {
       return {
-        tab: null,
         search: '',
         dialog: false,
         dialogDelete: false,
@@ -223,18 +202,16 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
-          {
             text: 'Nombre',
             value: 'nombre',
           },
           {
-            text: 'Descripción',
-            value: 'descripcion',
+            text: 'Valor',
+            value: 'valor',
+          },
+          {
+            text: 'Color',
+            value: 'color',
           },
           {
             text: 'Acción',
@@ -245,35 +222,31 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
-            descripcion: 'test descripcion',
-            viewType: false,
+            nombre: 'Sin riesgo',
+            valor: 0,
+            color: '',
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
-            descripcion: 'test descripcion',
-            viewType: true,
+            nombre: 'leve',
+            valor: 1,
+            color: '',
           },
         ],
         editedItem: {
-          image: '',
           nombre: '',
-          descripcion: '',
-          viewType: false,
+          color: '',
+          valor: 0,
         },
         defaultItem: {
-          image: '',
           nombre: '',
-          descripcion: '',
-          viewType: false,
+          valor: 0,
+          color: '',
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar nivel de riesgo' : 'Editar nivel de riesgo'
       },
     },
     watch: {
@@ -285,13 +258,8 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {

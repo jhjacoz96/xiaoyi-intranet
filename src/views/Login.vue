@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <span class="bg" />
-    <span class="bgColor" />
     <v-content>
       <v-container
         class="fill-height"
@@ -17,7 +16,8 @@
             lg="3"
             xl="3"
           >
-            <v-fade-transition mode="out-in">
+            <!-- <v-fade-transition mode="out-in"> -->
+            <v-slide-y-transition>
               <v-card
                 elevation="5"
                 class="rounded-xl pa-5"
@@ -90,7 +90,7 @@
                   </v-btn>
                 </v-card-actions>
               </v-card>
-            </v-fade-transition>
+            </v-slide-y-transition>
           </v-col>
         </v-row>
         <base-alert />
@@ -124,24 +124,14 @@
     position: absolute;
     top: 0;
     left: 0;
-    background: url( '../assets/fondo.jpg');
+    background-color: rgba(0, 0, 0, 0.7);
+    background-image: url( '../assets/fondo.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
+    filter:  brightness(0.4);
     /* background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(10,63,133,1) 29%, rgba(0,212,255,1) 100%); */
-  }
-  .bgColor {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.7);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
   }
   .custom-loader {
     animation: loader 1s infinite;

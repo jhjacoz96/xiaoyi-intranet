@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Clasificación de recursos multimedia
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar la clasificación de recursos multimedia
             </div>
           </v-col>
         </v-row>
@@ -47,21 +47,6 @@
             />
           </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -134,7 +119,7 @@
                 >
                   <v-text-field
                     v-model="editedItem.nombre"
-                    label="Nombre"
+                    label="Titulo"
                     outlined
                   />
                 </v-col>
@@ -246,13 +231,13 @@
         desserts: [
           {
             image: '',
-            nombre: 'Medicina alternativa',
+            nombre: 'Infografias',
             descripcion: 'test descripcion',
             viewType: false,
           },
           {
             image: '',
-            nombre: 'CUidado de heridas',
+            nombre: 'Videos',
             descripcion: 'test descripcion',
             viewType: true,
           },
@@ -273,7 +258,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar Tipo de recuso' : 'Editar Tipo de recurso'
       },
     },
     watch: {

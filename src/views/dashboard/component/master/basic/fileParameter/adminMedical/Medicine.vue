@@ -1,3 +1,4 @@
+
 <template>
   <v-container>
     <base-material-card color="primary">
@@ -17,10 +18,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Medicamentos
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar los medicamentos para los pacientes
             </div>
           </v-col>
         </v-row>
@@ -40,28 +41,16 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
+          <template v-slot:item.tipoMedicamento="{ item }">
+            {{ item.tipoMedicamento.nombre }}
+          </template>
+          <template v-slot:item.tipoVia="{ item }">
+            {{ item.tipoVia.nombre }}
+          </template>
+          <template v-slot:item.via="{ item }">
+            {{ item.via.nombre }}
           </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -99,7 +88,7 @@
       </v-card-text>
       <v-dialog
         v-model="dialog"
-        max-width="500px"
+        max-width="600px"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -122,20 +111,62 @@
               <v-row>
                 <v-col
                   cols="12"
+                  sm="6"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
+                  <v-select
+                    v-model="editedItem.tipoMedicamento.id"
+                    small
+                    label="Tipos de medicamentos"
+                    item-text="nombre"
+                    item-value="id"
+                    :items="tipoMedicamento"
+                    outlined
+                    dense
+                    @change="seletedMedicine"
                   />
                 </v-col>
                 <v-col
                   cols="12"
+                  sm="6"
                 >
                   <v-text-field
                     v-model="editedItem.nombre"
                     label="Nombre"
+                    dense
                     outlined
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-select
+                    v-model="editedItem.tipoVia.id"
+                    small
+                    label="Tipos de vías"
+                    item-text="nombre"
+                    item-value="id"
+                    :items="tipoVia"
+                    outlined
+                    dense
+                    @change="seletedTypeVia"
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-select
+                    v-model="editedItem.via.id"
+                    :disabled="editedItem.disabledVia"
+                    small
+                    label="Vías"
+                    item-text="nombre"
+                    item-value="id"
+                    :items="editedItem.viasSelected"
+                    outlined
+                    dense
+                    @change="seletedVia"
                   />
                 </v-col>
                 <v-col
@@ -146,14 +177,6 @@
                     label="Descripción"
                     outlined
                     name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
                   />
                 </v-col>
               </v-row>
@@ -215,7 +238,6 @@
   export default {
     data () {
       return {
-        tab: null,
         search: '',
         dialog: false,
         dialogDelete: false,
@@ -223,14 +245,20 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
+            text: 'Tipo medicamento',
+            value: 'tipoMedicamento',
           },
           {
             text: 'Nombre',
             value: 'nombre',
+          },
+          {
+            text: 'Tipo de vía',
+            value: 'tipoVia',
+          },
+          {
+            text: 'Vía',
+            value: 'via',
           },
           {
             text: 'Descripción',
@@ -245,35 +273,105 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
+            nombre: 'Calcibón d',
             descripcion: 'test descripcion',
-            viewType: false,
+            tipoVia: {
+              nombre: 'Enteral',
+              id: 1,
+            },
+            via: {
+              nombre: 'Oral',
+              id: 1,
+            },
+            tipoMedicamento: {
+              nombre: 'Analgécicos',
+              id: 2,
+            },
+          },
+        ],
+        tipoVia: [
+          {
+            nombre: 'Entral',
+            id: 1,
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
-            descripcion: 'test descripcion',
-            viewType: true,
+            nombre: 'Parenteral',
+            id: 2,
+          },
+        ],
+        via: [
+          {
+            nombre: 'Oral',
+            id: 1,
+            idTipoVia: 1,
+          },
+          {
+            nombre: 'Sublingual',
+            id: 2,
+            idTipoVia: 1,
+          },
+          {
+            nombre: 'Intradérmica',
+            id: 3,
+            idTipoVia: 2,
+          },
+          {
+            nombre: 'Subcutánea',
+            id: 4,
+            idTipoVia: 2,
+          },
+        ],
+        tipoMedicamento: [
+          {
+            nombre: 'Analgécicos',
+            id: 1,
+          },
+          {
+            nombre: 'Antibióticos',
+            id: 2,
           },
         ],
         editedItem: {
-          image: '',
           nombre: '',
+          disabledVia: true,
+          viasSelected: [],
+          tipoVia: {
+            nombre: '',
+            id: null,
+          },
+          via: {
+            nombre: '',
+            id: null,
+          },
+          tipoMedicamento: {
+            nombre: '',
+            id: null,
+          },
           descripcion: '',
-          viewType: false,
         },
         defaultItem: {
-          image: '',
           nombre: '',
+          disabledVia: true,
+          viasSelected: [],
+          tipoVia: {
+            nombre: '',
+            id: null,
+          },
+          via: {
+            nombre: '',
+            id: null,
+          },
+          tipoMedicamento: {
+            nombre: '',
+            id: null,
+          },
           descripcion: '',
-          viewType: false,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar vía' : 'Editar vía'
       },
     },
     watch: {
@@ -285,13 +383,8 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {
@@ -308,6 +401,7 @@
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
           this.desserts.push(this.editedItem)
+          console.log(this.editedItem)
         }
         this.close()
       },
@@ -325,6 +419,21 @@
           this.editedIndex = -1
         })
       },
+      seletedMedicine (id) {
+        const tipoMedicamento = this.tipoMedicamento.find(item => item.id === id)
+        Object.assign(this.editedItem.tipoMedicamento, tipoMedicamento)
+      },
+      seletedTypeVia (id) {
+        const tipoVia = this.tipoVia.find(item => item.id === id)
+        Object.assign(this.editedItem.tipoVia, tipoVia)
+        this.editedItem.viasSelected = this.via.filter(item => item.idTipoVia === id)
+        this.editedItem.disabledVia = false
+      },
+      seletedVia (id) {
+        const via = this.editedItem.viasSelected.find(item => item.id === id)
+        Object.assign(this.editedItem.via, via)
+      },
+
     },
   }
 </script>

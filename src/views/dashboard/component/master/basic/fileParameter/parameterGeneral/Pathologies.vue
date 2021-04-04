@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Patologías
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar las patologías que un paciente puede padeser
             </div>
           </v-col>
         </v-row>
@@ -40,28 +40,23 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
+            <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   fab
-                  color="info"
                   x-small
+                  :outlined="!item.capture"
                   v-bind="attrs"
+                  class="ml-2"
                   v-on="on"
-                  @click="enableType(item)"
+                  @click="capture(item)"
                 >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+                  <v-icon>mdi-bacteria</v-icon>
                 </v-btn>
               </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
+              <span>{{ item.capture ? 'Pacientes capturados' : 'Capturar pacientes' }}</span>
+            </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -123,15 +118,6 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
                   <v-text-field
                     v-model="editedItem.nombre"
                     label="Nombre"
@@ -146,14 +132,6 @@
                     label="Descripción"
                     outlined
                     name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
                   />
                 </v-col>
               </v-row>
@@ -215,19 +193,12 @@
   export default {
     data () {
       return {
-        tab: null,
         search: '',
         dialog: false,
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
         headers: [
-          {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
           {
             text: 'Nombre',
             value: 'nombre',
@@ -245,35 +216,31 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
+            nombre: 'Diabetes',
             descripcion: 'test descripcion',
-            viewType: false,
+            capture: true,
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
+            nombre: 'Impertención',
             descripcion: 'test descripcion',
-            viewType: true,
+            capture: false,
           },
         ],
         editedItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
+          capture: false,
         },
         defaultItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
+          capture: false,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar patología' : 'Editar patología'
       },
     },
     watch: {
@@ -285,13 +252,8 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {
@@ -324,6 +286,15 @@
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         })
+      },
+      capture (patpathologed) {
+        const habilited = this.desserts.find(item => item.capture === true)
+        if (habilited) {
+          const index = this.desserts.indexOf(habilited)
+          this.desserts[index].capture = false
+        }
+        const index1 = this.desserts.indexOf(patpathologed)
+        this.desserts[index1].capture = true
       },
     },
   }
