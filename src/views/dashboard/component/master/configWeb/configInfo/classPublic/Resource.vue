@@ -111,7 +111,7 @@
                   <v-select
                     v-model="editedItem.classResource.id"
                     small
-                    label="Tipos de publicación"
+                    label="Clasificación de recursos"
                     item-text="nombre"
                     item-value="id"
                     dense

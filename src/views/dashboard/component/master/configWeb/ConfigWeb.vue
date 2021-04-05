@@ -12,12 +12,12 @@
 
           <v-tab href="#tab-1">
             Contenido de adultos mayores
-            <v-icon>mdi-hospital-building</v-icon>
+            <v-icon>mdi-human-cane</v-icon>
           </v-tab>
 
           <v-tab href="#tab-2">
             Información general
-            <v-icon>mdi-key</v-icon>
+            <v-icon>mdi-information-variant</v-icon>
           </v-tab>
         </v-tabs>
       </template>

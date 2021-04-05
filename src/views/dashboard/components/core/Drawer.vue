@@ -5,7 +5,7 @@
     :dark="barColor !== 'rgba(228, 226, 226, 1), rgba(255, 255, 255, 0.7)'"
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
-    :src="barImage"
+    color="primary"
     mobile-breakpoint="960"
     app
     width="260"
@@ -116,12 +116,12 @@
           children: [
             {
               icon: 'mdi-file-cog-outline',
-              title: 'Maestros básicos',
+              title: 'Configuración básica',
               to: 'intranet/maestros-basicos',
             },
             {
-              icon: 'mdi-file-cog-outline',
-              title: 'Configurar sítio web',
+              icon: 'mdi-application',
+              title: 'Configurar del sítio web',
               to: 'intranet/configuracion-web',
             },
           ],

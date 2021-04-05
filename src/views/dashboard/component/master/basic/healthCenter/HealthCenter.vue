@@ -8,14 +8,14 @@
         <v-col cols="3">
           <base-item-master
             title="Datos básicos"
-            icon="mdi-36px mdi-grease-pencil"
+            icon="mdi-36px mdi-home-edit"
             to="/intranet/configuracion-basica/datos-basicos"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
-            title="Institución del sistema"
-            icon="mdi-36px mdi-grease-pencil"
+            title="Instituciones del sistema"
+            icon="mdi-36px mdi-hospital"
             to="/intranet/configuracion-basica/institucion-sistema"
           />
         </v-col>
@@ -36,14 +36,14 @@
         <v-col cols="3">
           <base-item-master
             title="Especialidades"
-            icon="mdi-36px mdi-medical-bag"
+            icon="mdi-36px mdi-doctor"
             to="/intranet/configuracion-basica/especialidades"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Tipo de empleado"
-            icon="mdi-36px mdi-medical-bag"
+            icon="mdi-36px mdi-doctor"
             to="/intranet/configuracion-basica/tipo-empleado"
           />
         </v-col>
@@ -56,7 +56,7 @@
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Zonas básicas"
+            title="Grupo poblacional"
             icon="mdi-36px mdi-google-maps"
             to="/intranet/configuracion-basica/zonas"
           />

@@ -15,17 +15,17 @@
         <v-col cols="3">
           <base-item-master
             title="Medicamento"
-            icon="mdi-36px mdi-36px mdi-flask"
+            icon="mdi-36px mdi-36px mdi-pill"
             to="/intranet/configuracion-basica/medicamento"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
             title="Presentación"
             icon="mdi-36px mdi-36px mdi-flask-round-bottom"
             to="/intranet/configuracion-basica/presentacion"
           />
-        </v-col>
+        </v-col> -->
         <v-col cols="3">
           <base-item-master
             title="Tipo de vías"
@@ -75,13 +75,13 @@
             to="/intranet/configuracion-basica/grupo-cultural"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
             title="Parentesco"
             icon="mdi-36px mdi-36px mdi-human-male-female"
             to="/intranet/configuracion-basica/parentesco"
           />
-        </v-col>
+        </v-col> -->
         <!-- <v-col cols="3">
           <base-item-master
             title="Escolaridad"
@@ -92,24 +92,24 @@
         <v-col cols="3">
           <base-item-master
             title="Patologías"
-            icon="mdi-36px mdi-36px mdi-bacteria"
+            icon="mdi-36px mdi-36px mdi-virus"
             to="/intranet/configuracion-basica/patologias"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Discapacidades"
-            icon="mdi-36px mdi-36px mdi-bacteria"
+            icon="mdi-36px mdi-36px mdi-wheelchair-accessibility"
             to="/intranet/configuracion-basica/discapacidades"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
             title="Sustancias psicotrópicas"
             icon="mdi-36px mdi-36px mdi-account-key"
             to="/intranet/configuracion-basica/sustancias-psicotropicas"
           />
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-container>
     <v-subheader>
@@ -120,7 +120,7 @@
         <v-col cols="3">
           <base-item-master
             title="Grupos de edad"
-            icon="mdi-36px mdi-36px mdi-account-key"
+            icon="mdi-36px mdi-36px mdi-human-male-boy"
             to="/intranet/configuracion-basica/grupo-edades"
           />
         </v-col>
@@ -162,25 +162,25 @@
         <v-col cols="3">
           <base-item-master
             title="Vacunas"
-            icon="mdi-36px mdi-36px mdi-account-key"
+            icon="mdi-36px mdi-36px mdi-needle"
             to="/intranet/configuracion-basica/vacunas"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Exámenes rutinarios"
-            icon="mdi-36px mdi-36px mdi-bacteria"
+            icon="mdi-36px mdi-36px mdi-clipboard-pulse"
             to="/intranet/configuracion-basica/examenes-rutinarios"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Semana de gestción"
-            icon="mdi-36px mdi-36px mdi-bacteria"
+            icon="mdi-36px mdi-36px mdi-human-pregnant"
             to="/intranet/configuracion-basica/semana-gestacion"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
             title="Cacteristicas del parto"
             icon="mdi-36px mdi-36px mdi-bacteria"
@@ -193,7 +193,7 @@
             icon="mdi-36px mdi-36px mdi-bacteria"
             to="configuracion-basica/senal-alarma"
           />
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-container>
   </v-card>

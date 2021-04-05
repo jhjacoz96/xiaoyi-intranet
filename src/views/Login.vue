@@ -54,11 +54,11 @@
                     lazy-validation
                   >
                     <v-text-field
-                      label="Usuario"
+                      label="Correo electrónico"
                       rounded
                       dense
                       filled
-                      name="username"
+                      name=""
                       prepend-icon="mdi-account"
                       type="text"
                       color="primary"
@@ -68,7 +68,7 @@
                       filled
                       rounded
                       dense
-                      label="Password"
+                      label="Contraseña"
                       name="password"
                       prepend-icon="mdi-lock"
                       :type="show ? 'text' : 'password'"
@@ -78,9 +78,15 @@
                     />
                   </v-form>
                 </v-card-text>
+                <v-card-text class="text-center">
+                  <router-link to="#">
+                    ¿Ha olvidado la contraseña?
+                  </router-link>
+                </v-card-text>
                 <v-card-actions class="justify-center">
                   <v-btn
                     rounded
+                    class="elevation-4"
                     color="primary"
                     :loading="loading"
                     :disabled="loading"
@@ -111,7 +117,7 @@
       session () {
         this.loading = true
         setTimeout(() => (this.loading = false), 3000)
-        this.$router.push('/intranet')
+        this.$router.push('/intranet/inicio')
       },
     },
   }

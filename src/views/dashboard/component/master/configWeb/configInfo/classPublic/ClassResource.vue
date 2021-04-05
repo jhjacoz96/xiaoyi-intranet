@@ -258,7 +258,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de recuso' : 'Editar Tipo de recurso'
+        return this.editedIndex === -1 ? 'Agregar clasificación de recuso' : 'Editar clasificación de recurso'
       },
     },
     watch: {

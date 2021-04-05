@@ -19,7 +19,7 @@
         color="white"
         contain
       >
-        <v-img src="@/assets/logo.png" />
+        <v-img src="https://s3.amazonaws.com/37assets/svn/765-default-avatar.png" />
       </v-list-item-avatar>
 
       <v-list-item-content>

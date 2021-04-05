@@ -17,7 +17,7 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Zonas básicas
+              Grupos poblacionales
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite gestionar las zonas a las que el centro de salud le hace cobertura
@@ -220,7 +220,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar zona' : 'Editar zona'
+        return this.editedIndex === -1 ? 'Agregar grupo poblacional' : 'Editar grupo poblacional'
       },
     },
     watch: {
