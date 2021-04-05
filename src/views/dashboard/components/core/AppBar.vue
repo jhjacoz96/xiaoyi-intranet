@@ -15,7 +15,7 @@
       @click="setDrawer(!drawer)"
     >
       <v-icon v-if="value">
-        mdi-view-quilt
+        mdi-view-quiltx
       </v-icon>
 
       <v-icon v-else>
@@ -23,10 +23,10 @@
       </v-icon>
     </v-btn>
 
-    <v-toolbar-title
+    <!-- <v-toolbar-title
       class="hidden-sm-and-down font-weight-light"
       v-text="$route.name"
-    />
+    /> -->
 
     <v-spacer />
 
@@ -97,14 +97,44 @@
       </v-list>
     </v-menu>
 
-    <v-btn
-      class="ml-2"
-      min-width="0"
-      text
-      to="intranet/pages/user"
+    <v-menu
+      bottom
+      left
+      offset-y
+      origin="top right"
+      transition="scale-transition"
     >
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
+      <template v-slot:activator="{ attrs, on }">
+        <v-btn
+          class="ml-2"
+          min-width="0"
+          text
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-account</v-icon>
+        </v-btn>
+      </template>
+
+      <v-list
+        nav
+        dense
+      >
+        <v-list-item-group
+          v-model="selectedItem"
+          color="primary"
+        >
+          <v-list-item to="/">
+            <v-list-item-icon>
+              <v-icon v-text="'mdi-lock'" />
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-text v-text="'Cerrar sesión'" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
@@ -152,6 +182,7 @@
     },
 
     data: () => ({
+      selectedItem: 0,
       notifications: [
         'Mike John Responded to your email',
         'You have 5 new tasks',

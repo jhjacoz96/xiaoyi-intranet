@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Grupo de edad
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar los destintos grupos de edades
             </div>
           </v-col>
         </v-row>
@@ -40,28 +40,7 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -123,20 +102,46 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
                   <v-text-field
                     v-model="editedItem.nombre"
                     label="Nombre"
+                    dense
                     outlined
                   />
+                </v-col>
+
+                <v-col cols="12">
+                  <label class="font-weight-light text-h5">Rango</label>
+                  <v-range-slider
+                    v-model="editedItem.rango"
+                    :max="max"
+                    :min="min"
+                    hide-details
+                    class="align-center"
+                  >
+                    <template v-slot:prepend>
+                      <v-text-field
+                        :value="editedItem.rango[0]"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px"
+                        @change="$set(editedItem.rango, 0, $event)"
+                      />
+                    </template>
+                    <template v-slot:append>
+                      <v-text-field
+                        :value="editedItem.rango[1]"
+                        class="mt-0 pt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                        style="width: 60px"
+                        @change="$set(editedItem.rango, 1, $event)"
+                      />
+                    </template>
+                  </v-range-slider>
                 </v-col>
                 <v-col
                   cols="12"
@@ -146,14 +151,6 @@
                     label="Descripción"
                     outlined
                     name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
                   />
                 </v-col>
               </v-row>
@@ -215,19 +212,13 @@
   export default {
     data () {
       return {
-        tab: null,
         search: '',
         dialog: false,
+        max: 120,
+        min: 0,
         dialogDelete: false,
-        imagen: null,
         editedIndex: -1,
         headers: [
-          {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
           {
             text: 'Nombre',
             value: 'nombre',
@@ -245,35 +236,31 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
+            nombre: 'Menor de 1 año',
             descripcion: 'test descripcion',
-            viewType: false,
+            rango: [0, 1],
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
+            nombre: 'Entre 2 y 10 años',
             descripcion: 'test descripcion',
-            viewType: true,
+            rango: [2, 10],
           },
         ],
         editedItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
+          rango: [0, 0],
         },
         defaultItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
+          rango: [0, 0],
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar grupo de edades' : 'Editar grupo edades'
       },
     },
     watch: {
@@ -285,13 +272,8 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {
@@ -309,6 +291,7 @@
         } else {
           this.desserts.push(this.editedItem)
         }
+        console.log(this.editedItem)
         this.close()
       },
       close () {
@@ -325,6 +308,20 @@
           this.editedIndex = -1
         })
       },
+      // validrango (val) {
+      //   if (val === '<') {
+      //     this.editedItem.rango[0] = '<'
+      //     this.editedItem.rango[1] = 0
+      //   }
+      //   if (val === '>') {
+      //     this.editedItem.rango[1] = '>'
+      //     this.editedItem.rango[0] = 0
+      //   }
+      //   if (val === ',') {
+      //     this.editedItem.rango[0] = 0
+      //     this.editedItem.rango[1] = 0
+      //   }
+      // },
     },
   }
 </script>

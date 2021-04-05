@@ -31,15 +31,6 @@
               label="Url"
               placeholder="Indique la url de redirección"
             />
-            <!-- <v-file-input
-                v-model="imagen"
-                :rules="rules"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Seleccione una imagen"
-                prepend-icon="mdi-camera"
-                label="Imagen"
-                @change="Preview_image"
-                /> -->
           </v-col>
           <v-col
             md="6"

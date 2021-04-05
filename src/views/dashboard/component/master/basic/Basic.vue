@@ -10,7 +10,7 @@
           <v-tabs-slider />
 
           <v-tab href="#tab-1">
-            Centro de salud
+            Organización
             <v-icon>mdi-hospital-building</v-icon>
           </v-tab>
 
@@ -51,7 +51,7 @@
   export default {
     components: {
       HealthCenter: () => import('../basic/healthCenter/HealthCenter'),
-      Segurity: () => import('../basic/segurity/Segurity'),
+      Segurity: () => import('../basic/security/Security'),
       Users: () => import('../basic/users/Users'),
       FileParameter: () => import('../basic/fileParameter/FileParameter'),
     },

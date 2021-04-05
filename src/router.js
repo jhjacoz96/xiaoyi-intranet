@@ -19,7 +19,7 @@ export default new Router({
         // Dashboard
         {
           name: 'Dashboard',
-          path: '',
+          path: 'inicio',
           component: () => import('@/views/dashboard/Dashboard'),
         },
         // Pages
@@ -29,14 +29,199 @@ export default new Router({
           component: () => import('@/views/dashboard/component/master/basic/Basic'),
         },
         {
+          name: 'Perfil',
+          path: 'perfil',
+          component: () => import('@/views/dashboard/component/User/Perfil'),
+        },
+        {
           name: 'Configuración de contenido en el sítio web',
           path: 'configuracion-web',
           component: () => import('@/views/dashboard/component/master/configWeb/ConfigWeb'),
         },
         {
-          name: 'Clasificación de publicación',
-          path: 'configuracion-web/publicacion',
+          name: 'Tipo de publicaciones',
+          path: 'configuracion-web/tipo-publicacion',
           component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ClassPublic'),
+        },
+        {
+          name: 'Publicaciones',
+          path: 'configuracion-web/publicaciones',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Publication'),
+        },
+        {
+          name: 'Tipo de recursos',
+          path: 'configuracion-web/tipo-recurso',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ClassResource'),
+        },
+        {
+          name: 'Recursos',
+          path: 'configuracion-web/recursos',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Resource'),
+        },
+        {
+          name: 'Datos básicos',
+          path: 'configuracion-basica/datos-basicos',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/areaNegocio/BasicData'),
+        },
+        {
+          name: 'Institución del sistema',
+          path: 'configuracion-basica/institucion-sistema',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/areaNegocio/InstitutionSystem'),
+        },
+        {
+          name: 'Servicios',
+          path: 'configuracion-basica/servicios',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/areaNegocio/Services'),
+        },
+        {
+          name: 'Actividades de servicio',
+          path: 'configuracion-basica/actividades-servicio',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/areaNegocio/activityService'),
+        },
+        {
+          name: 'Especialidades',
+          path: 'configuracion-basica/especialidades',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/areaNegocio/Especiality'),
+        },
+        {
+          name: 'Zonas básicas',
+          path: 'configuracion-basica/zonas',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/locality/Zone'),
+        },
+        {
+          name: 'Tipo de empleados',
+          path: 'configuracion-basica/tipo-empleado',
+          component: () => import('@/views/dashboard/component/master/basic/healthCenter/areaNegocio/TypeEmpleado'),
+        },
+        {
+          name: 'Permisos',
+          path: 'configuracion-basica/permisos',
+          component: () => import('@/views/dashboard/component/master/basic/security/accesibility/Permission'),
+        },
+        {
+          name: 'Roles',
+          path: 'configuracion-basica/roles',
+          component: () => import('@/views/dashboard/component/master/basic/security/accesibility/Rol'),
+        },
+        {
+          name: 'Gestionar usuarios',
+          path: 'configuracion-basica/usuarios',
+          component: () => import('@/views/dashboard/component/master/basic/users/infoUser/ManageUser'),
+        },
+        {
+          name: 'Tipo de documento',
+          path: 'configuracion-basica/tipo-documentos',
+          component: () => import('@/views/dashboard/component/master/basic/users/infoUser/TypeDocument'),
+        },
+        {
+          name: 'Tipos de medicamento',
+          path: 'configuracion-basica/tipo-medicamento',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/TypeMedicine'),
+        },
+        {
+          name: 'Medicamento',
+          path: 'configuracion-basica/medicamento',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/Medicine'),
+        },
+        {
+          name: 'Presentación',
+          path: 'configuracion-basica/presentacion',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/Presentation'),
+        },
+        {
+          name: 'Tipo de vías',
+          path: 'configuracion-basica/tipo-via',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/TypeVia'),
+        },
+        {
+          name: 'Vía',
+          path: 'configuracion-basica/vias',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/Via'),
+        },
+        {
+          name: 'Frecuencia',
+          path: 'configuracion-basica/frecuencia',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/Frequency'),
+        },
+        {
+          name: 'Medida',
+          path: 'configuracion-basica/medida',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/adminMedical/Measure'),
+        },
+        {
+          name: 'Grupo sanguineo',
+          path: 'configuracion-basica/grupo-sanguineo',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterGeneral/TypeBlood'),
+        },
+        {
+          name: 'Grupo cultural',
+          path: 'configuracion-basica/grupo-cultural',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterGeneral/CulturalGroup'),
+        },
+        {
+          name: 'Parentesco',
+          path: 'configuracion-basica/parentesco',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterGeneral/Relationship'),
+        },
+        {
+          name: 'Patologías',
+          path: 'configuracion-basica/patologias',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterGeneral/Pathologies'),
+        },
+        {
+          name: 'Discapacidades',
+          path: 'configuracion-basica/discapacidades',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterGeneral/Disabilities'),
+        },
+        {
+          name: 'Sustancias psicotrópicas',
+          path: 'configuracion-basica/sustancias-psicotropicas',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterGeneral/PsychotropicSubstances'),
+        },
+        {
+          name: 'Grupo de edades',
+          path: 'configuracion-basica/grupo-edades',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/AgeGroup'),
+        },
+        {
+          name: 'Clasificación de riesgos',
+          path: 'configuracion-basica/clasificacion-riesgos',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/RiskClassification'),
+        },
+        {
+          name: 'Riesgos',
+          path: 'configuracion-basica/riesgos',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/Risk'),
+        },
+        {
+          name: 'Niveles de riesgos',
+          path: 'configuracion-basica/nivel-riesgos',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/LevelRisk'),
+        },
+        {
+          name: 'Niveles de riesgos total',
+          path: 'configuracion-basica/nivel-riesgos-total',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/TotalValueRisk'),
+        },
+        {
+          name: 'Examenes rutinarios',
+          path: 'configuracion-basica/examenes-rutinarios',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/RoutineExams'),
+        },
+        {
+          name: 'Semanas de gestación',
+          path: 'configuracion-basica/semana-gestacion',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/GestationWeeks'),
+        },
+        {
+          name: 'Características del parto',
+          path: 'configuracion-basica/caracteristicas',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/FeacturesBirth'),
+        },
+        {
+          name: 'Señales de alarma',
+          path: 'configuracion-basica/senal-alarma',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/AlarmSignals'),
         },
         {
           name: 'User Profile',

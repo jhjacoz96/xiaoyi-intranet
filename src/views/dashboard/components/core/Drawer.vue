@@ -107,7 +107,7 @@
           icon: 'mdi-home',
           title: 'Incio',
           group: '',
-          to: '/intranet',
+          to: 'inicio',
         },
         {
           icon: 'mdi-cog',
@@ -126,37 +126,49 @@
             },
           ],
         },
-        {
-          icon: 'mdi-account',
-          title: 'user',
-          to: '/intranet/pages/user',
-        },
-        {
-          title: 'rtables',
-          icon: 'mdi-clipboard-outline',
-          to: '/intranet/tables/regular-tables',
-        },
-        {
-          title: 'typography',
-          icon: 'mdi-format-font',
-          to: '/intranet/components/typography',
-        },
-        {
-          title: 'icons',
-          icon: 'mdi-chart-bubble',
-          to: '/intranet/components/icons',
-        },
-        {
-          title: 'google',
-          icon: 'mdi-map-marker',
-          to: '/intranet/maps/google-maps',
-        },
-        {
-          title: 'notifications',
-          icon: 'mdi-bell',
-          to: '/intranet/components/notifications',
-        },
+        // {
+        //   icon: 'mdi-account',
+        //   title: 'user',
+        //   to: '/intranet/pages/user',
+        // },
+        // {
+        //   title: 'rtables',
+        //   icon: 'mdi-clipboard-outline',
+        //   to: '/intranet/tables/regular-tables',
+        // },
+        // {
+        //   title: 'typography',
+        //   icon: 'mdi-format-font',
+        //   to: '/intranet/components/typography',
+        // },
+        // {
+        //   title: 'icons',
+        //   icon: 'mdi-chart-bubble',
+        //   to: '/intranet/components/icons',
+        // },
+        // {
+        //   title: 'google',
+        //   icon: 'mdi-map-marker',
+        //   to: '/intranet/maps/google-maps',
+        // },
+        // {
+        //   title: 'notifications',
+        //   icon: 'mdi-bell',
+        //   to: '/intranet/components/notifications',
+        // },
       ],
+      profile: {
+        avatar: true,
+        title: 'Usuario',
+        group: '',
+        children: [
+          {
+            to: 'intranet/perfil',
+            title: 'Perfil',
+            icon: 'mdi-account',
+          },
+        ],
+      },
     }),
 
     computed: {
@@ -171,20 +183,6 @@
       },
       computedItems () {
         return this.items.map(this.mapItem)
-      },
-      profile () {
-        return {
-          avatar: true,
-          title: 'Usuario',
-          group: '',
-          children: [
-            {
-              to: 'intranet/pages/user',
-              title: 'Perfil',
-              icon: 'mdi-account',
-            },
-          ],
-        }
       },
     },
 

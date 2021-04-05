@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Institución del sistema
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar las instituciones del sistema
             </div>
           </v-col>
         </v-row>
@@ -40,28 +40,10 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
+          <template v-slot:item.descripcion="{ item }">
+            {{ item.descripcion | filterDescription }}
           </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -123,37 +105,21 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
+                  <v-text-field
+                    v-model="editedItem.nombre"
+                    dense
+                    outlined
+                    label="Nombre"
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Nombre"
-                    outlined
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <v-textarea
                     v-model="editedItem.descripcion"
-                    label="Descripción"
+                    dense
                     outlined
-                    name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
+                    label="Descripción"
                   />
                 </v-col>
               </v-row>
@@ -197,7 +163,7 @@
               Cancelar
             </v-btn>
             <v-btn
-              color="pinck"
+              color="pink"
               text
               @click="deleteItemConfirm"
             >
@@ -213,26 +179,29 @@
 
 <script>
   export default {
+    filters: {
+      filterDescription: function (val) {
+        var description = val.length > 45 ? val.slice(0, 45) + '...' : val
+        return description
+      },
+    },
     data () {
       return {
-        tab: null,
         search: '',
         dialog: false,
         dialogDelete: false,
-        imagen: null,
         editedIndex: -1,
         headers: [
-          {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
           {
             text: 'Nombre',
             value: 'nombre',
           },
+          //   {
+          //     text: 'Descripción',
+          //     value: 'descripcion',
+          //   },
           {
+
             text: 'Descripción',
             value: 'descripcion',
           },
@@ -245,35 +214,27 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
-            descripcion: 'test descripcion',
-            viewType: false,
+            nombre: 'MSP',
+            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, !',
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
-            descripcion: 'test descripcion',
-            viewType: true,
+            nombre: 'Polícia',
+            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores?!',
           },
         ],
         editedItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
         },
         defaultItem: {
-          image: '',
           nombre: '',
           descripcion: '',
-          viewType: false,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar Institucion' : 'Editar institución'
       },
     },
     watch: {
@@ -285,10 +246,6 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         // this.editedItem = Object.assign({}, item)

@@ -9,14 +9,14 @@
           <base-item-master
             title="Administrar usuarios"
             icon="mdi-36px mdi-account-multiple"
-            to="/intranet"
+            to="/intranet/configuracion-basica/usuarios"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Tipo de documento"
             icon="mdi-36px mdi-badge-account-horizontal"
-            to="/intranet"
+            to="/intranet/configuracion-basica/tipo-documentos"
           />
         </v-col>
       </v-row>

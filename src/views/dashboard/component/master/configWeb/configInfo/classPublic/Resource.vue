@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Recursos multimedia
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite gestionar los recursos multimedias de cada tipo.
             </div>
           </v-col>
         </v-row>
@@ -47,21 +47,6 @@
             />
           </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -117,25 +102,112 @@
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
 
-          <v-card-text>
+          <v-card-text id="create">
             <v-container>
-              <v-row>
+              <v-row class="justify-end">
                 <v-col
-                  cols="12"
+                  cols="6"
+                >
+                  <v-select
+                    v-model="editedItem.classResource.id"
+                    small
+                    label="Tipos de publicación"
+                    item-text="nombre"
+                    item-value="id"
+                    dense
+                    :items="classResource"
+                    outlined
+                  />
+                </v-col>
+                <v-col
+                  cols="6"
                 >
                   <v-switch
                     v-model="editedItem.viewType"
+                    class="ml-14"
                     inset
                     label="¿Habilitar?"
                   />
                 </v-col>
+                <template v-if="editedIndex === -1">
+                  <v-col
+                    cols="12"
+                  >
+                    <v-speed-dial
+                      v-model="fab"
+                      :direction="direction"
+                      :open-on-hover="hover"
+                      :transition="transition"
+                    >
+                      <template v-slot:activator>
+                        <v-btn
+                          v-model="fab"
+                          color="blue darken-2"
+                          dark
+                          fab
+                        >
+                          <v-icon v-if="fab">
+                            mdi-close
+                          </v-icon>
+                          <v-icon v-else>
+                            mdi-cloud-upload
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-btn
+                        fab
+                        dark
+                        small
+                        color="green"
+                        @click="selectFormat('image')"
+                      >
+                        <v-icon>mdi-image</v-icon>
+                      </v-btn>
+                      <v-btn
+                        fab
+                        dark
+                        small
+                        color="indigo"
+                        @click="selectFormat('document')"
+                      >
+                        <v-icon>mdi-file-document</v-icon>
+                      </v-btn>
+                      <v-btn
+                        fab
+                        dark
+                        small
+                        color="red"
+                        @click="selectFormat('video')"
+                      >
+                        <v-icon>mdi-youtube</v-icon>
+                      </v-btn>
+                    </v-speed-dial>
+                    <v-file-input
+                      v-if="editedItem.format==='document' || editedItem.format=== 'image'"
+                      v-model="editedItem.resource"
+                      :label="editedItem.format === 'document' ? 'seleccione el resource' : 'Seleccione la imagen'"
+                      outlined
+                      dense
+                      class="ml-16"
+                    />
+                    <v-text-field
+                      v-if="editedItem.format==='video'"
+                      v-model="editedItem.resource"
+                      label="Ingrese el link de video de youtube"
+                      outlined
+                      dense
+                      class="ml-16"
+                    />
+                  </v-col>
+                </template>
                 <v-col
                   cols="12"
                 >
                   <v-text-field
                     v-model="editedItem.nombre"
-                    label="Nombre"
+                    label="Titulo"
                     outlined
+                    dense
                   />
                 </v-col>
                 <v-col
@@ -150,12 +222,7 @@
                 </v-col>
                 <v-col
                   cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
-                  />
-                </v-col>
+                />
               </v-row>
             </v-container>
           </v-card-text>
@@ -215,11 +282,18 @@
   export default {
     data () {
       return {
-        tab: null,
+        direction: 'bottom',
+        hover: true,
+        fab: true,
+        transition: 'slide-y-reverse-transition',
+        bottom: true,
+        right: true,
+        format: '',
         search: '',
         dialog: false,
         dialogDelete: false,
         imagen: null,
+        resource: 'undefined',
         editedIndex: -1,
         headers: [
           {
@@ -237,6 +311,10 @@
             value: 'descripcion',
           },
           {
+            text: 'Formato',
+            value: 'format',
+          },
+          {
             text: 'Acción',
             sortable: false,
             align: 'center',
@@ -246,15 +324,35 @@
         desserts: [
           {
             image: '',
-            nombre: 'Medicina alternativa',
+            nombre: 'curas de hereridas',
             descripcion: 'test descripcion',
             viewType: false,
+            format: 'image',
+            classResource: {
+              nombre: 'Infografias',
+              id: 1,
+            },
           },
           {
             image: '',
-            nombre: 'CUidado de heridas',
+            nombre: 'Ejecercios aeróbicos',
             descripcion: 'test descripcion',
             viewType: true,
+            format: 'video',
+            classResource: {
+              nombre: 'Videos',
+              id: 2,
+            },
+          },
+        ],
+        classResource: [
+          {
+            nombre: 'Infografias',
+            id: 1,
+          },
+          {
+            nombre: 'Videos',
+            id: 2,
           },
         ],
         editedItem: {
@@ -262,18 +360,30 @@
           nombre: '',
           descripcion: '',
           viewType: false,
+          format: '',
+          resource: null,
+          classResource: {
+            nombre: '',
+            id: null,
+          },
         },
         defaultItem: {
           image: '',
           nombre: '',
           descripcion: '',
           viewType: false,
+          format: '',
+          resource: null,
+          classResource: {
+            nombre: '',
+            id: null,
+          },
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar recuso' : 'Editar recurso'
       },
     },
     watch: {
@@ -307,6 +417,7 @@
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
+          if (this.editedItem.format === 'video') this.editedItem.resorce = this.editedItem.resource.toString().split('').reverse().join('').slice(0, 11).split('').reverse().join('')
           this.desserts.push(this.editedItem)
         }
         this.close()
@@ -325,6 +436,23 @@
           this.editedIndex = -1
         })
       },
+      selectFormat (val) {
+        this.editedItem.format = val
+        this.editedItem.resource = null
+      },
     },
   }
 </script>
+
+<style>
+  /* This is for documentation purposes and will not be needed in your application */
+  #create .v-speed-dial {
+    position: absolute;
+    top: 27%;
+    left: 10;
+  }
+
+  #create .v-btn--floating {
+    position: relative;
+  }
+</style>
