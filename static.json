@@ -1,0 +1,7 @@
+{ 
+  "root": "dist", 
+  "clean_urls": true, 
+  "rutas": { 
+    "/ **": "index.html" 
+  } 
+}
