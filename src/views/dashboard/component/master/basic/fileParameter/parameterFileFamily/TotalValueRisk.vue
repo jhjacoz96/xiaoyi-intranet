@@ -322,6 +322,7 @@
         } else {
           this.desserts.push(this.editedItem)
         }
+        console.log(this.editedItem)
         this.close()
       },
       close () {
