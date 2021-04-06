@@ -119,7 +119,7 @@
                   />
                 </v-col>
                 <v-col cols="12">
-                  <label class="font-weight-light text-h5">Rango</label>
+                  <label class="font-weight-light text-h5">Indique el rango </label>
                   <v-range-slider
                     v-model="editedItem.rango"
                     :max="max"
@@ -291,7 +291,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar grupo de edades' : 'Editar grupo edades'
+        return this.editedIndex === -1 ? 'Agregar rango total' : 'Editar rango total'
       },
     },
     watch: {
@@ -322,7 +322,6 @@
         } else {
           this.desserts.push(this.editedItem)
         }
-        console.log(this.editedItem)
         this.close()
       },
       close () {

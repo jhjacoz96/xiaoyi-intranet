@@ -110,7 +110,7 @@
                   />
                 </v-col>
                 <v-col cols="12">
-                  <label class="font-weight-light text-h5">Rango</label>
+                  <label class="font-weight-light text-h5">Indique el rango de las semanas</label>
                   <v-range-slider
                     v-model="editedItem.rango"
                     :max="max"

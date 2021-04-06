@@ -204,6 +204,11 @@ export default new Router({
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/TotalValueRisk'),
         },
         {
+          name: 'Vacunas',
+          path: '/intranet/configuracion-basica/vacunas',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/Vaccines'),
+        },
+        {
           name: 'Examenes rutinarios',
           path: 'configuracion-basica/examenes-rutinarios',
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/RoutineExams'),

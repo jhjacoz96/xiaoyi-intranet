@@ -111,7 +111,7 @@
                 </v-col>
 
                 <v-col cols="12">
-                  <label class="font-weight-light text-h5">Rango</label>
+                  <label class="font-weight-light text-h5">Indíque el rango de edades (años)</label>
                   <v-range-slider
                     v-model="editedItem.rango"
                     :max="max"
