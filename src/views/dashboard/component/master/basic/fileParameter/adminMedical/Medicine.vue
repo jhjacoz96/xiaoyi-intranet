@@ -401,7 +401,6 @@
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
           this.desserts.push(this.editedItem)
-          console.log(this.editedItem)
         }
         this.close()
       },

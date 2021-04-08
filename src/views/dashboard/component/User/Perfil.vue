@@ -555,7 +555,6 @@
       },
       addItem () {
         Object.assign(this.perfil, this.editedUser)
-        console.log(this.perfil)
         this.close()
       },
       close () {

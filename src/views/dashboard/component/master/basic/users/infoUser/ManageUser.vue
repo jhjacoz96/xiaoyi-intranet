@@ -537,7 +537,6 @@
         } else {
           this.desserts.push(this.editedItem)
         }
-        console.log(this.editedItem)
         this.close()
       },
       close () {
@@ -558,7 +557,6 @@
         const tipoPersonal = this.tipoPersonal.find(item => item.id === this.editedItem.idTipoPersonal)
         this.editedItem.showEspecialidad = tipoPersonal.especialidad
         if (!tipoPersonal.especialidad) this.editedItem.idEspecialidad = null
-        console.log(this.editedItem)
       },
     },
   }
