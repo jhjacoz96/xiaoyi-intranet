@@ -516,11 +516,18 @@
           subtitle: this.perfil.direccion,
         }
       },
-      Telefono () {
+      telefono () {
         return {
           icon: 'mdi-36px mdi-phone',
-          title: 'éelefono',
+          title: 'Telefono',
           subtitle: this.perfil.telefono,
+        }
+      },
+      correo () {
+        return {
+          icon: 'mdi-36px mdi-email',
+          title: 'Correo electróico',
+          subtitle: this.perfil.correo,
         }
       },
       items () {
@@ -533,6 +540,7 @@
           this.provincia,
           this.canton,
           this.direccion,
+          this.correo,
         ]
       },
     },

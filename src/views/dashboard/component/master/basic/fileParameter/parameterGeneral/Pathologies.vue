@@ -55,7 +55,7 @@
                   <v-icon>mdi-bacteria</v-icon>
                 </v-btn>
               </template>
-              <span>{{ item.capture ? 'Pacientes capturados' : 'Capturar pacientes' }}</span>
+              <span>{{ item.capture ? 'Pacientes asignados a lax aplicación móvil' : 'Asignar pacientes a la aplicación móvil' }}</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
