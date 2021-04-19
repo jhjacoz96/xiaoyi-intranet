@@ -45,7 +45,7 @@
       </v-col>
       <v-col cols="3">
         <v-text-field
-          label="Telefono 2"
+          label="Telefono de emergencia"
           prepend-icon="mdi-phone"
           outlined
         />

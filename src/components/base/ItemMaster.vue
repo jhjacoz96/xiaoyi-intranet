@@ -4,6 +4,7 @@
     close-delay="200"
   >
     <v-card
+      v-bind="$attrs"
       :color="hover ? 'secondary' : 'transparent'"
       width="120"
       height="100"

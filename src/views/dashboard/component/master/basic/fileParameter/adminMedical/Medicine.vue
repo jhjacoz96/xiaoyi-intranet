@@ -109,7 +109,7 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col
+                <!-- <v-col
                   cols="12"
                   sm="6"
                 >
@@ -124,7 +124,7 @@
                     dense
                     @change="seletedMedicine"
                   />
-                </v-col>
+                </v-col> -->
                 <v-col
                   cols="12"
                   sm="6"
@@ -136,7 +136,7 @@
                     outlined
                   />
                 </v-col>
-                <v-col
+                <!-- <v-col
                   cols="12"
                   sm="6"
                 >
@@ -151,8 +151,8 @@
                     dense
                     @change="seletedTypeVia"
                   />
-                </v-col>
-                <v-col
+                </v-col> -->
+                <!-- <v-col
                   cols="12"
                   sm="6"
                 >
@@ -168,7 +168,7 @@
                     dense
                     @change="seletedVia"
                   />
-                </v-col>
+                </v-col> -->
                 <v-col
                   cols="12"
                 >
@@ -244,22 +244,22 @@
         imagen: null,
         editedIndex: -1,
         headers: [
-          {
-            text: 'Tipo medicamento',
-            value: 'tipoMedicamento',
-          },
+          // {
+          //   text: 'Tipo medicamento',
+          //   value: 'tipoMedicamento',
+          // },
           {
             text: 'Nombre',
             value: 'nombre',
           },
-          {
-            text: 'Tipo de vía',
-            value: 'tipoVia',
-          },
-          {
-            text: 'Vía',
-            value: 'via',
-          },
+          // {
+          //   text: 'Tipo de vía',
+          //   value: 'tipoVia',
+          // },
+          // {
+          //   text: 'Vía',
+          //   value: 'via',
+          // },
           {
             text: 'Descripción',
             value: 'descripcion',

@@ -107,7 +107,7 @@
           icon: 'mdi-home',
           title: 'Incio',
           group: '',
-          to: 'inicio',
+          to: '/intranet/inicio',
         },
         {
           icon: 'mdi-cog',
@@ -116,8 +116,13 @@
           children: [
             {
               icon: 'mdi-file-cog-outline',
-              title: 'Configuración básica',
+              title: 'Básica',
               to: 'intranet/maestros-basicos',
+            },
+            {
+              icon: 'mdi-file-cog',
+              title: 'Configuración',
+              to: 'intranet/configuracion',
             },
             {
               icon: 'mdi-application',
@@ -125,6 +130,59 @@
               to: 'intranet/configuracion-web',
             },
           ],
+        },
+        {
+          icon: 'mdi-file',
+          title: 'Ficha familiar',
+          group: '',
+          to: '/intranet/ficha-familiar',
+        },
+        {
+          icon: 'mdi-file',
+          title: 'Ficha Clínica',
+          group: '',
+          children: [
+            {
+              icon: 'mdi-baby',
+              title: 'Neonatología',
+              to: 'intranet/ficha-clinica-neonatologia',
+            },
+            {
+              icon: 'mdi-human-pregnant',
+              title: 'Obstetricia',
+              to: 'intranet/ficha-clinica-obstetricia',
+            },
+          ],
+        },
+        {
+          icon: 'mdi-water',
+          title: 'Pacientes diabeticos',
+          group: '',
+          to: '/intranet/control-diabetes',
+        },
+        {
+          icon: 'mdi-account-voice',
+          title: 'Atención al paciente',
+          group: '',
+          children: [
+            {
+              icon: 'mdi-comment',
+              title: 'Evaluar sugerencias',
+              to: 'intranet/atencion-paciente/evaluar-sugerencias',
+            },
+          ],
+        },
+        {
+          icon: 'mdi-file',
+          title: 'Reportes',
+          group: '',
+          to: '/intranet/reportes',
+        },
+        {
+          icon: 'mdi-file',
+          title: 'Administración del sistema',
+          group: '',
+          to: '/intranet/adminsitracion-sistema',
         },
         // {
         //   icon: 'mdi-account',

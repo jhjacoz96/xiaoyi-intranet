@@ -102,7 +102,7 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col
+                <!-- <v-col
                   cols="12"
                 >
                   <v-select
@@ -116,7 +116,7 @@
                     dense
                     @change="getClassification"
                   />
-                </v-col>
+                </v-col> -->
                 <v-col
                   cols="12"
                 >
@@ -201,10 +201,10 @@
         imagen: null,
         editedIndex: -1,
         headers: [
-          {
-            text: 'Clasificación de riesgo',
-            value: 'clasificacion',
-          },
+          // {
+          //   text: 'Clasificación de riesgo',
+          //   value: 'clasificacion',
+          // },
           {
             text: 'Nombre',
             value: 'nombre',

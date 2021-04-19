@@ -29,9 +29,14 @@ export default new Router({
           component: () => import('@/views/dashboard/component/master/basic/Basic'),
         },
         {
+          name: 'Configuración básica',
+          path: 'configuracion',
+          component: () => import('@/views/dashboard/component/master/config/Config'),
+        },
+        {
           name: 'Perfil',
           path: 'perfil',
-          component: () => import('@/views/dashboard/component/User/Perfil'),
+          component: () => import('@/views/dashboard/component/user/Perfil'),
         },
         {
           name: 'Configuración de contenido en el sítio web',
@@ -227,6 +232,76 @@ export default new Router({
           name: 'Señales de alarma',
           path: 'configuracion-basica/senal-alarma',
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/AlarmSignals'),
+        },
+        {
+          name: 'Encuesta de ficha familiar',
+          path: 'ficha-familiar/encuesta',
+          component: () => import('@/views/dashboard/component/fileFamily/addFileFamily/Add'),
+        },
+        {
+          name: 'Seguimiento de ficha familiar',
+          path: 'ficha-familiar/seguimiento',
+          component: () => import('@/views/dashboard/component/fileFamily/tracingFileFamily/TracingFileFamily'),
+        },
+        {
+          name: 'Ficha familiar',
+          path: 'ficha-familiar',
+          component: () => import('@/views/dashboard/component/fileFamily/FileFamily'),
+        },
+        {
+          name: 'Agregar ficha familiar',
+          path: 'ficha-familiar/agregar',
+          component: () => import('@/views/dashboard/component/fileFamily/addFileFamily/Add.vue'),
+        },
+        {
+          name: 'Ficha clinica de neonatología',
+          path: 'ficha-clinica-neonatologia',
+          component: () => import('@/views/dashboard/component/fileClinicalNeonatology/FileClinicalNeonatology'),
+        },
+        {
+          name: 'Control y seguimiento de ficha clinica de neonatología',
+          path: 'ficha-clinica-neonatologia/seguimiento',
+          component: () => import('@/views/dashboard/component/fileClinicalNeonatology/tracingFileClinicalNeonatology/TracingFileClinicalNeonatology'),
+        },
+        {
+          name: 'Registro de ficha clinica de neonatología',
+          path: 'ficha-clinica-neonatologia/agregar',
+          component: () => import('@/views/dashboard/component/fileClinicalNeonatology/FileClinicalNeonatology'),
+        },
+        {
+          name: 'Control y seguimiento de ficha clinica de obstetricia',
+          path: 'ficha-clinica-obstetricia/seguimiento',
+          component: () => import('@/views/dashboard/component/fileClinicalObstetrics/tracingFileClinicalObstetrics/TracingFileClinicalObstetrics'),
+        },
+        {
+          name: 'Registro de ficha clinica de obstetricia',
+          path: 'ficha-clinica-obstetricia/registrar',
+          component: () => import('@/views/dashboard/component/fileClinicalObstetrics/addFileClinicalObstetrics/AddFileClinicalObstetrics'),
+        },
+        {
+          name: 'Ficha clinica de obstetrícia',
+          path: 'ficha-clinica-obstetricia',
+          component: () => import('@/views/dashboard/component/fileClinicalObstetrics/FileClinicalObstetrics'),
+        },
+        {
+          name: 'Control de pacientes diabéticos',
+          path: 'control-diabetes',
+          component: () => import('@/views/dashboard/component/diabetesControl/DiabetesControl'),
+        },
+        {
+          name: 'Evaluar sugerencias y comentarios',
+          path: 'atencion-paciente/evaluar-sugerencias',
+          component: () => import('@/views/dashboard/component/patientCare/evaluateSuggestion/EvaluateSuggestion'),
+        },
+        {
+          name: 'Reportes',
+          path: 'reportes',
+          component: () => import('@/views/dashboard/component/report/Report'),
+        },
+        {
+          name: 'Administración del sistema',
+          path: 'adminsitracion-sistema',
+          component: () => import('@/views/dashboard/component/systemAdministration/SystemAdministration'),
         },
         {
           name: 'User Profile',

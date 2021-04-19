@@ -98,7 +98,7 @@
 
           <v-card-text>
             <v-container>
-              <v-subheader>
+              <!-- <v-subheader>
                 Personal médico
               </v-subheader>
               <v-row>
@@ -134,7 +134,7 @@
                     dense
                   />
                 </v-col>
-              </v-row>
+              </v-row> -->
               <v-subheader>
                 Datos personales
               </v-subheader>
@@ -290,7 +290,7 @@
                     label="Correo electrónico"
                   />
                 </v-col>
-                <v-col
+                <!-- <v-col
                   cols="12"
                   sm="6"
                 >
@@ -304,7 +304,7 @@
                     outlined
                     dense
                   />
-                </v-col>
+                </v-col> -->
               </v-row>
               <div class="text-h6 font-weight-medium ">
                 Una vez el usuario sea registrado, se le enviará una contraseña temporal a su correo. Está podrá ser modificada en su perfil

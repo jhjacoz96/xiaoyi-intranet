@@ -103,7 +103,7 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col
+                <!-- <v-col
                   cols="12"
                 >
                   <v-select
@@ -117,7 +117,7 @@
                     dense
                     @change="vias"
                   />
-                </v-col>
+                </v-col> -->
                 <v-col
                   cols="12"
                 >
@@ -202,10 +202,10 @@
         imagen: null,
         editedIndex: -1,
         headers: [
-          {
-            text: 'Tipo de via',
-            value: 'tipoVia',
-          },
+          // {
+          //   text: 'Tipo de via',
+          //   value: 'tipoVia',
+          // },
           {
             text: 'Nombre',
             value: 'nombre',

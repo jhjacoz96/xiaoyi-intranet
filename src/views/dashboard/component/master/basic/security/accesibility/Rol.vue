@@ -108,7 +108,7 @@
                     dense
                   />
                 </v-col>
-                <v-col
+                <!-- <v-col
                   cols="12"
                 >
                   <v-select
@@ -122,7 +122,7 @@
                     multiple
                     outlined
                   />
-                </v-col>
+                </v-col> -->
                 <v-col
                   cols="12"
                 >

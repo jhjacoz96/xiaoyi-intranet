@@ -15,7 +15,7 @@
         <v-col cols="3">
           <base-item-master
             title="Medicamento"
-            icon="mdi-36px mdi-36px mdi-pill"
+            icon="mdi-36px mdi-pill"
             to="/intranet/configuracion-basica/medicamento"
           />
         </v-col>

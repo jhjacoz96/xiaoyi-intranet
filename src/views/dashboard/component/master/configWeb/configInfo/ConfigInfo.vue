@@ -22,45 +22,47 @@
       </v-row>
     </v-container> -->
     <v-subheader>
-      Sección de publicaciones
+      Maestros referentes a las publicaciones
     </v-subheader>
     <v-container fluid>
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Tipos de publiaciones"
+            title="Clasificación"
             icon="mdi-36px mdi-view-grid-plus-outline"
-            to="/intranet/configuracion-web/tipo-publicacion"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Publicaciones"
             icon="mdi-36px mdi-view-grid-plus-outline"
-            to="configuracion-web/publicaciones"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Preguntas frecuentes"
+            icon="mdi-36px mdi-view-grid-plus-outline"
           />
         </v-col>
       </v-row>
     </v-container>
     <v-subheader>
-      Recursos multimedia
+      Configuración de publicaciones
     </v-subheader>
     <v-container fluid>
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Clasificación de recursos"
+            title="Configurar publicaciones"
             icon="mdi-36px mdi-camera-iris"
-            to="/intranet/configuracion-web/tipo-recurso"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
-            title="Recursos"
+            title="Configurar recursos"
             icon="mdi-36px mdi-camera-iris"
-            to="/intranet/configuracion-web/recursos"
           />
-        </v-col>
+        </v-col> -->
         <!-- <v-col cols="3">
           <base-item-master
             title="Formato de recursos"

@@ -99,7 +99,7 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col
+                <!-- <v-col
                   cols="12"
                 >
                   <v-select
@@ -112,7 +112,7 @@
                     outlined
                     dense
                   />
-                </v-col>
+                </v-col> -->
                 <v-col
                   cols="12"
                 >

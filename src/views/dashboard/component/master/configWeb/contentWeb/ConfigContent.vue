@@ -118,7 +118,7 @@
           <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
               <v-col cols="4">
-                Pié de pagina
+                Contáctanos
               </v-col>
               <v-col
                 cols="8"
