@@ -520,7 +520,7 @@
                   </v-container>
                 </v-tab-item>
                 <v-tab-item v-if="editedItem.pregnant === 'si'">
-                  <v-container>
+                  <v-container class="mt-6">
                     <v-row>
                       <v-col
                         cols="12"
@@ -676,7 +676,7 @@
                   </v-container>
                 </v-tab-item>
                 <v-tab-item>
-                  <v-container>
+                  <v-container class="mt-6">
                     <v-subheader>
                       Signos vitales
                     </v-subheader>
