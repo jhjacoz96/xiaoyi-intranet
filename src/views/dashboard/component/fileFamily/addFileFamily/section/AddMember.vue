@@ -675,7 +675,7 @@
                     </v-row>
                   </v-container>
                 </v-tab-item>
-                <v-tab-item>
+                <v-tab-item  v-if="editedItem.diabetic">
                   <v-container class="mt-6">
                     <v-subheader>
                       Signos vitales
