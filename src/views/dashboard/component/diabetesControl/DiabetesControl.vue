@@ -222,12 +222,11 @@
             </v-tab-item>
 
             <v-tab-item class="pb-12">
-              <div class="d-flex">
-                <v-subheader class="float-left">
+              <div class="d-flex justify-space-around">
+                <v-subheader>
                   Tratamientos farmacológicos
                 </v-subheader>
                 <v-btn
-                  class="float-right"
                   color="secondary"
                   fab
                 >

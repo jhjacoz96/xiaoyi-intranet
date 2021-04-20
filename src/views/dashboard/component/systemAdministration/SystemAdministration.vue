@@ -18,7 +18,7 @@
           <v-row>
             <v-col cols="3">
               <base-item-master
-                title="Recupercion de la DB"
+                title="Recuperción de la DB"
                 icon="mdi-36px mdi-database"
               />
             </v-col>

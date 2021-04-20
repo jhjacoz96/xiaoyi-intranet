@@ -21,10 +21,10 @@
       </template>
       <v-tabs-items v-model="tab">
         <v-tab-item value="tab-1">
-          <statistical-report />
+          <structured-report />
         </v-tab-item>
         <v-tab-item value="tab-2">
-          <structured-report />
+          <statistical-report />
         </v-tab-item>
       </v-tabs-items>
     </base-material-card>

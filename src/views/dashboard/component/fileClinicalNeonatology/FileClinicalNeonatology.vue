@@ -18,7 +18,7 @@
           <v-col cols="3">
             <base-item-master
               title="Control y seguimiento"
-              icon="mdi-36px mdi-36px mdi-clipboard-puls"
+              icon="mdi-36px mdi-36px mdi-clipboard-pulse"
               to="ficha-clinica-neonatologia/seguimiento"
             />
           </v-col>
