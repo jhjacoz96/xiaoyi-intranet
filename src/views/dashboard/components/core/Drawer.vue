@@ -217,7 +217,7 @@
       ],
       profile: {
         avatar: true,
-        title: 'Usuario',
+        title: 'Ali Ferrer',
         group: '',
         children: [
           {

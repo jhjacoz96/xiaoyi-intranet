@@ -4,11 +4,36 @@
     tag="section"
   >
     <v-row>
-      <v-col
-        cols="12"
-        lg="4"
-      >
-        dashboard
+      <v-col cols="12">
+        <v-card class="pa-5 rounded-xl">
+          <v-container>
+            <v-row>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <div
+                  class="font-weight-bold text-h2"
+                  style="color: #37474F;"
+                >
+                  {{ saludar }}, Doctor <span class="primary--text">Ali Ferrer</span>
+                </div>
+                <div class="font-weight-medium grey--text mt-3">
+                  Bienvenido al panel de control de Xiaoyi
+                </div>
+              </v-col>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <v-img
+                  width="300"
+                  src="@/assets/doctor.svg"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
