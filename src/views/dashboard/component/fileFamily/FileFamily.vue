@@ -23,14 +23,14 @@
           <v-col cols="3">
             <base-item-master
               title="Seguimiento"
-              icon="mdi-36px mdi-36px mdi-bacteria"
+              icon="mdi-36px mdi-36px mdi-clipboard-pulse"
               to="ficha-familiar/seguimiento"
             />
           </v-col>
           <v-col cols="3">
             <base-item-master
               title="Iniciar nueva encuesta"
-              icon="mdi-36px mdi-36px mdi-bacteria"
+              icon="mdi-36px mdi-36px mdi-file-document-edit"
               to="ficha-familiar/agregar"
             />
           </v-col>

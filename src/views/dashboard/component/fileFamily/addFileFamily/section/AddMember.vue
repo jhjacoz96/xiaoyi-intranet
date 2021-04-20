@@ -141,9 +141,9 @@
                 <v-tab v-if="editedItem.pregnant === 'si'">
                   Datos de embarazo
                 </v-tab>
-                <v-tab v-if="editedItem.diabetic">
+                <!-- <v-tab v-if="editedItem.diabetic">
                   Datos de diabéticos
-                </v-tab>
+                </v-tab> -->
               </v-tabs>
               <v-tabs-items v-model="tab">
                 <v-tab-item>
@@ -675,7 +675,7 @@
                     </v-row>
                   </v-container>
                 </v-tab-item>
-                <v-tab-item v-if="editedItem.diabetic">
+                <!-- <v-tab-item v-if="editedItem.diabetic">
                   <v-container class="mt-6">
                     <v-subheader>
                       Signos vitales
@@ -865,7 +865,7 @@
                       </v-col>
                     </v-row>
                   </v-container>
-                </v-tab-item>
+                </v-tab-item> -->
               </v-tabs-items>
             </v-form>
           </v-container>

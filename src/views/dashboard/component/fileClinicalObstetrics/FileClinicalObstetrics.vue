@@ -18,7 +18,7 @@
           <v-col cols="3">
             <base-item-master
               title="Control y seguimiento"
-              icon="mdi-36px mdi-36px mdi-bacteria"
+              icon="mdi-36px mdi-36px mdi-clipboard-pulse"
               to="ficha-clinica-obstetricia/seguimiento"
             />
           </v-col>
@@ -26,7 +26,7 @@
             <v-template @click="dialog = !dialog">
               <base-item-master
                 title="Nuevo registro"
-                icon="mdi-36px mdi-36px mdi-bacteria"
+                icon="mdi-36px mdi-36px mdi-file-document-edit"
               />
             </v-template>
           </v-col>
