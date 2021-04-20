@@ -36,7 +36,7 @@ export default new Router({
         {
           name: 'Perfil',
           path: 'perfil',
-          component: () => import('@/views/dashboard/component/user/Perfil'),
+          component: () => import('@/views/dashboard/component/perfil/Perfil'),
         },
         {
           name: 'Configuración de contenido en el sítio web',
