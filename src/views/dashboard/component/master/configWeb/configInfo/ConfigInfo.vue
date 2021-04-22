@@ -22,13 +22,13 @@
       </v-row>
     </v-container> -->
     <v-subheader>
-      Maestros referentes a las publicaciones
+      Maestros para el sítio web
     </v-subheader>
     <v-container fluid>
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Clasificación"
+            title="Clasificación publicaciónes"
             icon="mdi-36px mdi-view-grid-plus-outline"
           />
         </v-col>
@@ -40,8 +40,14 @@
         </v-col>
         <v-col cols="3">
           <base-item-master
-            title="Preguntas frecuentes"
+            title="Recursos de publicaciones"
             icon="mdi-36px mdi-view-grid-plus-outline"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Preguntas frecuentes"
+            icon="mdi-36px mdi-comment-question"
           />
         </v-col>
       </v-row>

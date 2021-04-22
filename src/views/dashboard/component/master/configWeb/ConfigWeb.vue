@@ -11,8 +11,8 @@
           <v-tabs-slider />
 
           <v-tab href="#tab-1">
-            Contenido de adultos mayores
-            <v-icon>mdi-human-cane</v-icon>
+            Maestros básicos y configuraciones
+            <v-icon>mdi-information-variant</v-icon>
           </v-tab>
 
           <v-tab href="#tab-2">
