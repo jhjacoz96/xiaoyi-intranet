@@ -63,24 +63,5 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-subheader>
-      Clalificación del servicio
-    </v-subheader>
-    <v-container fluid>
-      <v-row>
-        <v-col cols="3">
-          <base-item-master
-            title="Preguntas de calificación"
-            icon="mdi-36px mdi-comment-question"
-          />
-        </v-col>
-        <v-col cols="3">
-          <base-item-master
-            title="Nivel de calificación"
-            icon="mdi-36px mdi-comment-question"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
   </v-card>
 </template>

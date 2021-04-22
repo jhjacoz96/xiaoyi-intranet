@@ -341,6 +341,11 @@ export default new Router({
           path: 'upgrade',
           component: () => import('@/views/dashboard/Upgrade'),
         },
+        {
+          name: 'Configuración de contenido de la movil',
+          path: 'configuracion-movil',
+          component: () => import('@/views/dashboard/component/master/configMovil/ConfigMovil'),
+        },
       ],
     },
   ],

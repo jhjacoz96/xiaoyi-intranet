@@ -116,7 +116,7 @@
           children: [
             {
               icon: 'mdi-file-cog-outline',
-              title: 'Básica',
+              title: 'Maestros',
               to: 'intranet/maestros-basicos',
             },
             {
@@ -126,8 +126,13 @@
             },
             {
               icon: 'mdi-application',
-              title: 'Configurar del sítio web',
+              title: 'Configuración del sítio web',
               to: 'intranet/configuracion-web',
+            },
+            {
+              icon: 'mdi-application',
+              title: 'Configuración de la movil',
+              to: 'intranet/configuracion-movil',
             },
           ],
         },
