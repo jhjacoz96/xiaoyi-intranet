@@ -44,8 +44,8 @@ export default new Router({
           component: () => import('@/views/dashboard/component/master/configWeb/ConfigWeb'),
         },
         {
-          name: 'Tipo de publicaciones',
-          path: 'configuracion-web/tipo-publicacion',
+          name: 'Clasificación de publicaciones',
+          path: 'configuracion-web/clasificacion-publicaciones',
           component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ClassPublic'),
         },
         {
@@ -54,9 +54,19 @@ export default new Router({
           component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Publication'),
         },
         {
-          name: 'Tipo de recursos',
-          path: 'configuracion-web/tipo-recurso',
-          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ClassResource'),
+          name: 'Publicaciones',
+          path: 'configuracion-web/preguntas-frecuentes',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Faq'),
+        },
+        {
+          name: 'Configuración de publicaciones',
+          path: 'configuracion-web/configurar-publicaciones',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ConfigPublic'),
+        },
+        {
+          name: 'Recursos de publicaciones',
+          path: 'configuracion-web/publicaciones',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Publication'),
         },
         {
           name: 'Recursos',
@@ -117,6 +127,11 @@ export default new Router({
           name: 'Tipo de documento',
           path: 'configuracion-basica/tipo-documentos',
           component: () => import('@/views/dashboard/component/master/basic/users/infoUser/TypeDocument'),
+        },
+        {
+          name: 'Activiades físicas',
+          path: 'configuracion-basica/actividades-fisicas',
+          component: () => import('@/views/dashboard/component/master/basic/diabetic/PhysicalActivity'),
         },
         {
           name: 'Tipos de medicamento',
@@ -234,6 +249,36 @@ export default new Router({
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/AlarmSignals'),
         },
         {
+          name: 'Configuracion servicios asistenciales',
+          path: 'configuracion-maestros/servicios',
+          component: () => import('@/views/dashboard/component/master/config/healthCenter/ConfigService'),
+        },
+        {
+          name: 'Configuracion de permisos',
+          path: 'configuracion-maestros/permisos',
+          component: () => import('@/views/dashboard/component/master/config/security/ConfigPermission'),
+        },
+        {
+          name: 'Configuracion de usuarios',
+          path: 'configuracion-maestros/usuarios',
+          component: () => import('@/views/dashboard/component/master/config/security/ConfigUser'),
+        },
+        {
+          name: 'Configuracion de medicamentos',
+          path: 'configuracion-maestros/medicamentos',
+          component: () => import('@/views/dashboard/component/master/config/fileParameter/ConfigMedicine'),
+        },
+        {
+          name: 'Configuracion de vías',
+          path: 'configuracion-maestros/vias',
+          component: () => import('@/views/dashboard/component/master/config/fileParameter/ConfigVia'),
+        },
+        {
+          name: 'Configuracion de riesgos',
+          path: 'configuracion-maestros/riesgos',
+          component: () => import('@/views/dashboard/component/master/config/fileParameter/ConfigRisk'),
+        },
+        {
           name: 'Encuesta de ficha familiar',
           path: 'ficha-familiar/encuesta',
           component: () => import('@/views/dashboard/component/fileFamily/addFileFamily/Add'),
@@ -345,6 +390,16 @@ export default new Router({
           name: 'Configuración de contenido de la movil',
           path: 'configuracion-movil',
           component: () => import('@/views/dashboard/component/master/configMovil/ConfigMovil'),
+        },
+        {
+          name: 'Preguntas de calificación',
+          path: 'configuracion-movil/preguntas-calificacion',
+          component: () => import('@/views/dashboard/component/master/configMovil/QualificationQuestion'),
+        },
+        {
+          name: 'Niveles de calificación',
+          path: 'configuracion-movil/niveles-calificacion',
+          component: () => import('@/views/dashboard/component/master/configMovil/QualificationLevel'),
         },
       ],
     },

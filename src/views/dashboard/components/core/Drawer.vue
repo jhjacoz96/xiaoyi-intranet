@@ -121,7 +121,7 @@
             },
             {
               icon: 'mdi-file-cog',
-              title: 'Configuración',
+              title: 'Configuración de maestros',
               to: 'intranet/configuracion',
             },
             {
@@ -131,7 +131,7 @@
             },
             {
               icon: 'mdi-application',
-              title: 'Configuración de la movil',
+              title: 'Configuración de la móvil',
               to: 'intranet/configuracion-movil',
             },
           ],

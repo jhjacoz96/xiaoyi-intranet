@@ -15,12 +15,12 @@
               <v-icon>mdi-arrow-left-bold</v-icon>
             </v-btn>
           </v-col>
-          <v-col md="auto">
+          <v-col md="10">
             <div class="text-h3 font-weight-medium">
-              Clasificación de recursos multimedia
+              Nivel de calificación
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de recursos multimedia
+              Permite administrar Los distintos niveles de calificación para responder a las distintas preguntas que se le haran a los usarios a la hora de calificar la aplicación
             </div>
           </v-col>
         </v-row>
@@ -40,13 +40,8 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
+            >
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -86,17 +81,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -108,37 +92,24 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
                   <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Titulo"
+                    v-model="editedItem.title"
+                    label="Titulo del nivel"
                     outlined
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
-                  <v-textarea
-                    v-model="editedItem.descripcion"
-                    label="Descripción"
-                    outlined
-                    name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
+                  <v-subheader class="pl-0">
+                    Semana de gestación
+                  </v-subheader>
+                  <v-slider
+                    v-model="editedItem.level"
+                    :thumb-size="24"
+                    max="5"
+                    min="0"
+                    :thumb-label="true"
                   />
                 </v-col>
               </v-row>
@@ -208,18 +179,12 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
+            text: 'Titulo',
+            value: 'title',
           },
           {
-            text: 'Nombre',
-            value: 'nombre',
-          },
-          {
-            text: 'Descripción',
-            value: 'descripcion',
+            text: 'Nivel',
+            value: 'level',
           },
           {
             text: 'Acción',
@@ -230,35 +195,23 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Infografias',
-            descripcion: 'test descripcion',
-            viewType: false,
-          },
-          {
-            image: '',
-            nombre: 'Videos',
-            descripcion: 'test descripcion',
-            viewType: true,
+            title: 'Totalmente satisfecho',
+            level: 5,
           },
         ],
         editedItem: {
-          image: '',
-          nombre: '',
-          descripcion: '',
-          viewType: false,
+          title: '',
+          level: 0,
         },
         defaultItem: {
-          image: '',
-          nombre: '',
-          descripcion: '',
-          viewType: false,
+          title: '',
+          level: 0,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar clasificación de recuso' : 'Editar clasificación de recurso'
+        return this.editedIndex === -1 ? 'Agregar nivel' : 'Editar nivel'
       },
     },
     watch: {
@@ -270,13 +223,8 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {

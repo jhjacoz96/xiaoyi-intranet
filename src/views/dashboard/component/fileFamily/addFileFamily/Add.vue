@@ -21,6 +21,14 @@
       <v-tab-item class="pb-12">
         <add-classification @data="event($event)" />
       </v-tab-item>
+
+      <v-tab-item class="pb-12">
+        <add-evolution-risk @data="event($event)" />
+      </v-tab-item>
+
+      <v-tab-item class="pb-12">
+        <add-contamination-point @data="event($event)" />
+      </v-tab-item>
     </base-material-wizard>
   </v-container>
 </template>
@@ -32,6 +40,8 @@
       AddDataBasic: () => import('./section/AddDataBasic'),
       AddMember: () => import('./section/AddMember'),
       AddClassification: () => import('./section/AddClassification'),
+      AddEvolutionRisk: () => import('./section/AddEvolutionRisk'),
+      AddContaminationPoint: () => import('./section/AddContaminationPoint'),
     },
     data: () => ({
       address: '',
@@ -42,7 +52,7 @@
       step: [],
       street: '',
       tab: 0,
-      tabs: ['Datos generales', 'Miembros', 'Clasificación de riesgos'],
+      tabs: ['Datos generales', 'Miembros', 'Clasificación de riesgos', 'Evolución de la gestión de risgo familiar', 'Contaminación ambiental'],
     }),
 
     computed: {
@@ -52,7 +62,8 @@
       scope () {
         if (this.tab === 0) return 'basicos'
         else if (this.tab === 1) return 'member'
-        return 'risks'
+        else if (this.tab === 2) return 'clasificacion'
+        return 'evolution'
       },
       // availableSteps () {
       //   const steps = [0]

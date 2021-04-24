@@ -30,24 +30,28 @@
           <base-item-master
             title="Clasificación publicaciónes"
             icon="mdi-36px mdi-view-grid-plus-outline"
+            to="configuracion-web/clasificacion-publicaciones"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Publicaciones"
             icon="mdi-36px mdi-view-grid-plus-outline"
+            to="configuracion-web/publicaciones"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
-            title="Recursos de publicaciones"
+            title="Recursos de multimedia"
             icon="mdi-36px mdi-view-grid-plus-outline"
+            to="configuracion-web/recursos"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Preguntas frecuentes"
             icon="mdi-36px mdi-comment-question"
+            to="configuracion-web/preguntas-frecuentes"
           />
         </v-col>
       </v-row>
@@ -61,6 +65,7 @@
           <base-item-master
             title="Configurar publicaciones"
             icon="mdi-36px mdi-camera-iris"
+            to="configuracion-web/configurar-publicaciones"
           />
         </v-col>
         <!-- <v-col cols="3">

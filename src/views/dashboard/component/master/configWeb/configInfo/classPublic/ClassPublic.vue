@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Tipo de publicaciones
+              Clasificación de publicaciones
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la clasificación de publicaciones por tipo para el cuidado de adultos mayores
+              Permite clasificacificar las publicaciones
             </div>
           </v-col>
         </v-row>
@@ -148,14 +148,6 @@
                     name="input-7-4"
                   />
                 </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
-                  />
-                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -223,12 +215,6 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
-          {
             text: 'Nombre',
             value: 'nombre',
           },
@@ -258,13 +244,10 @@
           },
         ],
         editedItem: {
-          image: '',
-          nombre: '',
           descripcion: '',
           viewType: false,
         },
         defaultItem: {
-          image: '',
           nombre: '',
           descripcion: '',
           viewType: false,
@@ -273,7 +256,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Tipo de publicación' : 'Editar Tipo de publicación'
+        return this.editedIndex === -1 ? 'Agregar Clasificación de publicación' : 'Editar Clasificación de publicación'
       },
     },
     watch: {

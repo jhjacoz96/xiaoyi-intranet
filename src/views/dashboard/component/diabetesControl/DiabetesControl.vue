@@ -78,7 +78,7 @@
     </base-material-card>
     <v-dialog
       v-model="dialog"
-      max-width="600"
+      max-width="900"
     >
       <v-card>
         <v-card-title>
@@ -222,100 +222,139 @@
             </v-tab-item>
 
             <v-tab-item class="pb-12">
-              <div class="d-flex justify-space-around">
+              <div
+                class="text-center text-h4 d-fleX font-weight-bold mb-6 blue--text"
+              >
+                <div
+                  class=" d-inline-block"
+                >
+                  Tratamiento farmacológico
+                </div>
+              </div>
+              <v-card-text class="d-flex">
                 <v-subheader>
-                  Tratamientos farmacológicos
+                  medicamentos
                 </v-subheader>
                 <v-btn
-                  color="secondary"
                   fab
+                  color="secondary"
+                  class="float-right d-inline-block"
                 >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
+              </V-card-text>
+              <v-card-text>
+                <tr
+                  v-for="(item, k) in editedItem.tratamientos"
+                  :key="k"
+                >
+                  <td>
+                    <v-select
+                      v-model="item.typeMedicine"
+                      label="Tipo"
+                      outlined
+                      :items="typeMedicine"
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-select
+                      v-model="item.medicamento"
+                      label="Medicamento"
+                      outlined
+                      :items="medicamento"
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="item.dosis"
+                      class="mx-2"
+                      label="Dosis"
+                      outlined
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-select
+                      v-model="item.measure"
+                      class="mx-2"
+                      label="Medica"
+                      :items="measure"
+                      outlined
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-select
+                      v-model="item.frecuencia"
+                      label="Frecuencia"
+                      outlined
+                      dense
+                      :items="frecuencia"
+                    />
+                  </td>
+                </tr>
+              </v-card-text>
+
+              <div
+                class="text-center text-h4 d-fleX font-weight-bold mb-6 blue--text"
+              >
+                <div
+                  class=" d-inline-block"
+                >
+                  Tratamiento no farmacológico
+                </div>
               </div>
-              <v-container>
-                <v-card-text>
-                  <tr
-                    v-for="(item, k) in editedItem.tratamientos"
-                    :key="k"
-                  >
-                    <td>
-                      <v-select
-                        v-model="item.medicamento"
-                        label="Tratameinto"
-                        outlined
-                        :items="medicamento"
-                        dense
-                      />
-                    </td>
-                    <td>
-                      <v-text-field
-                        v-model="item.dosis"
-                        class="mx-2"
-                        label="Dosis"
-                        outlined
-                        dense
-                      />
-                    </td>
-                    <td>
-                      <v-select
-                        v-model="item.frecuencia"
-                        label="Frecuencia"
-                        outlined
-                        dense
-                        :tems="frecuencia"
-                      />
-                    </td>
-                  </tr>
-                </v-card-text>
-              </v-container>
               <v-subheader>
-                Tratamientos no farmacológicos
+                Indicaciones de la dieta
               </v-subheader>
-              <v-container>
-                <v-card-text>
-                  <v-textarea
-                    label="Dieta"
-                    outlined
-                    multiple
-                    dense
-                  />
-                </v-card-text>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      cols="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Actividad fisica"
-                        outlined
-                        dense
-                      />
-                    </v-col>
-                    <v-col
-                      cols="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Tiempo"
-                        outlined
-                        dense
-                      />
-                    </v-col>
-                    <v-col
-                      cols="6"
-                      md="4"
-                    >
-                      <v-select
-                        label="Frecuencia"
-                        outlined
-                        dense
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-container>
+              <v-card-text>
+                <v-textarea
+                  label="Descripción"
+                  outlined
+                  multiple
+                  dense
+                />
+              </v-card-text>
+              <v-card-text class="d-flex">
+                <v-subheader>
+                  Indicaciones para las actividades físicas
+                </v-subheader>
+                <v-btn
+                  fab
+                  color="secondary"
+                  class="float-right d-inline-block"
+                >
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </V-card-text>
+              <v-card-text class="justify-center">
+                <tr>
+                  <td>
+                    <v-select
+                      label="Actividad fisica"
+                      outlined
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-text-field
+                      label="Duración"
+                      outlined
+                      class="mx-2"
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-select
+                      label="Frecuencia"
+                      outlined
+                      dense
+                    />
+                  </td>
+                </tr>
+              </v-card-text>
             </v-tab-item>
           </base-material-wizard-normal>
         </v-card-text>
@@ -369,14 +408,16 @@
           tratamientos: [
             {
               medicamento: '',
-              dosis: '',
+              measure: '',
               frecuencia: '',
             },
           ],
           glusemia: '',
         },
         medicamento: ['Glutem', 'Avitix'],
-        frecuencia: ['Diario'],
+        typeMedicine: ['Antibióticos', 'Analgésicos', 'Aines', 'Opiodides', 'Diureticos'],
+        frecuencia: ['Cada hora', 'Cada dos horas', 'Diario'],
+        measure: ['cc', 'Tableta'],
       }
     },
     computed: {

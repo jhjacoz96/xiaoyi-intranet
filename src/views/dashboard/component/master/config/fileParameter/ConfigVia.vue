@@ -1,4 +1,3 @@
-
 <template>
   <v-container>
     <base-material-card color="primary">
@@ -18,22 +17,13 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Frecuencia
+              Configuración de vías
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar la frecuencia en que se puede administrar cada medicamento
+              Permite configurar las vías
             </div>
           </v-col>
         </v-row>
-        <v-btn
-          absolute
-          fab
-          right
-          color="secondary"
-          @click="dialog = true"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
       </template>
       <v-card-text>
         <v-data-table
@@ -41,6 +31,14 @@
           :items="desserts"
           :search="search"
         >
+          <template v-slot:item.typeVia="{ item }">
+            <v-template v-if="item.typeVia">
+              {{ item.typeVia }}
+            </v-template>
+            <v-template v-else>
+              Sin registro
+            </v-template>
+          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -56,23 +54,7 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
-              <span>Editar</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  x-small
-                  color="pink"
-                  class="ml-2"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="deleteItem(item)"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Eliminar</span>
+              <span>Editar vía</span>
             </v-tooltip>
           </template>
         </v-data-table>
@@ -81,20 +63,9 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
-            <span class="text-h5">{{ formTitle }}</span>
+            <span class="text-h5">Configurar vía</span>
           </v-card-title>
 
           <v-card-text>
@@ -104,19 +75,22 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Nombre"
+                    v-model="editedItem.name"
+                    label="Nombre de la via"
+                    dense
+                    disabled
                     outlined
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
-                  <v-textarea
-                    v-model="editedItem.descripcion"
-                    label="Descripción"
+                  <v-select
+                    v-model="editedItem.typeVia"
+                    label="Tipo de via"
+                    dense
+                    :items="typeVia"
                     outlined
-                    name="input-7-4"
                   />
                 </v-col>
               </v-row>
@@ -141,35 +115,7 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>
-      <v-dialog
-        v-model="dialogDelete"
-        max-width="500px"
-      >
-        <v-card>
-          <v-card-title class="text-h5">
-            ¿Está seguro de realizar esta acción?
-          </v-card-title>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn
-              color="black darken-1"
-              text
-              @click="closeDelete"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              color="pinck"
-              text
-              @click="deleteItemConfirm"
-            >
-              Eliminar
-            </v-btn>
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      </v-dialog> -->
     </base-material-card>
   </v-container>
 </template>
@@ -180,17 +126,15 @@
       return {
         search: '',
         dialog: false,
-        dialogDelete: false,
-        imagen: null,
         editedIndex: -1,
         headers: [
           {
-            text: 'Nombre',
-            value: 'nombre',
+            text: 'Nombre de vía',
+            value: 'name',
           },
           {
-            text: 'Descripción',
-            value: 'descripcion',
+            text: 'Tipo de vía',
+            value: 'typeVia',
           },
           {
             text: 'Acción',
@@ -201,36 +145,28 @@
         ],
         desserts: [
           {
-            nombre: 'Cada hora',
-            descripcion: 'test descripcion',
+            name: 'Enteral',
+            typeMedicine: undefined,
           },
           {
-            nombre: 'Diaria',
-            descripcion: 'test descripcion',
+            name: 'Sublingual',
+            typeMedicine: undefined,
+          },
+          {
+            name: 'Intradérmica',
+            typeMedicine: undefined,
           },
         ],
+        typeVia: ['Enteral', 'Parenteral'],
         editedItem: {
-          nombre: '',
-          descripcion: '',
+          name: '',
+          typeVia: undefined,
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
+          name: '',
+          typeVia: undefined,
         },
       }
-    },
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'Agregar frecuencia' : 'Editar frecuencia'
-      },
-    },
-    watch: {
-      dialog (val) {
-        val || this.close()
-      },
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
     },
     methods: {
       deleteItem (item) {
@@ -248,11 +184,7 @@
         this.dialog = true
       },
       addItem () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        } else {
-          this.desserts.push(this.editedItem)
-        }
+        Object.assign(this.desserts[this.editedIndex], this.editedItem)
         this.close()
       },
       close () {

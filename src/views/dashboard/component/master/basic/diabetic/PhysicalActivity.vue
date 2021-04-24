@@ -15,12 +15,12 @@
               <v-icon>mdi-arrow-left-bold</v-icon>
             </v-btn>
           </v-col>
-          <v-col md="auto">
+          <v-col md="10">
             <div class="text-h3 font-weight-medium">
-              Recursos multimedias
+              Actividad física
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar los recursos multimedias
+              Permite administrar las actividades físicas que se le pueden indicar a un pasiente diabético
             </div>
           </v-col>
         </v-row>
@@ -40,12 +40,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -86,133 +80,37 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
 
-          <v-card-text id="create">
+          <v-card-text>
             <v-container>
-              <v-row class="justify-end">
-                <!-- <v-col
-                  cols="6"
-                >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    class="ml-14"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col> -->
+              <v-row>
                 <v-col
-                  cols="6"
+                  cols="12"
                 >
                   <v-text-field
                     v-model="editedItem.name"
-                    label="Nombre del recurso"
+                    label="Nombre"
                     dense
                     outlined
                   />
                 </v-col>
-                <template v-if="editedIndex === -1">
-                  <v-col
-                    cols="12"
-                  >
-                    <v-speed-dial
-                      v-model="fab"
-                      :direction="direction"
-                      :open-on-hover="hover"
-                      :transition="transition"
-                    >
-                      <template v-slot:activator>
-                        <v-btn
-                          v-model="fab"
-                          color="blue darken-2"
-                          dark
-                          fab
-                        >
-                          <v-icon v-if="fab">
-                            mdi-close
-                          </v-icon>
-                          <v-icon v-else>
-                            mdi-cloud-upload
-                          </v-icon>
-                        </v-btn>
-                      </template>
-                      <v-btn
-                        fab
-                        dark
-                        small
-                        color="green"
-                        @click="selectFormat('image')"
-                      >
-                        <v-icon>mdi-image</v-icon>
-                      </v-btn>
-                      <v-btn
-                        fab
-                        dark
-                        small
-                        color="indigo"
-                        @click="selectFormat('document')"
-                      >
-                        <v-icon>mdi-file-document</v-icon>
-                      </v-btn>
-                      <v-btn
-                        fab
-                        dark
-                        small
-                        color="red"
-                        @click="selectFormat('video')"
-                      >
-                        <v-icon>mdi-youtube</v-icon>
-                      </v-btn>
-                    </v-speed-dial>
-                    <v-file-input
-                      v-if="editedItem.format==='document' || editedItem.format=== 'image'"
-                      v-model="editedItem.resource"
-                      :label="editedItem.format === 'document' ? 'seleccione el resource' : 'Seleccione la imagen'"
-                      outlined
-                      dense
-                      class="ml-16"
-                    />
-                    <v-text-field
-                      v-if="editedItem.format==='video'"
-                      v-model="editedItem.resource"
-                      label="Ingrese el link de video de youtube"
-                      outlined
-                      dense
-                      class="ml-16"
-                    />
-                  </v-col>
-                </template>
                 <v-col
                   cols="12"
                 >
-                  <v-textarea
-                    v-model="editedItem.descripcion"
-                    label="Descripción"
+                  <v-text-field
+                    v-model="editedItem.description"
+                    label="Descripcion"
+                    dense
                     outlined
-                    name="input-7-4"
                   />
                 </v-col>
-                <v-col
-                  cols="12"
-                />
               </v-row>
             </v-container>
           </v-card-text>
-
           <v-card-actions>
             <v-spacer />
             <v-btn
@@ -268,18 +166,11 @@
   export default {
     data () {
       return {
-        direction: 'bottom',
-        hover: true,
-        fab: true,
-        transition: 'slide-y-reverse-transition',
-        bottom: true,
-        right: true,
-        format: '',
+        tab: null,
         search: '',
         dialog: false,
         dialogDelete: false,
         imagen: null,
-        resource: 'undefined',
         editedIndex: -1,
         headers: [
           {
@@ -288,11 +179,7 @@
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
-          },
-          {
-            text: 'Formato',
-            value: 'format',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -303,33 +190,23 @@
         ],
         desserts: [
           {
-            name: 'Infografia de curas de adulto mayor',
-            descripcion: 'test descripcion',
-            format: 'image',
-          },
-          {
-            name: 'Video de adultos mayores y el covid',
-            descripcion: 'test descripcion',
-            format: 'video',
+            name: 'Caminar',
+            description: 'Caminar',
           },
         ],
         editedItem: {
           name: '',
-          descripcion: '',
-          format: '',
-          resource: null,
+          description: '',
         },
         defaultItem: {
           name: '',
           descripcion: '',
-          format: '',
-          resource: null,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar recuso' : 'Editar recurso'
+        return this.editedIndex === -1 ? 'Agregar actividad física' : 'Editar física'
       },
     },
     watch: {
@@ -341,13 +218,8 @@
       },
     },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {
@@ -363,7 +235,6 @@
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
-          if (this.editedItem.format === 'video') this.editedItem.resorce = this.editedItem.resource.toString().split('').reverse().join('').slice(0, 11).split('').reverse().join('')
           this.desserts.push(this.editedItem)
         }
         this.close()
@@ -382,23 +253,6 @@
           this.editedIndex = -1
         })
       },
-      selectFormat (val) {
-        this.editedItem.format = val
-        this.editedItem.resource = null
-      },
     },
   }
 </script>
-
-<style>
-  /* This is for documentation purposes and will not be needed in your application */
-  #create .v-speed-dial {
-    position: absolute;
-    top: 20%;
-    left: 10;
-  }
-
-  #create .v-btn--floating {
-    position: relative;
-  }
-</style>

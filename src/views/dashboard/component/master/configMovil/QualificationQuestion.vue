@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Publicaciones
+              Preguntas de calificación
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite dar de alta publicaciones en el sitio web
+              Permite administrar las preguntas que se haran cuando el usuario califique la aplicación móvil
             </div>
           </v-col>
         </v-row>
@@ -34,30 +34,12 @@
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
-      <v-card-title>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Buscar publicación"
-          single-line
-          hide-details
-        />
-      </v-card-title>
       <v-card-text>
         <v-data-table
           :headers="headers"
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
-          <!-- <template v-slot:item.descripcion="{ item }">
-            <div v-html="item.descripcion"/>
-          </template> -->
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -98,17 +80,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -117,39 +88,13 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <!-- <v-col
-                    cols="12"
-                  >
-                    <v-switch
-                      v-model="editedItem.viewPublication"
-                      inset
-                      label="¿Habilitar?"
-                    />
-                  </v-col> -->
                 <v-col
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Titulo"
+                    v-model="editedItem.question"
+                    label="Nombre"
                     outlined
-                  />
-                </v-col>
-                <!-- <v-col
-                    cols="12"
-                  >
-                    <base-preview-image
-                      imagen="imagen"
-                      @imagen="imagen = $event"
-                    />
-                  </v-col> -->
-                <v-col
-                  cols="12"
-                >
-                  <quill-editor
-                    ref="myTextEditor"
-                    v-model="editedItem.descripcion"
-                    :config="editorOption"
                   />
                 </v-col>
               </v-row>
@@ -193,7 +138,7 @@
               Cancelar
             </v-btn>
             <v-btn
-              color="pink"
+              color="pinck"
               text
               @click="deleteItemConfirm"
             >
@@ -208,25 +153,9 @@
 </template>
 
 <script>
-  import { quillEditor } from 'vue-quill-editor'
-  import 'quill/dist/quill.js'
   export default {
-    filters: {
-      filterDescription: function (val) {
-        var description = val.length > 45 ? val.slice(0, 45) + '...' : val
-        return description
-      },
-    },
-    components: {
-      quillEditor,
-    },
     data () {
       return {
-        content: 'esta es una demostración simple',
-        editorOption: {
-          theme: 'bubble',
-          placeholder: 'Agrege el contenido de la publicación...',
-        },
         tab: null,
         search: '',
         dialog: false,
@@ -235,18 +164,8 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Titulo',
-            value: 'nombre',
-          },
-          {
-
-            text: 'Fecha',
-            value: 'fecha',
-          },
-          {
-
-            text: 'Responsable',
-            value: 'responsable',
+            text: 'Pregunta',
+            value: 'question',
           },
           {
             text: 'Acción',
@@ -257,37 +176,20 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
-            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores? In, temporibus labore dolorem veniam consequatur, error aut placeat quam quisquam animi rem, aliquid eaque reprehenderit vitae. Provident, deleniti. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur accusamus quod, libero illo laboriosam molestias, quis a sit cum optio numquam, explicabo blanditiis sunt sapiente nulla ea iste voluptatem quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, doloremque laboriosam distinctio quo, aliquam eligendi dignissimos harum animi officiis nesciunt accusantium at voluptas minima ullam nihil atque expedita aut odio!',
-            viewPublication: false,
-            fecha: '30/03/2021',
-            responsable: 'Jhon Contreras',
-          },
-          {
-            image: '',
-            nombre: 'CUidado de heridas',
-            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores? In, temporibus labore dolorem veniam consequatur, error aut placeat quam quisquam animi rem, aliquid eaque reprehenderit vitae. Provident, deleniti. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur accusamus quod, libero illo laboriosam molestias, quis a sit cum optio numquam, explicabo blanditiis sunt sapiente nulla ea iste voluptatem quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, doloremque laboriosam distinctio quo, aliquam eligendi dignissimos harum animi officiis nesciunt accusantium at voluptas minima ullam nihil atque expedita aut odio!',
-            viewPublication: true,
-            fecha: '30/03/2021',
-            responsable: 'Jhon Contreras',
+            question: '¿Esta conforme con el control que le ofrece la aplición para su diabetes?',
           },
         ],
         editedItem: {
-          nombre: '',
-          descripcion: '',
-          viewPublication: false,
+          question: '',
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
-          viewPublication: false,
+          question: '',
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar publicación' : 'Editar  publicación'
+        return this.editedIndex === -1 ? 'Agregar pregunta' : 'Editar pregunta'
       },
     },
     watch: {
@@ -301,7 +203,6 @@
     methods: {
       deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
-      Miembros de la familia por grupos de edad
+      2. Miembros de la familia por grupos de edad
     </div>
     <div
       class="text-end"
@@ -72,9 +72,9 @@
           <template v-slot:item.age="{ item }">
             {{ item.age | ageFormat }}
           </template>
-          <template v-slot:item.accion="{ item }">
+          <!-- <template v-slot:item.accion="{ item }">
             {{ item.groupAge.name }}
-          </template>
+          </template> -->
           <template v-slot:item.accion="{ item }">
             <span class="d-none">{{ item.value }}</span>
             <v-btn
@@ -919,7 +919,7 @@
       </v-card>
     </v-dialog>
     <div class="text-center text-h4 font-weight-bold my-6 blue--text">
-      Mortalidad Familiar
+      3. Mortalidad Familiar
     </div>
     <div
       class="text-end"
@@ -950,6 +950,37 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <div class="text-center text-h4 font-weight-bold my-6 blue--text">
+      4. Responsable del llenado
+    </div>
+    <v-card-text>
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-text-field
+            label="Nombres y apellidos"
+            dense
+            value="Ali Ferrer"
+            outlined
+            disabled
+          />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-text-field
+            label="Código"
+            value="CSA01"
+            dense
+            outlined
+            disabled
+          />
+        </v-col>
+      </v-row>
+    </v-card-text>
     <v-dialog
       v-model="dialog2"
       max-width="700px"

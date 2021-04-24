@@ -17,22 +17,13 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Publicaciones
+              Configuración de publicaciones
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite dar de alta publicaciones en el sitio web
+              Permite configurar las publicaciones agregadas y asignarles recursos multimedias
             </div>
           </v-col>
         </v-row>
-        <v-btn
-          absolute
-          fab
-          right
-          color="secondary"
-          @click="dialog = true"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
       </template>
       <v-card-title>
         <v-text-field
@@ -49,15 +40,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
-          <!-- <template v-slot:item.descripcion="{ item }">
-            <div v-html="item.descripcion"/>
-          </template> -->
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -75,22 +57,6 @@
               </template>
               <span>Editar</span>
             </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  x-small
-                  color="pink"
-                  v-bind="attrs"
-                  class="ml-2"
-                  v-on="on"
-                  @click="deleteItem(item)"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Eliminar</span>
-            </v-tooltip>
           </template>
         </v-data-table>
       </v-card-text>
@@ -98,58 +64,39 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
-            <span class="text-h5">{{ formTitle }}</span>
+            <span class="text-h5">Configurar publicación</span>
           </v-card-title>
 
           <v-card-text>
             <v-container>
               <v-row>
-                <!-- <v-col
-                    cols="12"
-                  >
-                    <v-switch
-                      v-model="editedItem.viewPublication"
-                      inset
-                      label="¿Habilitar?"
-                    />
-                  </v-col> -->
+                <v-text-field
+                  v-model="editedItem.name"
+                  label="Titulo de la publicación"
+                  outlined
+                  dense
+                  disabled
+                />
                 <v-col
                   cols="12"
                 >
-                  <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Titulo"
-                    outlined
+                  <v-switch
+                    v-model="editedItem.viewPublication"
+                    inset
+                    label="¿Habilitar?"
                   />
                 </v-col>
-                <!-- <v-col
-                    cols="12"
-                  >
-                    <base-preview-image
-                      imagen="imagen"
-                      @imagen="imagen = $event"
-                    />
-                  </v-col> -->
                 <v-col
                   cols="12"
                 >
-                  <quill-editor
-                    ref="myTextEditor"
-                    v-model="editedItem.descripcion"
-                    :config="editorOption"
+                  <v-select
+                    v-model="editedItem.resource"
+                    label="Seleccione los recursos multimedias"
+                    outlined
+                    :items="resource"
+                    multiple
                   />
                 </v-col>
               </v-row>
@@ -208,17 +155,12 @@
 </template>
 
 <script>
-  import { quillEditor } from 'vue-quill-editor'
-  import 'quill/dist/quill.js'
   export default {
     filters: {
       filterDescription: function (val) {
         var description = val.length > 45 ? val.slice(0, 45) + '...' : val
         return description
       },
-    },
-    components: {
-      quillEditor,
     },
     data () {
       return {
@@ -235,18 +177,12 @@
         editedIndex: -1,
         headers: [
           {
-            text: 'Titulo',
-            value: 'nombre',
+            text: 'Nombre de la publicación',
+            value: 'name',
           },
           {
-
-            text: 'Fecha',
-            value: 'fecha',
-          },
-          {
-
-            text: 'Responsable',
-            value: 'responsable',
+            text: 'Estado',
+            value: 'viewPublication',
           },
           {
             text: 'Acción',
@@ -257,38 +193,38 @@
         ],
         desserts: [
           {
-            image: '',
-            nombre: 'Medicina alternativa',
+            name: 'Medicina alternativa',
             descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores? In, temporibus labore dolorem veniam consequatur, error aut placeat quam quisquam animi rem, aliquid eaque reprehenderit vitae. Provident, deleniti. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur accusamus quod, libero illo laboriosam molestias, quis a sit cum optio numquam, explicabo blanditiis sunt sapiente nulla ea iste voluptatem quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, doloremque laboriosam distinctio quo, aliquam eligendi dignissimos harum animi officiis nesciunt accusantium at voluptas minima ullam nihil atque expedita aut odio!',
             viewPublication: false,
             fecha: '30/03/2021',
             responsable: 'Jhon Contreras',
+            resourse: [],
           },
           {
-            image: '',
-            nombre: 'CUidado de heridas',
+            name: 'CUidado de heridas',
             descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores? In, temporibus labore dolorem veniam consequatur, error aut placeat quam quisquam animi rem, aliquid eaque reprehenderit vitae. Provident, deleniti. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur accusamus quod, libero illo laboriosam molestias, quis a sit cum optio numquam, explicabo blanditiis sunt sapiente nulla ea iste voluptatem quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, doloremque laboriosam distinctio quo, aliquam eligendi dignissimos harum animi officiis nesciunt accusantium at voluptas minima ullam nihil atque expedita aut odio!',
             viewPublication: true,
             fecha: '30/03/2021',
             responsable: 'Jhon Contreras',
+            resourse: [],
           },
         ],
+        resource: ['Infogrcia de cuidados de heridadas', 'Video de medicina alternativa'],
         editedItem: {
-          nombre: '',
+          name: '',
           descripcion: '',
+          resource: [],
           viewPublication: false,
         },
         defaultItem: {
-          nombre: '',
+          name: '',
           descripcion: '',
+          resource: [],
           viewPublication: false,
         },
       }
     },
     computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'Agregar publicación' : 'Editar  publicación'
-      },
     },
     watch: {
       dialog (val) {

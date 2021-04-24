@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
-      Miembros de la familia por grupos de edad
+      1. Datos generales
     </div>
     <v-form
       ref="form"
@@ -268,14 +268,44 @@
             dense
             validate-on-blur
           />
-          <div
-            class="d-none"
-          >
-            {{ availableSteps }}
-          </div>
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.phone"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.phone')"
+            data-vv-name="phone"
+            outlined
+            label="Número de telefono"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.folderNumber"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.folderNumber')"
+            data-vv-name="folderNumber"
+            outlined
+            label="Número de carpeta"
+            dense
+            validate-on-blur
+          />
         </v-col>
       </v-row>
     </v-form>
+    <div
+      class="d-none"
+    >
+      {{ availableSteps }}
+    </div>
   </v-container>
 </template>
 
@@ -320,8 +350,10 @@
           numberFamily: 1,
           apple: 'ddd',
           neighborhood: 'ddd',
+          folderNumber: 12321,
           address: 'ddd',
           numberHouse: 22,
+          phone: '2222',
           idComunity: 1,
           idCulturalGroup: 1,
           nomberBoss: 'dd',
@@ -347,7 +379,9 @@
           this.editedItem.idCanton &&
           this.editedItem.parish &&
           this.editedItem.sector &&
+          this.editedItem.phone &&
           this.editedItem.numberFamily &&
+          this.editedItem.folderNumber &&
           this.editedItem.apple &&
           this.editedItem.neighborhood &&
           this.editedItem.address &&

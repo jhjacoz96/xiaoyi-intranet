@@ -6,8 +6,8 @@
     <v-card
       v-bind="$attrs"
       :color="hover ? 'secondary' : 'transparent'"
-      width="120"
-      height="100"
+      width="140"
+      height="110"
       class="text-center rounded-xl pa-3 ma-0"
       :elevation="hover ? 10 : 3"
       :class="{ 'on-hover': hover }"

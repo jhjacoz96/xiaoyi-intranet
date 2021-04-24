@@ -1,6 +1,5 @@
 <template>
   <base-material-card
-    class="v-card--wizard"
     elevation="12"
     color="primary"
   >
@@ -37,62 +36,61 @@
     <div class="text-center text-h4 grey--text font-weight-light mb-6">
       Esta información nos permitira conocer mas sobre ti
     </div> -->
-    <v-container fluid>
-      <div class="mb-6" />
-      <v-tabs
-        ref="tabs"
-        v-model="internalValue"
-        background-color="green lighten-5"
-        color="white"
-        slider-size="50"
-        show-arrows
+    <div class="mb-6" />
+    <v-tabs
+      ref="tabs"
+      v-model="internalValue"
+      background-color="green lighten-5"
+      color="white"
+      slider-size="50"
+      grow
+      show-arrows
+    >
+      <v-tabs-slider
+        class="mt-1"
+        color="primary"
+      />
+
+      <v-tab
+        v-for="(item, i) in items"
+        :key="i"
+        :ripple="false"
+        :disabled="!availableSteps.includes(i)"
       >
-        <v-tabs-slider
-          class="mt-1"
-          color="primary"
-        />
+        {{ item }}
+      </v-tab>
+    </v-tabs>
 
-        <v-tab
-          v-for="(item, i) in items"
-          :key="i"
-          :ripple="false"
-          :disabled="!availableSteps.includes(i)"
-        >
-          {{ item }}
-        </v-tab>
-      </v-tabs>
+    <div class="my-6" />
 
-      <div class="my-6" />
+    <v-card-text>
+      <v-tabs-items v-model="internalValue">
+        <slot />
+      </v-tabs-items>
+    </v-card-text>
 
-      <v-card-text>
-        <v-tabs-items v-model="internalValue">
-          <slot />
-        </v-tabs-items>
-      </v-card-text>
+    <v-card-actions class="pb-4 pa-4">
+      <v-btn
+        :disabled="internalValue === 0"
+        class="white--text"
+        color="grey darken-2"
+        min-width="125"
+        @click="$emit('click:prev')"
+      >
+        Anterior
+      </v-btn>
 
-      <v-card-actions class="pb-4 pa-4">
-        <v-btn
-          :disabled="internalValue === 0"
-          class="white--text"
-          color="grey darken-2"
-          min-width="125"
-          @click="$emit('click:prev')"
-        >
-          Anterior
-        </v-btn>
+      <v-spacer />
 
-        <v-spacer />
-
-        <v-btn
-          :disabled="!availableSteps.includes(internalValue + 1)"
-          color="primary"
-          min-width="100"
-          @click="$emit('click:next')"
-        >
-          {{ internalValue === items.length - 1 ? 'Guardar' : 'Siguiente' }}
-        </v-btn>
-      </v-card-actions>
-    </v-container>
+      <v-btn
+        :disabled="!availableSteps.includes(internalValue + 1)"
+        color="primary"
+        min-width="100"
+        @click="$emit('click:next')"
+      >
+        {{ internalValue === items.length - 1 ? 'Guardar' : 'Siguiente' }}
+      </v-btn>
+    </v-card-actions>
   </base-material-card>
 </template>
 

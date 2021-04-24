@@ -9,12 +9,14 @@
           <base-item-master
             title="Configurar permisos"
             icon="mdi-36px mdi-security"
+            to="/intranet/configuracion-maestros/permisos"
           />
         </v-col>
         <v-col cols="3">
           <base-item-master
             title="Configurar usuarios"
             icon="mdi-36px mdi-security"
+            to="/intranet/configuracion-maestros/usuarios"
           />
         </v-col>
       </v-row>
