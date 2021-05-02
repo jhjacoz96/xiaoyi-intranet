@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
@@ -14,6 +15,7 @@ export default new Router({
     },
     {
       path: '/intranet',
+      meta: { requiresAuth: true },
       component: () => import('@/views/dashboard/Index'),
       children: [
         // Dashboard
@@ -405,3 +407,21 @@ export default new Router({
     },
   ],
 })
+
+router.beforeEach(async (to, from, next) => {
+  const routerProtected = await to.matched.some(record => record.meta.requiresAuth)
+  if (routerProtected) {
+    var authenticated1 = store.getters['auth/authenticatedGetter']
+    if (authenticated1) {
+      next()
+    } else {
+      next({
+        name: 'Login',
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

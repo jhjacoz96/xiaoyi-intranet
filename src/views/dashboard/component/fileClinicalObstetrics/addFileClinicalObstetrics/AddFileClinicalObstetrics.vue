@@ -11,27 +11,27 @@
       @click:prev="tab--"
     >
       <v-tab-item class="pb-12">
-        Datos generales
+        <add-basic-data @data="event($event)" />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        Antecedentes
+        <add-record @data="event($event)" />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        Datos obtetricos
+        <add-obstetric-data @data="event($event)" />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        Planificación de parto
+        <add-plan-birth @data="event($event)" />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        Parto
+        <add-birth @data="event($event)" />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        Purperio
+        <add-puerperium @data="event($event)" />
       </v-tab-item>
     </base-material-wizard>
   </v-container>
@@ -40,12 +40,15 @@
 <script>
   export default {
     name: 'DashboardFormsWizard',
+    components: {
+      AddBasicData: () => import('./section/AddBasicData'),
+      AddRecord: () => import('./section/AddRecord'),
+      AddObstetricData: () => import('./section/AddObstetricData'),
+      AddPlanBirth: () => import('./section/AddPlanBirth'),
+      AddBirth: () => import('./section/AddBirth'),
+      AddPuerperium: () => import('./section/AddPuerperium'),
+    },
     data: () => ({
-      address: '',
-      city: '',
-      state: '',
-      states: [],
-      e1: 1,
       step: [],
       street: '',
       tab: 0,
@@ -53,13 +56,12 @@
     }),
 
     computed: {
-      stringAccount () {
-        return this.account.join(',')
-      },
       scope () {
-        if (this.tab === 0) return 'basicos'
-        else if (this.tab === 1) return 'member'
-        return 'risks'
+        if (this.tab === 0) return 'general'
+        else if (this.tab === 1) return 'antecedents'
+        else if (this.tab === 2) return 'obstetricos'
+        else if (this.tab === 3) return 'planificacio'
+        return 'purperio'
       },
     },
 

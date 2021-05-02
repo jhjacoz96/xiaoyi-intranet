@@ -124,7 +124,7 @@
           v-model="selectedItem"
           color="primary"
         >
-          <v-list-item to="/">
+          <v-list-item @click="logout">
             <v-list-item-icon>
               <v-icon v-text="'mdi-lock'" />
             </v-list-item-icon>
@@ -143,7 +143,7 @@
   import { VHover, VListItem } from 'vuetify/lib'
 
   // Utilities
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState, mapMutations, mapActions } from 'vuex'
 
   export default {
     name: 'DashboardCoreAppBar',
@@ -200,6 +200,10 @@
       ...mapMutations({
         setDrawer: 'SET_DRAWER',
       }),
+      ...mapActions('auth', ['logoutAction']),
+      async logout () {
+        this.logoutAction()
+      },
     },
   }
 </script>

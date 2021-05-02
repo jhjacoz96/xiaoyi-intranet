@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <span class="bg" />
-    <v-content>
+    <v-main>
       <v-container
         class="fill-height"
         fluid
@@ -42,11 +42,9 @@
                     </template>
                   </v-img>
                 </v-card-text>
-                <v-text-title class="text-center">
-                  <div class="d-5">
-                    Inicia sesión con tus credencales
-                  </div>
-                </v-text-title>
+                <v-card-text class="text-center">
+                  Inicia sesión con tus credencales
+                </v-card-text>
                 <v-card-text>
                   <v-form
                     ref="form1"
@@ -54,6 +52,8 @@
                     lazy-validation
                   >
                     <v-text-field
+                      v-model="usuario.email"
+                      :rules="emailRules"
                       label="Correo electrónico"
                       rounded
                       dense
@@ -64,7 +64,8 @@
                       color="primary"
                     />
                     <v-text-field
-                      id="password"
+                      v-model="usuario.password"
+                      :rules="passwordRules"
                       filled
                       rounded
                       dense
@@ -88,9 +89,9 @@
                     rounded
                     class="elevation-4"
                     color="primary"
-                    :loading="loading"
                     :disabled="loading"
-                    @click="session"
+                    :loading="loading"
+                    @click="login()"
                   >
                     Iniciar sesión
                   </v-btn>
@@ -101,23 +102,56 @@
         </v-row>
         <base-alert />
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
 <script>
+  import { mapMutations, mapActions } from 'vuex'
   export default {
     data () {
       return {
+        valid1: false,
         show: false,
         loading: false,
+        usuario: {
+          email: '',
+          password: '',
+        },
+        emailRules: [
+          v => !!v || 'El correo es requerido',
+          v => /.+@.+/.test(v) || 'El correo no es valido',
+        ],
+        passwordRules: [
+          v => !!v || 'La contraseña es requerida',
+          v => (v || '').length >= 8 || 'Mínimo debe ser de 8 caracteres',
+        ],
       }
     },
     methods: {
-      session () {
+      ...mapMutations(['alert']),
+      ...mapActions('auth', ['loginAction']),
+      async login () {
         this.loading = true
-        setTimeout(() => (this.loading = false), 3000)
-        this.$router.push('/intranet/inicio')
+        if (this.$refs.form1.validate()) {
+          const serviceResponse = await this.loginAction(this.usuario)
+          if (serviceResponse.title === 'OK') {
+            this.loading = false
+            this.$router.push('/intranet/inicio').catch(() => {})
+          } else {
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+          this.loading = false
+        } else {
+          this.alert({
+            text: 'Campos incompletos',
+            color: 'warning',
+          })
+          this.loading = false
+        }
       },
     },
   }

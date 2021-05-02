@@ -34,9 +34,9 @@ export const apiHttp = async (method, endpoint, data, options = {}, loading = tr
 }
 
 function buildErrorMessage (error) {
-    console.error(error.response)
+    console.log(error.response)
     const errorResponse = {
-      ok: false,
+      ok: 'UNAUTHORIZED',
       message: {
         code: String,
         text: String,
@@ -54,7 +54,7 @@ function buildErrorMessage (error) {
       } else if (error.response.status === 405 || error.response.status === 406) {
         errorResponse.message.text = i18n.t('message.apiError405_406')
       } else errorResponse.message.text = error.response.data.message.text
-    errorResponse.ok = error.response.data.ok
+    errorResponse.ok = error.response.title
     errorResponse.message.text = error.response.data.message
     errorResponse.data = error.response.data
     return errorResponse

@@ -89,6 +89,8 @@
   // Utilities
   import {
     mapState,
+    mapMutations,
+    mapGetters,
   } from 'vuex'
 
   export default {
@@ -107,31 +109,37 @@
           icon: 'mdi-home',
           title: 'Incio',
           group: '',
+          can: 'home_access',
           to: '/intranet/inicio',
         },
         {
           icon: 'mdi-cog',
           title: 'Información inicial',
           group: '',
+          can: 'maestros',
           children: [
             {
               icon: 'mdi-file-cog-outline',
               title: 'Maestros',
+              can: 'master_access',
               to: 'intranet/maestros-basicos',
             },
             {
               icon: 'mdi-file-cog',
               title: 'Configuración de maestros',
+              can: 'configuration_master_access',
               to: 'intranet/configuracion',
             },
             {
               icon: 'mdi-application',
               title: 'Configuración del sítio web',
+              can: 'configuration_web_site_access',
               to: 'intranet/configuracion-web',
             },
             {
               icon: 'mdi-application',
               title: 'Configuración de la móvil',
+              can: 'configuration_mobile_access',
               to: 'intranet/configuracion-movil',
             },
           ],
@@ -140,21 +148,25 @@
           icon: 'mdi-file',
           title: 'Ficha familiar',
           group: '',
+          can: 'file_familiy_access',
           to: '/intranet/ficha-familiar',
         },
         {
           icon: 'mdi-file',
           title: 'Ficha Clínica',
           group: '',
+          can: 'file_clinical_access',
           children: [
             {
               icon: 'mdi-baby',
               title: 'Neonatología',
+              can: 'neonatology_access',
               to: 'intranet/ficha-clinica-neonatologia',
             },
             {
               icon: 'mdi-human-pregnant',
               title: 'Obstetricia',
+              can: 'obstetrics_access',
               to: 'intranet/ficha-clinica-obstetricia',
             },
           ],
@@ -162,17 +174,20 @@
         {
           icon: 'mdi-water',
           title: 'Pacientes diabeticos',
+          can: 'diabetes_control_access',
           group: '',
           to: '/intranet/control-diabetes',
         },
         {
           icon: 'mdi-account-voice',
           title: 'Atención al paciente',
-          group: '',
+          can: 'patient_care_access',
+          group: 'patient_care',
           children: [
             {
               icon: 'mdi-comment',
               title: 'Evaluar sugerencias',
+              can: 'evaluate_suggestion_access',
               to: 'intranet/atencion-paciente/evaluar-sugerencias',
             },
           ],
@@ -181,11 +196,13 @@
           icon: 'mdi-file',
           title: 'Reportes',
           group: '',
+          can: 'report_access',
           to: '/intranet/reportes',
         },
         {
           icon: 'mdi-file',
           title: 'Administración del sistema',
+          can: 'system_administration_access',
           group: '',
           to: '/intranet/adminsitracion-sistema',
         },
@@ -233,9 +250,10 @@
         ],
       },
     }),
-
     computed: {
       ...mapState(['barColor', 'barImage']),
+      ...mapGetters('auth', ['permissionsGetter']),
+      ...mapState('auth', ['permissions']),
       drawer: {
         get () {
           return this.$store.state.drawer
@@ -245,15 +263,19 @@
         },
       },
       computedItems () {
-        return this.items.map(this.mapItem)
+        return this.items.filter(this.filterItem).map(this.mapItem)
       },
     },
-
     methods: {
+      ...mapMutations('auth', ['can']),
+      filterItem (item) {
+        var access = this.permissionsGetter.includes(item.can)
+        return access
+      },
       mapItem (item) {
         return {
           ...item,
-          children: item.children ? item.children.map(this.mapItem) : undefined,
+          children: item.children ? item.children.filter(this.filterItem).map(this.mapItem) : undefined,
           title: this.$t(item.title),
         }
       },
