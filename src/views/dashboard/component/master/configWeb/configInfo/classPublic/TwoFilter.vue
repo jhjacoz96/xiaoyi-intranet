@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Clasificación de publicaciones
+              Segundo filtro de busqueda
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite clasificacificar las publicaciones
+              Permite agregar filtros de busqueda para las publicaciones
             </div>
           </v-col>
         </v-row>
@@ -40,28 +40,7 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
-            <!-- <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  color="info"
-                  x-small
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="enableType(item)"
-                >
-                  <v-icon>{{ item.viewType ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.viewType ? 'Mostrado' : 'Mostrar' }}</span>
-            </v-tooltip> -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -101,17 +80,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -123,29 +91,24 @@
                 <v-col
                   cols="12"
                 >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
+                    dense
                     outlined
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
-                  <v-textarea
-                    v-model="editedItem.descripcion"
-                    label="Descripción"
+                  <v-select
+                    v-model="editedItem.filter_one_publication_id"
+                    label="Primer filtro de busqueda"
                     outlined
-                    name="input-7-4"
+                    :items="filterOne"
+                    item-text="name"
+                    item-value="id"
+                    dense
                   />
                 </v-col>
               </v-row>
@@ -204,6 +167,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -213,14 +180,15 @@
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
-            text: 'Descripción',
-            value: 'descripcion',
+            text: 'Primer filtro de busqueda',
+            value: 'filter_one_publication_id.name',
           },
           {
             text: 'Acción',
@@ -229,34 +197,21 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            image: '',
-            nombre: 'Medicina alternativa',
-            descripcion: 'test descripcion',
-            viewType: false,
-          },
-          {
-            image: '',
-            nombre: 'CUidado de heridas',
-            descripcion: 'test descripcion',
-            viewType: true,
-          },
-        ],
+        filterOne: [],
+        desserts: [],
         editedItem: {
-          descripcion: '',
-          viewType: false,
+          name: '',
+          filter_one_publication_id: undefined,
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
-          viewType: false,
+          name: '',
+          filter_one_publication_id: undefined,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar Clasificación de publicación' : 'Editar Clasificación de publicación'
+        return this.editedIndex === -1 ? 'Agregar filtro de busqueda' : 'Editar filtro de busqueda'
       },
     },
     watch: {
@@ -267,38 +222,105 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+      this.listItemFilterOne()
+    },
     methods: {
-      //   enableType (item) {
-      //     const index = this.desserts.indexOf(item)
-      //     this.desserts[index].viewType = !item.viewType
-      //   },
-      deleteItem (item) {
+      ...mapActions('filterTwoPublication', ['filterTwoPublicationPostActions', 'filterTwoPublicationAllActions', 'filterTwoPublicationDeleteActions', 'filterTwoPublicationGetActions', 'filterTwoPublicationUpdateActions']),
+      ...mapActions('filterOnePublication', ['filterOnePublicationAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.filterTwoPublicationAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemFilterOne () {
+        const serviceResponse = await this.filterOnePublicationAllActions()
+        if (serviceResponse.ok) {
+          this.filterOne = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.filterTwoPublicationDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.filterTwoPublicationUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.filterTwoPublicationPostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -306,6 +328,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

@@ -31,14 +31,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.typeRisk="{ item }">
-            <v-template v-if="item.typeRisk">
-              {{ item.typeRisk }}
-            </v-template>
-            <v-template v-else>
-              Sin registro
-            </v-template>
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -86,10 +78,12 @@
                   cols="12"
                 >
                   <v-select
-                    v-model="editedItem.typeRisk"
+                    v-model="editedItem.risk_classification_id"
                     label="Tipo de riesgo"
                     dense
-                    :items="typeRisk"
+                    :items="riskClassification"
+                    item-value="id"
+                    item-text="name"
                     outlined
                   />
                 </v-col>
@@ -121,20 +115,21 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre del riesgo',
             value: 'name',
-          },
-          {
-            text: 'Tipo de riesgo',
-            value: 'typeRisk',
           },
           {
             text: 'Acción',
@@ -149,48 +144,80 @@
             typeRisk: undefined,
           },
         ],
-        typeRisk: ['Biológicos'],
+        riskClassification: [],
         editedItem: {
           name: '',
-          typeRisk: undefined,
+          risk_classification_id: undefined,
         },
         defaultItem: {
           name: '',
-          typeRisk: undefined,
+          risk_classification_id: undefined,
         },
       }
     },
+    created () {
+      this.listItem()
+      this.listItemRiskClassification()
+    },
     methods: {
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+      ...mapActions('risk', ['riskAllActions', 'riskGetActions', 'riskUpdateActions']),
+      ...mapActions('riskClassification', ['riskClassificationAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.riskAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async listItemRiskClassification () {
+        const serviceResponse = await this.riskClassificationAllActions()
+        if (serviceResponse.ok) {
+          this.riskClassification = serviceResponse.data
+          console.log(this.riskClassification)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        this.close()
+      async addItem () {
+        if (this.editedIndex > -1) {
+          console.log(this.editedItem)
+          const serviceResponse = await this.riskUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
-        })
-      },
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

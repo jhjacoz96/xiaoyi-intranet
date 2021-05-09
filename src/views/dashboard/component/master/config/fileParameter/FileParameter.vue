@@ -12,13 +12,13 @@
             to="/intranet/configuracion-maestros/medicamentos"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
             title="Configurar vías"
             icon="mdi-36px  mdi-needle"
             to="/intranet/configuracion-maestros/vias"
           />
-        </v-col>
+        </v-col> -->
       </v-row>
     </v-container>
     <v-subheader>

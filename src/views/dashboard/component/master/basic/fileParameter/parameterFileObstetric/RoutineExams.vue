@@ -103,7 +103,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                   />
@@ -112,7 +112,7 @@
                   cols="12"
                 >
                   <v-textarea
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     label="Descripción"
                     outlined
                     name="input-7-4"
@@ -174,6 +174,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -182,14 +186,15 @@
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -198,22 +203,13 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Hemograma/ Hto-Hb',
-            descripcion: 'descripción test',
-          },
-          {
-            nombre: 'Urocultivo y orina completa',
-            descripcion: 'descripción test',
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
+          name: '',
           descripcion: '',
         },
         defaultItem: {
-          nombre: '',
+          name: '',
           descripcion: '',
         },
       }
@@ -231,33 +227,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('examRutine', ['examRutinePostActions', 'examRutineAllActions', 'examRutineDeleteActions', 'examRutineGetActions', 'examRutineUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.examRutineAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.examRutineDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.examRutineUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.examRutinePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -265,6 +320,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

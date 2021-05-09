@@ -80,17 +80,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -102,7 +91,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                     dense
@@ -111,35 +100,16 @@
                 <!-- <v-col
                   cols="12"
                 >
-                  <v-select
-                    v-model="value"
-                    :items="items"
-                    item-text="nombre"
-                    item-value="id"
-                    chips
-                    label="Permisos"
-                    placeholder="Seleccione los permisos para este rol"
-                    multiple
-                    outlined
-                  />
-                </v-col> -->
-                <v-col
-                  cols="12"
-                >
                   <v-textarea
                     v-model="editedItem.descripcion"
                     label="Descripción"
                     outlined
                     name="input-7-4"
                   />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="3" />
+                </v-col> -->
               </v-row>
             </v-container>
           </v-card-text>
-          <v-btn />
           <v-card-actions>
             <v-spacer />
             <v-btn
@@ -192,6 +162,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -203,15 +177,7 @@
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
-          },
-          {
-            text: 'Descripción',
-            value: 'descripcion',
-          },
-          {
-            text: 'Ruta',
-            value: 'ruta',
+            value: 'name',
           },
           {
             text: 'Acción',
@@ -220,62 +186,12 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Configurar datos basicos',
-            descripcion: 'test descripcion',
-            ruta: '/intranet/configuracion-basica',
-            prermiso: [
-              {
-                nombre: 'Configuracion de Información',
-                ruta: '/intranet/configuracion-basica',
-                id: 1,
-              },
-              {
-                nombre: 'Gestión de ficha clínica de obtetricia',
-                ruta: '/intranet/ficha-clinica-obtetricia',
-                id: 2,
-              },
-            ],
-          },
-          {
-            nombre: 'Configurar sítio web',
-            descripcion: 'test descripcion',
-            ruta: '/intranet/configuracion-web',
-            permiso: [],
-          },
-        ],
-        items: [
-          {
-            nombre: 'Configuracion de Información',
-            ruta: '/intranet/configuracion-basica',
-            id: 1,
-          },
-          {
-            nombre: 'Gestión de ficha clínica de obtetricia',
-            ruta: '/intranet/ficha-clinica-obtetricia',
-            id: 2,
-          },
-          {
-            nombre: 'Gestión de ficha clínica de neonatologia',
-            ruta: '/intranet/ficha-clinica-obtetricia',
-            id: 3,
-          },
-          {
-            nombre: 'Gestión de ficha familiar',
-            ruta: '/intranet/ficha-familiar',
-            id: 4,
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
-          ruta: '',
+          name: '',
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
-          ruta: '',
+          name: '',
         },
       }
     },
@@ -292,34 +208,103 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('role', ['rolePostActions', 'roleAllActions', 'roleDeleteActions', 'roleGetActions', 'roleUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.roleAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async findCanton (val) {
+        const serviceResponse = await this.cantonFindActions(val)
+        if (serviceResponse.ok) {
+          this.canton = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.roleDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.roleUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.rolePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -327,6 +312,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

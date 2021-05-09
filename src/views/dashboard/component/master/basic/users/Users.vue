@@ -7,7 +7,7 @@
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Administrar usuarios"
+            title="Administrar empleados"
             icon="mdi-36px mdi-account-multiple"
             to="/intranet/configuracion-basica/usuarios"
           />

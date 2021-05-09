@@ -109,71 +109,21 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <!-- <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-select
-                    v-model="editedItem.tipoMedicamento.id"
-                    small
-                    label="Tipos de medicamentos"
-                    item-text="nombre"
-                    item-value="id"
-                    :items="tipoMedicamento"
-                    outlined
-                    dense
-                    @change="seletedMedicine"
-                  />
-                </v-col> -->
                 <v-col
                   cols="12"
-                  sm="6"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     dense
                     outlined
                   />
                 </v-col>
-                <!-- <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-select
-                    v-model="editedItem.tipoVia.id"
-                    small
-                    label="Tipos de vías"
-                    item-text="nombre"
-                    item-value="id"
-                    :items="tipoVia"
-                    outlined
-                    dense
-                    @change="seletedTypeVia"
-                  />
-                </v-col> -->
-                <!-- <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-select
-                    v-model="editedItem.via.id"
-                    :disabled="editedItem.disabledVia"
-                    small
-                    label="Vías"
-                    item-text="nombre"
-                    item-value="id"
-                    :items="editedItem.viasSelected"
-                    outlined
-                    dense
-                    @change="seletedVia"
-                  />
-                </v-col> -->
                 <v-col
                   cols="12"
                 >
                   <v-textarea
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     label="Descripción"
                     outlined
                     name="input-7-4"
@@ -235,6 +185,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -243,26 +197,15 @@
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
-          // {
-          //   text: 'Tipo medicamento',
-          //   value: 'tipoMedicamento',
-          // },
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
-          // {
-          //   text: 'Tipo de vía',
-          //   value: 'tipoVia',
-          // },
-          // {
-          //   text: 'Vía',
-          //   value: 'via',
-          // },
           {
             text: 'Descripción',
-            value: 'descripcion',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -271,107 +214,20 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Calcibón d',
-            descripcion: 'test descripcion',
-            tipoVia: {
-              nombre: 'Enteral',
-              id: 1,
-            },
-            via: {
-              nombre: 'Oral',
-              id: 1,
-            },
-            tipoMedicamento: {
-              nombre: 'Analgécicos',
-              id: 2,
-            },
-          },
-        ],
-        tipoVia: [
-          {
-            nombre: 'Entral',
-            id: 1,
-          },
-          {
-            nombre: 'Parenteral',
-            id: 2,
-          },
-        ],
-        via: [
-          {
-            nombre: 'Oral',
-            id: 1,
-            idTipoVia: 1,
-          },
-          {
-            nombre: 'Sublingual',
-            id: 2,
-            idTipoVia: 1,
-          },
-          {
-            nombre: 'Intradérmica',
-            id: 3,
-            idTipoVia: 2,
-          },
-          {
-            nombre: 'Subcutánea',
-            id: 4,
-            idTipoVia: 2,
-          },
-        ],
-        tipoMedicamento: [
-          {
-            nombre: 'Analgécicos',
-            id: 1,
-          },
-          {
-            nombre: 'Antibióticos',
-            id: 2,
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          disabledVia: true,
-          viasSelected: [],
-          tipoVia: {
-            nombre: '',
-            id: null,
-          },
-          via: {
-            nombre: '',
-            id: null,
-          },
-          tipoMedicamento: {
-            nombre: '',
-            id: null,
-          },
-          descripcion: '',
+          name: '',
+          description: '',
         },
         defaultItem: {
-          nombre: '',
-          disabledVia: true,
-          viasSelected: [],
-          tipoVia: {
-            nombre: '',
-            id: null,
-          },
-          via: {
-            nombre: '',
-            id: null,
-          },
-          tipoMedicamento: {
-            nombre: '',
-            id: null,
-          },
-          descripcion: '',
+          name: '',
+          description: '',
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar vía' : 'Editar vía'
+        return this.editedIndex === -1 ? 'Agregar medicamento' : 'Editar medicamento'
       },
     },
     watch: {
@@ -382,33 +238,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('medicine', ['medicinePostActions', 'medicineAllActions', 'medicineDeleteActions', 'medicineGetActions', 'medicineUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.medicineAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.medicineDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.medicineUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.medicinePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -416,23 +331,9 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
-      seletedMedicine (id) {
-        const tipoMedicamento = this.tipoMedicamento.find(item => item.id === id)
-        Object.assign(this.editedItem.tipoMedicamento, tipoMedicamento)
-      },
-      seletedTypeVia (id) {
-        const tipoVia = this.tipoVia.find(item => item.id === id)
-        Object.assign(this.editedItem.tipoVia, tipoVia)
-        this.editedItem.viasSelected = this.via.filter(item => item.idTipoVia === id)
-        this.editedItem.disabledVia = false
-      },
-      seletedVia (id) {
-        const via = this.editedItem.viasSelected.find(item => item.id === id)
-        Object.assign(this.editedItem.via, via)
-      },
-
     },
   }
 </script>

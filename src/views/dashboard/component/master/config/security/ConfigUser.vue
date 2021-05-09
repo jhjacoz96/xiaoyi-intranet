@@ -31,30 +31,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.rol="{ item }">
-            <v-template v-if="item.rol">
-              {{ item.rol }}
-            </v-template>
-            <v-template v-else>
-              Sin registro
-            </v-template>
-          </template>
-          <template v-slot:item.typeEmployee="{ item }">
-            <v-template v-if="item.typeEmployee">
-              {{ item.typeEmployee }}
-            </v-template>
-            <v-template v-else>
-              Sin registro
-            </v-template>
-          </template>
-          <template v-slot:item.specialty="{ item }">
-            <v-template v-if="item.specialty">
-              {{ item.specialty }}
-            </v-template>
-            <v-template v-else>
-              Sin registro
-            </v-template>
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -90,53 +66,37 @@
                 <v-col
                   cols="12"
                 >
-                  <v-text-field
-                    v-model="editedItem.name"
-                    label="Nombre del usuario"
-                    dense
-                    disabled
-                    outlined
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <v-text-field
-                    v-model="editedItem.ci"
-                    label="Cédula del usuario"
-                    dense
-                    disabled
-                    outlined
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
                   <v-select
-                    v-model="editedItem.rol"
+                    v-model="editedItem.role_id"
                     label="Rol"
                     outlined
                     :items="rol"
+                    item-text="name"
+                    item-value="name"
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
                   <v-select
-                    v-model="editedItem.typeEmployee"
+                    v-model="editedItem.type_employee_id"
                     label="Tipo de empleado"
                     outlined
                     :items="typeEmployee"
+                    item-text="name"
+                    item-value="id"
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
                   <v-select
-                    v-model="editedItem.specialty"
+                    v-model="editedItem.specialty_id"
                     label="Especialidad"
                     outlined
                     :items="specialty"
+                    item-text="name"
+                    item-value="id"
                   />
                 </v-col>
               </v-row>
@@ -167,12 +127,17 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre y apellido',
@@ -180,19 +145,7 @@
           },
           {
             text: 'Cédula',
-            value: 'ci',
-          },
-          {
-            text: 'Tipo de empleado',
-            value: 'typeEmployee',
-          },
-          {
-            text: 'Especialidad',
-            value: 'specialty',
-          },
-          {
-            text: 'Rol',
-            value: 'rol',
+            value: 'document',
           },
           {
             text: 'Acción',
@@ -201,68 +154,128 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            name: 'Asdrubal Gutierrez',
-            ci: '26378059',
-            typeEmployee: 'Director',
-            specialty: 'Pediatra',
-          },
-          {
-            name: 'Micaela Gutierrez',
-            ci: '26378059',
-            typeEmployee: 'Doctora',
-            specialty: undefined,
-          },
-          {
-            name: 'Marisol Gutierrez',
-            ci: '26378059',
-            typeEmployee: 'Enfermera',
-            specialty: undefined,
-          },
-        ],
-        typeEmployee: ['Enfermera', 'doctor', 'Director', 'Secreataria'],
-        rol: ['Enfermera', 'Doctor', 'Administrdor', 'Pasante'],
-        specialty: ['Pediatra', 'Neonatología', 'Obstetricia'],
+        desserts: [],
+        typeEmployee: [],
+        rol: [],
+        specialty: [],
         editedItem: {
-          name: '',
-          typeEmployee: undefined,
-          rol: undefined,
-          especialidad: undefined,
+          id: undefined,
+          type_employee_id: undefined,
+          role_id: undefined,
+          specialty_id: undefined,
+        },
+        defaultItem: {
+          id: undefined,
+          type_employee_id: undefined,
+          role_id: undefined,
+          specialty_id: undefined,
         },
       }
     },
+    created () {
+      this.listItem()
+      this.listItemRole()
+      this.listItemTypeEmployee()
+      this.listItemSpecialty()
+    },
     methods: {
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+      ...mapActions('employee', ['employeeGetActions', 'employeeAllActions', 'employeeUpdateActions']),
+      ...mapActions('role', ['roleGetActions', 'roleAllActions']),
+      ...mapActions('typeEmployee', ['typeEmployeeAllActions']),
+      ...mapActions('specialty', ['specialtyAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.employeeAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+          console.log(this.desserts)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async listItemRole () {
+        const serviceResponse = await this.roleAllActions()
+        if (serviceResponse.ok) {
+          this.rol = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemTypeEmployee () {
+        const serviceResponse = await this.typeEmployeeAllActions()
+        if (serviceResponse.ok) {
+          this.typeEmployee = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemSpecialty () {
+        const serviceResponse = await this.specialtyAllActions()
+        if (serviceResponse.ok) {
+          this.specialty = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        this.close()
+      async addItem () {
+        if (this.editedIndex > -1) {
+          const serviceResponse = await this.employeeUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        } else {
+          const serviceResponse = await this.servicePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
-        })
-      },
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

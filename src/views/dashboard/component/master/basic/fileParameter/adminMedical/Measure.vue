@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Medida
+              Unidad de medida
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar las distintas para los medicamentos
+              Permite gestionar las distintas unidades de medidas para los medicamentos
             </div>
           </v-col>
         </v-row>
@@ -40,12 +40,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -86,17 +80,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -180,6 +163,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -188,14 +175,15 @@
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -204,29 +192,20 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Cucharada',
-            descripcion: 'test descripcion',
-          },
-          {
-            nombre: 'CC',
-            descripcion: 'test descripcion',
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
+          name: '',
+          description: '',
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
+          name: '',
+          description: '',
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar medida' : 'Editar '
+        return this.editedIndex === -1 ? 'Agregar unidad de medida' : 'Editar unidad de medida'
       },
     },
     watch: {
@@ -237,34 +216,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('measure', ['measurePostActions', 'measureAllActions', 'measureDeleteActions', 'measureGetActions', 'measureUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.measureAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.measureDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.measureUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.measurePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -272,6 +309,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

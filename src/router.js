@@ -46,14 +46,19 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/master/configWeb/ConfigWeb'),
         },
         {
-          name: 'Clasificación de publicaciones',
-          path: 'configuracion-web/clasificacion-publicaciones',
-          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ClassPublic'),
+          name: 'Primer filtro de busqueda',
+          path: 'configuracion-web/primer-filtro-busqueda',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/OneFilter'),
         },
         {
-          name: 'Publicaciones',
-          path: 'configuracion-web/publicaciones',
-          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Publication'),
+          name: 'Segundo filtro de busqueda',
+          path: 'configuracion-web/segundo-filtro-busqueda',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/TwoFilter'),
+        },
+        {
+          name: 'Tercer filtro de busqueda',
+          path: 'configuracion-web/tercer-filtro-busqueda',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ThreeFilter'),
         },
         {
           name: 'Publicaciones',

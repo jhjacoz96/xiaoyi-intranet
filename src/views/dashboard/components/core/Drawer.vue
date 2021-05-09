@@ -116,7 +116,7 @@
           icon: 'mdi-cog',
           title: 'Información inicial',
           group: '',
-          can: 'maestros',
+          can: 'initial_information_access',
           children: [
             {
               icon: 'mdi-file-cog-outline',
@@ -173,7 +173,7 @@
         },
         {
           icon: 'mdi-water',
-          title: 'Pacientes diabeticos',
+          title: 'Control de diabéticos',
           can: 'diabetes_control_access',
           group: '',
           to: '/intranet/control-diabetes',
@@ -237,23 +237,26 @@
         //   to: '/intranet/components/notifications',
         // },
       ],
-      profile: {
-        avatar: true,
-        title: 'Ali Ferrer',
-        group: '',
-        children: [
-          {
-            to: 'intranet/perfil',
-            title: 'Perfil',
-            icon: 'mdi-account',
-          },
-        ],
-      },
     }),
     computed: {
       ...mapState(['barColor', 'barImage']),
       ...mapGetters('auth', ['permissionsGetter']),
-      ...mapState('auth', ['permissions']),
+      ...mapState('auth', ['permissions', 'user']),
+      profile () {
+        console.log(this.user)
+        return {
+          avatar: true,
+          title: this.user.employee.name,
+          group: '',
+          children: [
+            {
+              to: 'intranet/perfil',
+              title: 'Perfil',
+              icon: 'mdi-account',
+            },
+          ],
+        }
+      },
       drawer: {
         get () {
           return this.$store.state.drawer

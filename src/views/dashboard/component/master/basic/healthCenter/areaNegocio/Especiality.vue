@@ -40,12 +40,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -109,7 +103,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                   />
@@ -118,18 +112,10 @@
                   cols="12"
                 >
                   <v-textarea
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     label="Descripción"
                     outlined
                     name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <base-preview-image
-                    imagen="imagen"
-                    @imagen="imagen = $event"
                   />
                 </v-col>
               </v-row>
@@ -188,28 +174,26 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         dialogDelete: false,
-        imagen: null,
+        editedId: undefined,
         editedIndex: -1,
         headers: [
           {
-            text: 'Imagen',
-            align: 'center',
-            sortable: false,
-            value: 'imagen',
-          },
-          {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -218,27 +202,14 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            image: '',
-            nombre: 'Neonatología',
-            descripcion: 'test descripcion',
-          },
-          {
-            image: '',
-            nombre: 'Obtetrícia',
-            descripcion: 'test descripcion',
-          },
-        ],
+        desserts: [],
         editedItem: {
-          image: '',
-          nombre: '',
-          descripcion: '',
+          name: '',
+          description: '',
         },
         defaultItem: {
-          image: '',
-          nombre: '',
-          descripcion: '',
+          name: '',
+          description: '',
         },
       }
     },
@@ -255,34 +226,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('specialty', ['specialtyPostActions', 'specialtyAllActions', 'specialtyDeleteActions', 'specialtyGetActions', 'specialtyUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const specialtyResponse = await this.specialtyAllActions()
+        if (specialtyResponse.ok) {
+          this.desserts = specialtyResponse.data
+        } else {
+          this.alert({
+            text: specialtyResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const specialtyResponse = await this.specialtyDeleteActions(this.editedId)
+        if (specialtyResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: specialtyResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: specialtyResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const specialtyResponse = await this.specialtyUpdateActions(this.editedItem)
+          if (specialtyResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: specialtyResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: specialtyResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const specialtyResponse = await this.specialtyPostActions(this.editedItem)
+          if (specialtyResponse.ok) {
+            this.desserts.push(specialtyResponse.data)
+            this.close()
+            this.alert({
+              text: specialtyResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: specialtyResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -290,6 +319,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

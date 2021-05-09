@@ -112,7 +112,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nivel de riesgo"
                     dense
                     outlined
@@ -121,7 +121,7 @@
                 <v-col cols="12">
                   <label class="font-weight-light text-h5">Indique el rango </label>
                   <v-range-slider
-                    v-model="editedItem.rango"
+                    v-model="editedItem.rank"
                     :max="max"
                     :min="min"
                     hide-details
@@ -129,24 +129,24 @@
                   >
                     <template v-slot:prepend>
                       <v-text-field
-                        :value="editedItem.rango[0]"
+                        :value="editedItem.rank[0]"
                         class="mt-0 pt-0"
                         hide-details
                         single-line
                         type="number"
                         style="width: 60px"
-                        @change="$set(editedItem.rango, 0, $event)"
+                        @change="$set(editedItem.rank, 0, $event)"
                       />
                     </template>
                     <template v-slot:append>
                       <v-text-field
-                        :value="editedItem.rango[1]"
+                        :value="editedItem.rank[1]"
                         class="mt-0 pt-0"
                         hide-details
                         single-line
                         type="number"
                         style="width: 60px"
-                        @change="$set(editedItem.rango, 1, $event)"
+                        @change="$set(editedItem.rank, 1, $event)"
                       />
                     </template>
                   </v-range-slider>
@@ -162,16 +162,6 @@
                     hide-mode-switch
                     hide-canvas
                     mode="hexa"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <v-textarea
-                    v-model="editedItem.descripcion"
-                    label="Descripción"
-                    outlined
-                    name="input-7-4"
                   />
                 </v-col>
               </v-row>
@@ -230,6 +220,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -239,22 +233,15 @@
         min: 0,
         dialogDelete: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
-          },
-          {
-            text: 'Rango',
-            value: 'rango',
+            value: 'name',
           },
           {
             text: 'Color',
             value: 'color',
-          },
-          {
-            text: 'Descripción',
-            value: 'descripcion',
           },
           {
             text: 'Acción',
@@ -263,29 +250,16 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Sin riesgo',
-            descripcion: 'test descripcion',
-            rango: [0, 0],
-          },
-          {
-            nombre: 'Riesgo bajo',
-            descripcion: 'test descripcion',
-            rango: [1, 14],
-          },
-        ],
+        desserts: [],
         editedItem: {
           color: '',
-          nombre: '',
-          descripcion: '',
-          rango: [0, 0],
+          name: '',
+          rank: [0, 0],
         },
         defaultItem: {
-          nombre: '',
+          name: '',
           color: '',
-          descripcion: '',
-          rango: [0, 0],
+          rank: [0, 0],
         },
       }
     },
@@ -302,33 +276,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('levelTotal', ['levelTotalPostActions', 'levelTotalAllActions', 'levelTotalDeleteActions', 'levelTotalGetActions', 'levelTotalUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.levelTotalAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data.map(this.mapArray)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.levelTotalDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.levelTotalUpdateActions(this.mapString(this.editedItem))
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.levelTotalPostActions(this.mapString(this.editedItem))
+          if (serviceResponse.ok) {
+            this.desserts.push(this.mapArray(serviceResponse.data))
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -336,7 +369,22 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
+      },
+      mapArray (item) {
+        return {
+          name: item.name,
+          color: item.color,
+          rank: JSON.parse(item.rank),
+        }
+      },
+      mapString (item) {
+        return {
+          name: item.name,
+          color: item.color,
+          rank: JSON.stringify(item.rank),
+        }
       },
     },
   }

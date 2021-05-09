@@ -86,17 +86,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -109,7 +98,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                   />
@@ -117,10 +106,15 @@
                 <v-col
                   cols="12"
                 >
-                  <v-text-field
+                  <v-subheader class="pl-0">
+                    Valor
+                  </v-subheader>
+                  <v-slider
                     v-model="editedItem.valor"
-                    label="Nombre"
-                    outlined
+                    :thumb-size="24"
+                    max="15"
+                    min="0"
+                    :thumb-label="true"
                   />
                 </v-col>
                 <v-col
@@ -192,6 +186,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -200,14 +198,15 @@
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Valor',
-            value: 'valor',
+            value: 'value',
           },
           {
             text: 'Color',
@@ -220,26 +219,15 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Sin riesgo',
-            valor: 0,
-            color: '',
-          },
-          {
-            nombre: 'leve',
-            valor: 1,
-            color: '',
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
+          name: '',
           color: '',
-          valor: 0,
+          value: 0,
         },
         defaultItem: {
-          nombre: '',
-          valor: 0,
+          name: '',
+          value: 0,
           color: '',
         },
       }
@@ -257,33 +245,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('levelRisk', ['levelRiskPostActions', 'levelRiskAllActions', 'levelRiskDeleteActions', 'levelRiskGetActions', 'levelRiskUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.levelRiskAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.levelRiskDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.levelRiskUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.levelRiskPostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -291,6 +338,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

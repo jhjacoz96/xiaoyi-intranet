@@ -40,9 +40,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.descripcion="{ item }">
-            {{ item.descripcion | filterDescription }}
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -101,28 +98,30 @@
 
           <v-card-text>
             <v-container>
-              <v-row>
-                <v-col
-                  cols="12"
-                >
-                  <v-text-field
-                    v-model="editedItem.nombre"
-                    dense
-                    outlined
-                    label="Nombre"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <v-text-field
-                    v-model="editedItem.descripcion"
-                    dense
-                    outlined
-                    label="Descripción"
-                  />
-                </v-col>
-              </v-row>
+              <v-form>
+                <v-row>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-text-field
+                      v-model="editedItem.name"
+                      dense
+                      outlined
+                      label="name"
+                    />
+                  </v-col>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-text-field
+                      v-model="editedItem.code"
+                      dense
+                      outlined
+                      label="Código"
+                    />
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-container>
           </v-card-text>
 
@@ -178,32 +177,27 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
-    filters: {
-      filterDescription: function (val) {
-        var description = val.length > 45 ? val.slice(0, 45) + '...' : val
-        return description
-      },
-    },
     data () {
       return {
         search: '',
         dialog: false,
         dialogDelete: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
-          //   {
-          //     text: 'Descripción',
-          //     value: 'descripcion',
-          //   },
           {
 
-            text: 'Descripción',
-            value: 'descripcion',
+            text: 'Código',
+            value: 'code',
           },
           {
             text: 'Acción',
@@ -212,23 +206,16 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'MSP',
-            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, !',
-          },
-          {
-            nombre: 'Polícia',
-            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores?!',
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
+          id: undefined,
+          name: '',
+          code: '',
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
+          id: undefined,
+          name: '',
+          code: '',
         },
       }
     },
@@ -245,34 +232,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('institution', ['institutionPostActions', 'institutionAllActions', 'institutionDeleteActions', 'institutionGetActions', 'institutionUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.institutionAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.institutionDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.institutionUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.institutionPostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -280,6 +325,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

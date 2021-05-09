@@ -5,11 +5,18 @@
     </v-subheader>
     <v-container fluid>
       <v-row>
-        <v-col cols="3">
+        <!--<v-col cols="3">
           <base-item-master
             title="Tipo de medicamento"
             icon="mdi-36px mdi-36px mdi-flask"
             to="/intranet/configuracion-basica/tipo-medicamento"
+          />
+        </v-col> -->
+        <v-col cols="3">
+          <base-item-master
+            title="Presentación"
+            icon="mdi-36px mdi-36px mdi-flask-round-bottom"
+            to="/intranet/configuracion-basica/presentacion"
           />
         </v-col>
         <v-col cols="3">
@@ -20,13 +27,6 @@
           />
         </v-col>
         <!-- <v-col cols="3">
-          <base-item-master
-            title="Presentación"
-            icon="mdi-36px mdi-36px mdi-flask-round-bottom"
-            to="/intranet/configuracion-basica/presentacion"
-          />
-        </v-col> -->
-        <v-col cols="3">
           <base-item-master
             title="Tipo de vías"
             icon="mdi-36px  mdi-needle"
@@ -39,7 +39,7 @@
             icon="mdi-36px mdi-needle"
             to="/intranet/configuracion-basica/vias"
           />
-        </v-col>
+        </v-col> -->
         <v-col cols="3">
           <base-item-master
             title="Frecuencia"
@@ -173,13 +173,13 @@
             to="/intranet/configuracion-basica/examenes-rutinarios"
           />
         </v-col>
-        <v-col cols="3">
+        <!-- <v-col cols="3">
           <base-item-master
             title="Semana de gestción"
             icon="mdi-36px mdi-36px mdi-human-pregnant"
             to="/intranet/configuracion-basica/semana-gestacion"
           />
-        </v-col>
+        </v-col> -->
         <!-- <v-col cols="3">
           <base-item-master
             title="Cacteristicas del parto"

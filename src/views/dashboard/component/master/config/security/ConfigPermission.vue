@@ -75,7 +75,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
+              <!-- <v-row>
                 <v-col
                   v-for="(item, index) in permission"
                   :key="index"
@@ -85,6 +85,23 @@
                     v-model="editedItem.permission"
                     :label="item"
                     :value="item"
+                  />
+                </v-col>
+              </v-row> -->
+              <v-row>
+                <v-col
+                  cols="12"
+                >
+                  <v-autocomplete
+                    v-model="editedItem.permissions"
+                    label="Permisos"
+                    item-value="name"
+                    item-text="description"
+                    multiple
+                    chips
+                    :items="permissions"
+                    :filter="permissionFilter"
+                    outlined
                   />
                 </v-col>
               </v-row>
@@ -115,12 +132,17 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Roles',
@@ -133,78 +155,102 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            name: 'Administrador',
-            permission: ['Salud mental', 'Fisioterapia'],
-          },
-          {
-            name: 'Doctor',
-            permission: [],
-          },
-          {
-            name: 'Enfermera',
-            permission: [],
-          },
-          {
-            name: 'Pasante',
-            permission: [],
-          },
-        ],
-        permission: [
-          'Maestos básicos',
-          'Crear ficha familiar',
-          'Seguimiento de ficha familiar',
-          'Actualizar ficha familiar',
-          'Actializar ficha clinica de obstetricia',
-          'Seguimiento de ficha clinica de obstetricia',
-          'Actualizar ficha clinica de neonatología',
-          'Seguimiento de ficha clinica de neonatología',
-          'Reportes',
-          'COntrol de pacientes diabéticos',
-        ],
+        desserts: [],
+        permissions: [],
         editedItem: {
           name: '',
-          acttivity: [],
+          permissions: [],
         },
         defaultItem: {
           name: '',
-          acttivity: [],
+          permissions: [],
         },
       }
     },
+    created () {
+      this.listItem()
+      this.listItemPermission()
+    },
     methods: {
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+      ...mapActions('role', ['roleGetActions', 'rolePermissionAllActions', 'roleAllActions', 'roleAssignPermissionActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.roleAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+          console.log(this.desserts)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async listItemPermission () {
+        const serviceResponse = await this.rolePermissionAllActions()
+        if (serviceResponse.ok) {
+          this.permissions = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        this.close()
+      async addItem () {
+        if (this.editedIndex > -1) {
+          console.log(this.editedItem)
+          const serviceResponse = await this.roleAssignPermissionActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        } else {
+          const serviceResponse = await this.servicePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
+      permissionFilter (item, queryText, itemText) {
+        const textOne = item.name.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        return textOne.indexOf(searchText) > -1
       },
     },
   }

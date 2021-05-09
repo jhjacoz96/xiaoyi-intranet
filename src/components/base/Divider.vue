@@ -17,7 +17,10 @@
     name: 'BaseDivider',
 
     props: {
-      color: String,
+      color: {
+        type: String,
+        default: 'primary',
+      },
       dense: Boolean,
       space: {
         type: [Number, String],

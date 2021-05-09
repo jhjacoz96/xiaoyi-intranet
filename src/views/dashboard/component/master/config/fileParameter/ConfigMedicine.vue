@@ -31,14 +31,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.typeMedicine="{ item }">
-            <v-template v-if="item.typeMedicine">
-              {{ item.typeMedicine }}
-            </v-template>
-            <v-template v-else>
-              Sin registro
-            </v-template>
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -86,10 +78,12 @@
                   cols="12"
                 >
                   <v-select
-                    v-model="editedItem.typeMedicine"
-                    label="Tipo de medicamento"
+                    v-model="editedItem.presentation_id"
+                    label="Presentación"
                     dense
-                    :items="typeMedicine"
+                    :items="presentations"
+                    item-text="name"
+                    item-value="id"
                     outlined
                   />
                 </v-col>
@@ -121,20 +115,21 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
             value: 'name',
-          },
-          {
-            text: 'Tipo de medicamento',
-            value: 'typeMedicine',
           },
           {
             text: 'Acción',
@@ -143,62 +138,95 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            name: 'Glucovance',
-            typeMedicine: undefined,
-          },
-          {
-            name: 'Janumet',
-            typeMedicine: undefined,
-          },
-          {
-            name: 'Hipoglucin',
-            typeMedicine: undefined,
-          },
-        ],
-        typeMedicine: ['Analgésicos', 'Antibióticos', 'Aines', 'Diuréticos'],
+        desserts: [],
+        presentations: [],
         editedItem: {
           name: '',
-          typeMedicine: undefined,
+          presentation_id: undefined,
         },
         defaultItem: {
           name: '',
-          typeMedicine: undefined,
+          presentation_id: undefined,
         },
       }
     },
+    created () {
+      this.listItem()
+      this.listItemPresentation()
+    },
     methods: {
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+      ...mapActions('medicine', ['medicineAllActions', 'medicineGetActions', 'medicineUpdateActions']),
+      ...mapActions('presentation', ['presentationAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.medicineAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async listItemPresentation () {
+        const serviceResponse = await this.presentationAllActions()
+        if (serviceResponse.ok) {
+          this.presentations = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        this.close()
+      async addItem () {
+        if (this.editedIndex > -1) {
+          const serviceResponse = await this.medicineUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        } else {
+          const serviceResponse = await this.servicePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
-        })
-      },
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

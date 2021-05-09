@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Administrar usuario
+              Administrar empleado
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite la administración los usuarios del sistems
+              Permite la administración de los empleados del centro de salud
             </div>
           </v-col>
         </v-row>
@@ -80,17 +80,6 @@
         v-model="dialog"
         max-width="600px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -98,43 +87,6 @@
 
           <v-card-text>
             <v-container>
-              <!-- <v-subheader>
-                Personal médico
-              </v-subheader>
-              <v-row>
-                <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-select
-                    v-model="editedItem.idTipoPersonal"
-                    small
-                    label="Tipos de personal médico"
-                    item-text="nombre"
-                    item-value="id"
-                    :items="tipoPersonal"
-                    outlined
-                    dense
-                    @change="showEspecialidad()"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-select
-                    v-show="editedItem.showEspecialidad"
-                    v-model="editedItem.idEspecialidad"
-                    small
-                    label="Tipos de especialidad"
-                    item-text="nombre"
-                    item-value="id"
-                    :items="especialidad"
-                    outlined
-                    dense
-                  />
-                </v-col>
-              </v-row> -->
               <v-subheader>
                 Datos personales
               </v-subheader>
@@ -144,7 +96,7 @@
                   sm="6"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     dense
                     outlined
                     label="Nombres"
@@ -154,68 +106,28 @@
                   cols="12"
                   sm="6"
                 >
-                  <v-text-field
-                    v-model="editedItem.apellido"
-                    dense
-                    outlined
-                    label="Apellidos"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                  sm="6"
-                >
                   <v-select
-                    v-model="editedItem.sexo"
+                    v-model="editedItem.gender_id"
                     small
-                    label="Sexo"
+                    label="Género"
                     item-text="nombre"
                     item-value="id"
-                    :items="sexo"
+                    :items="gender"
                     outlined
                     dense
                   />
-                </v-col>
-                <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-menu
-                    v-model="show2date"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="100px"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="editedItem.fechaNacimiento"
-                        label="Fecha de nacimiento"
-                        prepend-icon="mdi-calendar"
-                        outlined
-                        dense
-                        v-bind="attrs"
-                        v-on="on"
-                      />
-                    </template>
-                    <v-date-picker
-                      v-model="editedItem.fechaNacimiento"
-                      @input="showDate = false"
-                    />
-                  </v-menu>
                 </v-col>
                 <v-col
                   cols="6"
                   sm="3"
                 >
                   <v-select
-                    v-model="editedItem.idTipoDocumento"
+                    v-model="editedItem.type_document_id"
                     small
                     label="Tipo de documento"
                     item-text="nombre"
                     item-value="id"
-                    :items="tipoDocumento"
+                    :items="typeDocument"
                     outlined
                     dense
                   />
@@ -225,7 +137,7 @@
                   sm="3"
                 >
                   <v-text-field
-                    v-model="editedItem.cedula"
+                    v-model="editedItem.document"
                     dense
                     outlined
                     label="Cédula"
@@ -236,7 +148,7 @@
                   sm="6"
                 >
                   <v-text-field
-                    v-model="editedItem.telefono"
+                    v-model="editedItem.phone"
                     dense
                     outlined
                     label="Teléfono de contacto"
@@ -246,45 +158,55 @@
                   cols="12"
                   sm="6"
                 >
-                  <v-text-field
-                    v-model="editedItem.provincia"
-                    dense
-                    outlined
+                  <v-autocomplete
+                    v-model="editedItem.province_id"
+                    :items="province"
+                    :filter="provinceFilter"
+                    item-value="id"
+                    item-text="name"
                     label="Provincia"
+                    outlined
+                    dense
+                    @change="findCanton($event)"
                   />
                 </v-col>
                 <v-col
                   cols="12"
                   sm="6"
                 >
-                  <v-text-field
-                    v-model="editedItem.canton"
+                  <v-autocomplete
+                    v-model="editedItem.canton_id"
+                    label="Cantón"
+                    item-value="id"
+                    item-text="name"
+                    :items="canton"
+                    :filter="cantonFilter"
+                    :disabled="canton.length > 0 ? false : true"
                     dense
                     outlined
-                    label="Cantón"
                   />
                 </v-col>
                 <v-col
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.direccion"
+                    v-model="editedItem.address"
                     dense
                     outlined
                     label="Dirección de vivienda"
                   />
                 </v-col>
               </v-row>
-              <v-subheader>
+              <v-subheader v-if="editedIndex === -1">
                 Datos de usuario
               </v-subheader>
-              <v-row>
+              <v-row v-if="editedIndex === -1">
                 <v-col
                   cols="12"
                   sm="6"
                 >
                   <v-text-field
-                    v-model="editedItem.correo"
+                    v-model="editedItem.email"
                     dense
                     outlined
                     label="Correo electrónico"
@@ -306,7 +228,10 @@
                   />
                 </v-col> -->
               </v-row>
-              <div class="text-h6 font-weight-medium ">
+              <div
+                v-if="editedIndex === -1"
+                class="text-h6 font-weight-medium "
+              >
                 Una vez el usuario sea registrado, se le enviará una contraseña temporal a su correo. Está podrá ser modificada en su perfil
               </div>
             </v-container>
@@ -364,29 +289,26 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
-
-        showDate: false,
-        show2date: false,
         search: '',
         dialog: false,
         dialogDelete: false,
-        e6: 1,
+        editedId: undefined,
         editedIndex: -1,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Cédula',
-            value: 'cedula',
-          },
-          {
-            text: 'Correo electrónico',
-            value: 'correo',
+            value: 'document',
           },
           {
             text: 'Acción',
@@ -395,117 +317,38 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            Nombre: 'Jhon Jairo',
-            apellido: 'Contreras Diaz',
-            sexo: 'm',
-            cedula: '26378059',
-            fechaNacimiento: '13/10/1996',
-            telefono: '0414-9568372',
-            provincial: 'fefe',
-            canton: 'frfr',
-            direccion: 'av. las delicias',
-            correo: 'hola@test.com',
-            idTipoPersonal: 1,
-            idEspecialidad: 2,
-            idTipoDocumento: 1,
-            idRol: 1,
-          },
-        ],
-        especialidad: [
-          {
-            nombre: 'Pediatra',
-            id: 2,
-          },
-          {
-            nombre: 'Ginecólogo',
-            id: 1,
-          },
-        ],
-        sexo: [
-          {
-            nombre: 'Masculino',
-            id: 'm',
-          },
-          {
-            nombre: 'Femenino',
-            id: 'f',
-          },
-        ],
-        tipoPersonal: [
-          {
-            nombre: 'Médico',
-            id: 1,
-            especialidad: true,
-          },
-          {
-            nombre: 'Enfermera',
-            id: 2,
-            especialidad: false,
-          },
-        ],
-        rol: [
-          {
-            nombre: 'Personal medico',
-            id: 1,
-          },
-          {
-            nombre: 'Paciente',
-            id: 2,
-          },
-        ],
-        tipoDocumento: [
-          {
-            nombre: 'V',
-            id: 1,
-          },
-          {
-            nombre: 'E',
-            id: 2,
-          },
-        ],
+        desserts: [],
+        gender: [],
+        province: [],
+        canton: [],
+        typeDocument: [],
         editedItem: {
-          Nombre: '',
-          apellido: '',
-          sexo: '',
-          fechaNacimiento: '',
-          telefono: '',
-          provincial: '',
-          canton: '',
-          direccion: '',
-          correo: '',
-          idTipoPersonal: null,
-          showEspecialidad: false,
-          idEspecialidad: null,
-          idRol: null,
-          idTipoDocumento: null,
+          name: '',
+          phone: '',
+          document: '',
+          address: '',
+          gender_id: undefined,
+          canton_id: undefined,
+          province_id: undefined,
+          email: '',
+          type_document_id: undefined,
         },
         defaultItem: {
-          Nombre: '',
-          apellido: '',
-          sexo: '',
-          fechaNacimiento: '',
-          telefono: '',
-          provincial: '',
-          canton: '',
-          direccion: '',
-          correo: '',
-          idTipoPersonal: null,
-          idEspecialidad: null,
-          showEspecialidad: false,
-          idRol: null,
-          idTipoDocumento: null,
+          name: '',
+          phone: '',
+          document: '',
+          address: '',
+          gender_id: undefined,
+          canton_id: undefined,
+          province_id: undefined,
+          email: '',
+          type_document_id: undefined,
         },
       }
     },
     computed: {
       formTitle () {
         return this.editedIndex === -1 ? 'Agregar usuario' : 'Editar usuario'
-      },
-      d () {
-        const tipoPersonal = this.tipoPersonal.find(item => item.id === this.editedItem.idTipoPersonal)
-        return tipoPersonal.espedialidad
       },
     },
     watch: {
@@ -516,34 +359,142 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+      this.listItemGender()
+      this.listItemTypeDocument()
+      this.listProvince()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('employee', ['employeePostActions', 'employeeAllActions', 'employeeDeleteActions', 'employeeGetActions', 'employeeUpdateActions']),
+      ...mapActions('gender', ['genderAllActions']),
+      ...mapActions('zone', ['provinceAllActions', 'cantonFindActions']),
+      ...mapActions('typeDocument', ['typeDocumentAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.employeeAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemGender () {
+        const serviceResponse = await this.genderAllActions()
+        if (serviceResponse.ok) {
+          this.gender = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemTypeDocument () {
+        const serviceResponse = await this.typeDocumentAllActions()
+        if (serviceResponse.ok) {
+          this.typeDocument = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listProvince () {
+        const serviceResponse = await this.provinceAllActions()
+        if (serviceResponse.ok) {
+          this.province = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async findCanton (val) {
+        const serviceResponse = await this.cantonFindActions(val)
+        if (serviceResponse.ok) {
+          this.canton = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.employeeDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.employeeUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.employeePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -551,12 +502,18 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
-      showEspecialidad () {
-        const tipoPersonal = this.tipoPersonal.find(item => item.id === this.editedItem.idTipoPersonal)
-        this.editedItem.showEspecialidad = tipoPersonal.especialidad
-        if (!tipoPersonal.especialidad) this.editedItem.idEspecialidad = null
+      provinceFilter (item, queryText, itemText) {
+        const textOne = item.name.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        return textOne.indexOf(searchText) > -1
+      },
+      cantonFilter (item, queryText, itemText) {
+        const textOne = item.name.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        return textOne.indexOf(searchText) > -1
       },
     },
   }

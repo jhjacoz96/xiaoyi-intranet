@@ -14,13 +14,6 @@
         </v-col>
         <v-col cols="3">
           <base-item-master
-            title="Permisos"
-            icon="mdi-36px mdi-security"
-            to="/intranet/configuracion-basica/permisos"
-          />
-        </v-col>
-        <v-col cols="3">
-          <base-item-master
             title="Administrar usuarios"
             icon="mdi-36px mdi-account-multiple"
             to="/intranet/configuracion-basica/usuarios"

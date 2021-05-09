@@ -67,7 +67,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.name"
+                    v-model="editedItem.nombre"
                     label="Nombre"
                     dense
                     disabled
@@ -78,10 +78,12 @@
                   cols="12"
                 >
                   <v-select
-                    v-model="editedItem.activity"
+                    v-model="editedItem.activities"
                     label="Asignar actividades"
                     outlined
-                    :items="activity"
+                    :items="activities"
+                    item-value="id"
+                    item-text="name"
                     multiple
                   />
                 </v-col>
@@ -113,20 +115,25 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Servicio',
-            value: 'name',
+            value: 'nombre',
           },
           {
-            text: 'Activiades',
-            value: 'activity',
+            text: 'Actividades',
+            value: 'activities',
           },
           {
             text: 'Acción',
@@ -135,54 +142,100 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            name: 'Reabilitación',
-            activity: ['Salud mental', 'Fisioterapia'],
-          },
-          {
-            name: 'Emergencias',
-            activity: [],
-          },
-        ],
-        activity: ['Salud mental', 'Fisioterapia', 'Atención medica primaria'],
+        desserts: [],
+        activities: [],
         editedItem: {
-          name: '',
-          acttivity: [],
+          id: undefined,
+          descripcion: '',
+          nombre: '',
+          activities: [],
+        },
+        defaultItem: {
+          id: undefined,
+          descripcion: '',
+          nombre: '',
+          activities: [],
         },
       }
     },
+    created () {
+      this.listItem()
+      this.listItemActivity()
+    },
     methods: {
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+      ...mapActions('service', ['serviceAllActions', 'serviceGetActions', 'serviceAssignActivitiesActions']),
+      ...mapActions('activity', ['activityAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.serviceAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async listItemActivity () {
+        const serviceResponse = await this.activityAllActions()
+        if (serviceResponse.ok) {
+          this.activities = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        this.close()
+      async addItem () {
+        if (this.editedIndex > -1) {
+          console.log(this.editedItem)
+          const serviceResponse = await this.serviceAssignActivitiesActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        } else {
+          const serviceResponse = await this.servicePostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
-        })
-      },
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

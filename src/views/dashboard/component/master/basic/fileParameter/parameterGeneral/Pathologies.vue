@@ -46,22 +46,6 @@
                 <v-btn
                   fab
                   x-small
-                  :outlined="!item.capture"
-                  v-bind="attrs"
-                  class="ml-2"
-                  v-on="on"
-                  @click="capture(item)"
-                >
-                  <v-icon>mdi-bacteria</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ item.capture ? 'Pacientes asignados a lax aplicación móvil' : 'Asignar pacientes a la aplicación móvil' }}</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  x-small
                   color="warning"
                   v-bind="attrs"
                   class="ml-2"
@@ -96,17 +80,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -119,7 +92,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                   />
@@ -127,8 +100,18 @@
                 <v-col
                   cols="12"
                 >
+                  <v-switch
+                    v-model="editedItem.capture"
+                    label="¿Asignar pacientes a la aplicación móvil?"
+                    color="primary"
+                    hide-details
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                >
                   <v-textarea
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     label="Descripción"
                     outlined
                     name="input-7-4"
@@ -190,6 +173,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -198,14 +185,15 @@
         dialogDelete: false,
         imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -214,26 +202,15 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Diabetes',
-            descripcion: 'test descripcion',
-            capture: true,
-          },
-          {
-            nombre: 'Impertención',
-            descripcion: 'test descripcion',
-            capture: false,
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
+          name: '',
+          description: '',
           capture: false,
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
+          name: '',
+          description: '',
           capture: false,
         },
       }
@@ -251,33 +228,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('pathology', ['pathologyPostActions', 'pathologyAllActions', 'pathologyDeleteActions', 'pathologyGetActions', 'pathologyUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.pathologyAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.pathologyDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.pathologyUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.pathologyPostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -285,16 +321,8 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
-      },
-      capture (patpathologed) {
-        const habilited = this.desserts.find(item => item.capture === true)
-        if (habilited) {
-          const index = this.desserts.indexOf(habilited)
-          this.desserts[index].capture = false
-        }
-        const index1 = this.desserts.indexOf(patpathologed)
-        this.desserts[index1].capture = true
       },
     },
   }

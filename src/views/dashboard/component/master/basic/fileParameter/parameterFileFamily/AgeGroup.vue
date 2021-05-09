@@ -80,17 +80,6 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -103,7 +92,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     dense
                     outlined
@@ -113,7 +102,7 @@
                 <v-col cols="12">
                   <label class="font-weight-light text-h5">Indíque el rango de edades (años)</label>
                   <v-range-slider
-                    v-model="editedItem.rango"
+                    v-model="editedItem.rank"
                     :max="max"
                     :min="min"
                     hide-details
@@ -121,24 +110,24 @@
                   >
                     <template v-slot:prepend>
                       <v-text-field
-                        :value="editedItem.rango[0]"
+                        :value="editedItem.rank[0]"
                         class="mt-0 pt-0"
                         hide-details
                         single-line
                         type="number"
                         style="width: 60px"
-                        @change="$set(editedItem.rango, 0, $event)"
+                        @change="$set(editedItem.rank, 0, $event)"
                       />
                     </template>
                     <template v-slot:append>
                       <v-text-field
-                        :value="editedItem.rango[1]"
+                        :value="editedItem.rank[1]"
                         class="mt-0 pt-0"
                         hide-details
                         single-line
                         type="number"
                         style="width: 60px"
-                        @change="$set(editedItem.rango, 1, $event)"
+                        @change="$set(editedItem.rank, 1, $event)"
                       />
                     </template>
                   </v-range-slider>
@@ -147,7 +136,7 @@
                   cols="12"
                 >
                   <v-textarea
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     label="Descripción"
                     outlined
                     name="input-7-4"
@@ -209,6 +198,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -218,14 +211,15 @@
         min: 0,
         dialogDelete: false,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -234,27 +228,16 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Menor de 1 año',
-            descripcion: 'test descripcion',
-            rango: [0, 1],
-          },
-          {
-            nombre: 'Entre 2 y 10 años',
-            descripcion: 'test descripcion',
-            rango: [2, 10],
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
-          rango: [0, 0],
+          name: '',
+          description: '',
+          rank: [0, 0],
         },
         defaultItem: {
           nombre: '',
-          descripcion: '',
-          rango: [0, 0],
+          description: '',
+          rank: [0, 0],
         },
       }
     },
@@ -271,33 +254,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('groupAge', ['groupAgePostActions', 'groupAgeAllActions', 'groupAgeDeleteActions', 'groupAgeGetActions', 'groupAgeUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.groupAgeAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data.map(this.mapArray)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.groupAgeDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.groupAgeUpdateActions(this.mapString(this.editedItem))
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.groupAgePostActions(this.mapString(this.editedItem))
+          if (serviceResponse.ok) {
+            this.desserts.push(this.mapArray(serviceResponse.data))
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -305,22 +347,23 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
-      // validrango (val) {
-      //   if (val === '<') {
-      //     this.editedItem.rango[0] = '<'
-      //     this.editedItem.rango[1] = 0
-      //   }
-      //   if (val === '>') {
-      //     this.editedItem.rango[1] = '>'
-      //     this.editedItem.rango[0] = 0
-      //   }
-      //   if (val === ',') {
-      //     this.editedItem.rango[0] = 0
-      //     this.editedItem.rango[1] = 0
-      //   }
-      // },
+      mapArray (item) {
+        return {
+          name: item.name,
+          description: item.description,
+          rank: JSON.parse(item.rank),
+        }
+      },
+      mapString (item) {
+        return {
+          name: item.name,
+          description: item.description,
+          rank: JSON.stringify(item.rank),
+        }
+      },
     },
   }
 </script>

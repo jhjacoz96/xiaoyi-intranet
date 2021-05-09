@@ -91,12 +91,9 @@
                 <v-col
                   cols="12"
                 >
-                  <v-select
-                    v-model="editedItem.resource"
-                    label="Seleccione los recursos multimedias"
-                    outlined
-                    :items="resource"
-                    multiple
+                  <base-preview-image
+                    imagen="imagen"
+                    @imagen="editedItem.resource = $event"
                   />
                 </v-col>
               </v-row>

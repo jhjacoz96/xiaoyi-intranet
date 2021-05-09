@@ -16,7 +16,7 @@
                   class="font-weight-bold text-h2"
                   style="color: #37474F;"
                 >
-                  {{ saludar }}, Doctor <span class="primary--text">Ali Ferrer</span>
+                  {{ saludar }}, Doctor <span class="primary--text">{{ user.employee.name }}</span>
                 </div>
                 <div class="font-weight-medium grey--text mt-3">
                   Bienvenido al panel de control de Xiaoyi
@@ -40,12 +40,16 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   export default {
     data () {
       return {
         saludar: '',
         hours: undefined,
       }
+    },
+    computed: {
+      ...mapState('auth', ['user']),
     },
     mounted () {
       var myDate = new Date()

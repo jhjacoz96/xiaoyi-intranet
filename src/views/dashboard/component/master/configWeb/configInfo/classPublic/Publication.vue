@@ -49,11 +49,17 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
-            <v-img
-              :src="item.imagen"
-              width="60"
-            />
+          <template v-slot:item.image_mini="{ item }">
+            <div
+              v-if="item.image_mini"
+              class="my-4"
+            >
+              <v-img
+                :src="`${$store.state.urlApi}/${item.image_mini.url}`"
+                width="100"
+                height="100"
+              />
+            </div>
           </template>
           <!-- <template v-slot:item.descripcion="{ item }">
             <div v-html="item.descripcion"/>
@@ -96,19 +102,8 @@
       </v-card-text>
       <v-dialog
         v-model="dialog"
-        max-width="500px"
+        max-width="700px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
@@ -130,27 +125,151 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Titulo"
                     outlined
                   />
                 </v-col>
-                <!-- <v-col
-                    cols="12"
-                  >
-                    <base-preview-image
-                      imagen="imagen"
-                      @imagen="imagen = $event"
-                    />
-                  </v-col> -->
                 <v-col
                   cols="12"
                 >
+                  <div>
+                    <p class="text-h6 font-weight-regular">
+                      Filtros de búsqueda
+                    </p>
+                  </div>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                    >
+                      <v-select
+                        v-model="editedItem.filter_one_publication_id"
+                        label="Primer filtro"
+                        outlined
+                        dense
+                        :items="filterOne"
+                        item-text="name"
+                        item-value="id"
+                        @change="getFilterTwo($event)"
+                      />
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                    >
+                      <v-select
+                        v-model="editedItem.filter_two_publication_id"
+                        label="Segundo filtro"
+                        outlined
+                        dense
+                        :items="filterTwo"
+                        :disabled="editedItem.filter_one_publication_id !== undefined ? false : true"
+                        item-text="name"
+                        item-value="id"
+                        @change="getFilterThree($event)"
+                      />
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="4"
+                    >
+                      <v-select
+                        v-model="editedItem.filter_three_publication_id"
+                        label="Tercer filtro"
+                        :items="filterThree"
+                        item-text="name"
+                        item-value="id"
+                        :disabled="editedItem.filter_two_publication_id !== undefined ? false : true"
+                        outlined
+                        dense
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col
+                  cols="12"
+                >
+                  <p class="text-h6 font-weight-regular">
+                    Imagen miniatura
+                  </p>
+                  <base-preview-image
+                    imagen="imagen"
+                    @imagen="editedItem.image_mini = $event"
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                >
+                  <p class="text-h6 font-weight-regular">
+                    Descripción de la publicación
+                  </p>
                   <quill-editor
                     ref="myTextEditor"
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     :config="editorOption"
                   />
+                </v-col>
+                <v-col
+                  cols="12"
+                >
+                  <div class="mt-4 my-3">
+                    <div class="d-inline-block">
+                      <span class="text-h5">Agregar recursos</span>
+                    </div>
+                    <v-btn
+                      fab
+                      color="secondary"
+                      class="float-right"
+                      @click="addResource()"
+                    >
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </div>
+                  <v-card-text>
+                    <tr
+                      v-for="(item, k) in editedItem.resources"
+                      :key="k"
+                    >
+                      <td>
+                        <v-select
+                          v-model="item.type_resource"
+                          :items="['image', 'video']"
+                          outlined
+                          label="Tipo de recurso"
+                          dense
+                        />
+                      </td>
+                      <td>
+                        <v-file-input
+                          v-if="item.type_resource==='image'"
+                          v-model="item.url"
+                          label="Seleccione la imagen"
+                          outlined
+                          dense
+                          class="ml-2"
+                        />
+                        <v-text-field
+                          v-else
+                          v-model="item.url"
+                          label="Ingrese el link de video de youtube"
+                          outlined
+                          dense
+                          class="ml-2"
+                        />
+                      </td>
+                      <td>
+                        <v-btn
+                          icon
+                          color="pink"
+                          class="ml-2"
+                          @click="deletedResource(item)"
+                        >
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </td>
+                    </tr>
+                  </v-card-text>
                 </v-col>
               </v-row>
             </v-container>
@@ -208,6 +327,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   import { quillEditor } from 'vue-quill-editor'
   import 'quill/dist/quill.js'
   export default {
@@ -231,22 +354,27 @@
         search: '',
         dialog: false,
         dialogDelete: false,
-        imagen: null,
         editedIndex: -1,
+        editedId: undefined,
         headers: [
           {
             text: 'Titulo',
-            value: 'nombre',
+            value: 'name',
           },
           {
 
             text: 'Fecha',
-            value: 'fecha',
+            value: 'created_at',
+          },
+          {
+
+            text: 'Imagen mini',
+            value: 'image_mini',
           },
           {
 
             text: 'Responsable',
-            value: 'responsable',
+            value: 'employee.name',
           },
           {
             text: 'Acción',
@@ -255,33 +383,37 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            image: '',
-            nombre: 'Medicina alternativa',
-            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores? In, temporibus labore dolorem veniam consequatur, error aut placeat quam quisquam animi rem, aliquid eaque reprehenderit vitae. Provident, deleniti. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur accusamus quod, libero illo laboriosam molestias, quis a sit cum optio numquam, explicabo blanditiis sunt sapiente nulla ea iste voluptatem quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, doloremque laboriosam distinctio quo, aliquam eligendi dignissimos harum animi officiis nesciunt accusantium at voluptas minima ullam nihil atque expedita aut odio!',
-            viewPublication: false,
-            fecha: '30/03/2021',
-            responsable: 'Jhon Contreras',
-          },
-          {
-            image: '',
-            nombre: 'CUidado de heridas',
-            descripcion: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, consequatur dolores? In, temporibus labore dolorem veniam consequatur, error aut placeat quam quisquam animi rem, aliquid eaque reprehenderit vitae. Provident, deleniti. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur accusamus quod, libero illo laboriosam molestias, quis a sit cum optio numquam, explicabo blanditiis sunt sapiente nulla ea iste voluptatem quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, doloremque laboriosam distinctio quo, aliquam eligendi dignissimos harum animi officiis nesciunt accusantium at voluptas minima ullam nihil atque expedita aut odio!',
-            viewPublication: true,
-            fecha: '30/03/2021',
-            responsable: 'Jhon Contreras',
-          },
-        ],
+        desserts: [],
+        filterOne: [],
+        filterTwo: [],
+        filterThree: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
-          viewPublication: false,
+          name: '',
+          description: '',
+          filter_three_publication_id: undefined,
+          filter_two_publication_id: undefined,
+          filter_one_publication_id: undefined,
+          image_mini: undefined,
+          resources: [
+            {
+              type_resource: undefined,
+              url: undefined,
+            },
+          ],
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
-          viewPublication: false,
+          name: '',
+          description: '',
+          filter_three_publication_id: undefined,
+          filter_two_publication_id: undefined,
+          filter_one_publication_id: undefined,
+          image_mini: undefined,
+          resources: [
+            {
+              type_resource: undefined,
+              url: undefined,
+            },
+          ],
         },
       }
     },
@@ -298,34 +430,150 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+      this.listItemFIlterOne()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('publication', ['publicationPostActions', 'publicationAllActions', 'publicationDeleteActions', 'publicationGetActions', 'publicationUpdateActions']),
+      ...mapActions('filterOnePublication', ['filterOnePublicationAllActions']),
+      ...mapActions('filterTwoPublication', ['filterTwoPublicationFilterActions']),
+      ...mapActions('filterThreePublication', ['filterThreePublicationFilterActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.publicationAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemFIlterOne () {
+        const serviceResponse = await this.filterOnePublicationAllActions()
+        if (serviceResponse.ok) {
+          this.filterOne = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async getFilterTwo (id) {
+        const serviceResponse = await this.filterTwoPublicationFilterActions(id)
+        if (serviceResponse.ok) {
+          this.filterTwo = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async getFilterThree (id) {
+        const serviceResponse = await this.filterThreePublicationFilterActions(id)
+        if (serviceResponse.ok) {
+          this.filterThree = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.publicationDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        Object.assign(this.editedItem, item)
+        this.editedId = item.id
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          this.editedItem.resources.forEach(this.formatYoutube)
+          console.log(this.editedItem)
+          const formData = new FormData()
+          formData.append('name', this.editedItem.name)
+          formData.append('description', this.editedItem.description)
+          formData.append('filter_one_publication_id', this.editedItem.filter_one_publication_id)
+          formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
+          formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
+          formData.append('image_mini', this.editedItem.image_mini)
+          formData.append('resources', JSON.stringify(this.editedItem.resources))
+
+          const serviceResponse = await this.publicationUpdateActions(formData)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          this.editedItem.resources.forEach(this.formatYoutube)
+          console.log(this.editedItem)
+          const formData = new FormData()
+          formData.append('name', this.editedItem.name)
+          formData.append('description', this.editedItem.description)
+          formData.append('filter_one_publication_id', this.editedItem.filter_one_publication_id)
+          formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
+          formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
+          formData.append('image_mini', this.editedItem.image_mini)
+          formData.append('resources', JSON.stringify(this.editedItem.resources))
+          const serviceResponse = await this.publicationPostActions(formData)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -333,7 +581,21 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
+      },
+      addResource () {
+        this.editedItem.resources.push(this.defaultItem.resources[0])
+      },
+      deletedResource (val) {
+        var index = this.editedItem.resources.indexOf(val)
+        this.editedItem.resources.splice(index, 1)
+      },
+      formatYoutube (val) {
+        if (val.type_resource === 'video' && val.url.length > 11) {
+          var index = this.editedItem.resources.indexOf(val)
+          this.editedItem.resources[index].url = val.url.toString().split('').reverse().join('').slice(0, 11).split('').reverse().join('')
+        }
       },
     },
   }

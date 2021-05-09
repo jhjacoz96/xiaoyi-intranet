@@ -25,7 +25,7 @@
               class="d-flex transition-fast-in-fast-out grey darken-4 v-card--reveal text-h4 white--text"
               style="height:20%"
             >
-              Cambiar imagenx
+              Seleccione una imagen
             </div>
           </v-expand-transition>
         </v-img>
@@ -53,12 +53,22 @@
 
 <script>
   export default {
+    // props: {
+    //   image: {
+    //     type: Object,
+    //     default: () => ({}),
+    //   },
+    // },
     data () {
       return {
         imagen: null,
         imagenPreview: null,
       }
     },
+    // created () {
+    //   this.load()
+    //   console.log(this.image)
+    // },
     methods: {
       preview_image (e) {
         if (e) {
@@ -67,6 +77,12 @@
           this.$emit('imagen', this.imagen)
         }
       },
+      // load () {
+      //   // eslint-disable-next-line no-prototype-builtins
+      //   if (this.image.hasOwnProperty('url')) {
+      //     this.imagenPreview = `${this.$store.state.urlApi}/${this.image.url}`
+      //   }
+      // },
     },
   }
 </script>

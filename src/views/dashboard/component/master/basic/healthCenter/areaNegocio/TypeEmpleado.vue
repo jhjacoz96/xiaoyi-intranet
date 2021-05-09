@@ -103,7 +103,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                   />
@@ -112,19 +112,10 @@
                   cols="12"
                 >
                   <v-textarea
-                    v-model="editedItem.descripcion"
+                    v-model="editedItem.description"
                     label="Descripción"
                     outlined
                     name="input-7-4"
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <v-switch
-                    v-model="editedItem.especialidad"
-                    inset
-                    label="¿Asignar especialidad?"
                   />
                 </v-col>
               </v-row>
@@ -183,6 +174,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -194,15 +189,11 @@
         headers: [
           {
             text: 'Nombre',
-            value: 'nombre',
+            value: 'name',
           },
           {
             text: 'Descripción',
-            value: 'descripcion',
-          },
-          {
-            text: '¿Asignar especialidad?',
-            value: 'especialidad',
+            value: 'description',
           },
           {
             text: 'Acción',
@@ -211,38 +202,20 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            nombre: 'Director',
-            descripcion: 'test descripcion',
-            especialidad: false,
-          },
-          {
-            nombre: 'Doctor',
-            descripcion: 'test descripcion',
-            especialidad: true,
-          },
-          {
-            nombre: 'enfermera',
-            descripcion: 'test descripcion',
-            especialidad: true,
-          },
-        ],
+        desserts: [],
         editedItem: {
-          nombre: '',
-          descripcion: '',
-          especialidad: false,
+          name: '',
+          description: '',
         },
         defaultItem: {
-          nombre: '',
-          descripcion: '',
-          especialidad: false,
+          name: '',
+          description: '',
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar especialidad' : 'Editar especialidad'
+        return this.editedIndex === -1 ? 'Agregar tipo de empleado' : 'Editar tipo de empleado'
       },
     },
     watch: {
@@ -253,34 +226,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('typeEmployee', ['typeEmployeePostActions', 'typeEmployeeAllActions', 'typeEmployeeDeleteActions', 'typeEmployeeGetActions', 'typeEmployeeUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const typeEmployeeResponse = await this.typeEmployeeAllActions()
+        if (typeEmployeeResponse.ok) {
+          this.desserts = typeEmployeeResponse.data
+        } else {
+          this.alert({
+            text: typeEmployeeResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        // this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const typeEmployeeResponse = await this.typeEmployeeDeleteActions(this.editedId)
+        if (typeEmployeeResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: typeEmployeeResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: typeEmployeeResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const typeEmployeeResponse = await this.typeEmployeeUpdateActions(this.editedItem)
+          if (typeEmployeeResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: typeEmployeeResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: typeEmployeeResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const typeEmployeeResponse = await this.typeEmployeePostActions(this.editedItem)
+          if (typeEmployeeResponse.ok) {
+            this.desserts.push(typeEmployeeResponse.data)
+            this.close()
+            this.alert({
+              text: typeEmployeeResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: typeEmployeeResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -288,6 +319,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

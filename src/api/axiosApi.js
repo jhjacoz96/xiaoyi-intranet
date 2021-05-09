@@ -5,8 +5,8 @@ const API_URL_BACKEND = process.env.VUE_APP_API_URL_BACKEND
 export const apiHttp = async (method, endpoint, data, options = {}, loading = true) => {
     const { token } = localStorage
     const defaultHeaders = {
-      Accept: 'application/json',
       'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
       Authorization: 'Bearer ' + `${token}`,
     }
 
@@ -20,7 +20,7 @@ export const apiHttp = async (method, endpoint, data, options = {}, loading = tr
    method,
    url: `${API_URL_BACKEND}${endpoint}`,
    data,
-//    ...options,
+   ...options,
  })
 
  try {

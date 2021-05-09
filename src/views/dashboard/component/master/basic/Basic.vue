@@ -18,11 +18,10 @@
             Seguridad
             <v-icon>mdi-key</v-icon>
           </v-tab>
-
-          <v-tab href="#tab-3">
+          <!-- <v-tab href="#tab-3">
             Pacientes diabéticos
             <v-icon>mdi-account-key</v-icon>
-          </v-tab>
+          </v-tab> -->
           <v-tab href="#tab-4">
             Parametros de fichas
             <v-icon>mdi-clipboard-text</v-icon>
@@ -36,9 +35,9 @@
         <v-tab-item value="tab-2">
           <segurity />
         </v-tab-item>
-        <v-tab-item value="tab-3">
+        <!-- <v-tab-item value="tab-3">
           <diabetic />
-        </v-tab-item>
+        </v-tab-item> -->
         <v-tab-item value="tab-4">
           <file-parameter />
         </v-tab-item>
@@ -52,7 +51,7 @@
     components: {
       HealthCenter: () => import('../basic/healthCenter/HealthCenter'),
       Segurity: () => import('../basic/security/Security'),
-      Diabetic: () => import('../basic/diabetic/Diabetic'),
+      // Diabetic: () => import('../basic/diabetic/Diabetic'),
       FileParameter: () => import('../basic/fileParameter/FileParameter'),
     },
     data () {
