@@ -310,6 +310,9 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -358,6 +361,7 @@
           idCulturalGroup: 1,
           nomberBoss: 'dd',
         },
+        organization: {},
       }
     },
     computed: {
@@ -394,7 +398,11 @@
         return steps
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
+      ...mapActions('configWeb', ['webOrganizationPostActions', 'webOrganizationAllActions']),
       customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const textTwo = item.abbr.toLowerCase()
@@ -402,6 +410,17 @@
 
         return textOne.indexOf(searchText) > -1 ||
           textTwo.indexOf(searchText) > -1
+      },
+      async listItem () {
+        const serviceResponsee = await this.webOrganizationAllActions()
+        if (serviceResponsee.ok) {
+          this.organization = serviceResponsee.data
+        } else {
+          this.alert({
+            text: serviceResponsee.message.text,
+            color: 'warning',
+          })
+        }
       },
     },
   }

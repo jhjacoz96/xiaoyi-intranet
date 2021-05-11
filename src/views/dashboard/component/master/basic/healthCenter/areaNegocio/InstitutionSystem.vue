@@ -107,7 +107,7 @@
                       v-model="editedItem.name"
                       dense
                       outlined
-                      label="name"
+                      label="Nombre"
                     />
                   </v-col>
                   <v-col

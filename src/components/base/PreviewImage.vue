@@ -14,7 +14,7 @@
         @click="$refs.file.click()"
       >
         <v-img
-          v-if="imagen"
+          v-if="imagen || (image != '')"
           :src="imagenPreview"
           height="100%"
           width="100%"
@@ -25,7 +25,7 @@
               class="d-flex transition-fast-in-fast-out grey darken-4 v-card--reveal text-h4 white--text"
               style="height:20%"
             >
-              Seleccione una imagen
+              Cambiar imagen
             </div>
           </v-expand-transition>
         </v-img>
@@ -41,7 +41,7 @@
               class="d-flex transition-fast-in-fast-out grey darken-4 v-card--reveal text-h4 white--text"
               style="height:20%"
             >
-              Cambiar imagen
+              Seleccione una imagen
             </div>
           </v-expand-transition>
         </v-img>
@@ -53,22 +53,24 @@
 
 <script>
   export default {
-    // props: {
-    //   image: {
-    //     type: Object,
-    //     default: () => ({}),
-    //   },
-    // },
+    props: {
+      image: {
+        type: String,
+        default: '',
+      },
+    },
     data () {
       return {
         imagen: null,
         imagenPreview: null,
       }
     },
-    // created () {
-    //   this.load()
-    //   console.log(this.image)
-    // },
+    watch: {
+      image (val) {
+        console.log(val)
+        if (val !== '') this.imagenPreview = `${this.$store.state.urlApi}/${val}`
+      },
+    },
     methods: {
       preview_image (e) {
         if (e) {
@@ -77,12 +79,6 @@
           this.$emit('imagen', this.imagen)
         }
       },
-      // load () {
-      //   // eslint-disable-next-line no-prototype-builtins
-      //   if (this.image.hasOwnProperty('url')) {
-      //     this.imagenPreview = `${this.$store.state.urlApi}/${this.image.url}`
-      //   }
-      // },
     },
   }
 </script>

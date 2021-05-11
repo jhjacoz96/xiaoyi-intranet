@@ -16,23 +16,17 @@
             sm="6"
             cols="12"
           >
-            <v-textarea
-              v-model="editedItem.value"
+            <v-text-field
+              v-model="editedItem.description1"
               outlined
-              name="input-7-3"
               dense
-              label="Descripción del objetivo"
+              label="Descripción 1"
             />
-          </v-col>
-          <v-col
-            md="6"
-            sm="6"
-            cols="12"
-            class="text-end"
-          >
-            <base-preview-image
-              :image="typeof editedItem.image_value === 'object' ? editedItem.image_value.url : editedItem.image_value"
-              @imagen="editedItem.image_value = $event"
+            <v-text-field
+              v-model="editedItem.description2"
+              outlined
+              dense
+              label="Descripción 2"
             />
           </v-col>
         </v-row>
@@ -57,28 +51,25 @@
   } from 'vuex'
   export default {
     data: () => ({
-      rules: [
-        value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
-      ],
       valid: false,
       editedItem: {
-        value: '',
-        image_value: undefined,
+        description1: '',
+        description2: '',
       },
     }),
     created () {
       this.listItem()
     },
     methods: {
-      ...mapActions('configWeb', ['webUsPostActions', 'webUsAllActions']),
+      ...mapActions('configWeb', ['webServicePostActions', 'webServiceAllActions']),
       ...mapMutations(['alert']),
       async listItem () {
-        const serviceResponse = await this.webUsAllActions()
+        const serviceResponse = await this.webServiceAllActions()
         if (serviceResponse.ok) {
           console.log(serviceResponse.data)
           if (serviceResponse.data) {
-            this.editedItem.value = serviceResponse.data.value
-            this.editedItem.image_value = serviceResponse.data.image_value
+            this.editedItem.descripction1 = serviceResponse.data.descripction1
+            this.editedItem.descripction2 = serviceResponse.data.descripction2
           }
         } else {
           this.alert({
@@ -88,14 +79,10 @@
         }
       },
       async addItem () {
-        const formData = new FormData()
-        formData.append('value', this.editedItem.value)
-        formData.append('image_value', this.editedItem.image_value)
-        console.log(formData)
-        const serviceResponse = await this.webUsPostActions(formData)
+        const serviceResponse = await this.webServicePostActions(this.editedItem)
         if (serviceResponse.ok) {
-          this.editedItem.value = serviceResponse.data.value
-          this.editedItem.image_value = serviceResponse.data.image_value
+          this.editedItem.descripction1 = serviceResponse.data.descripction1
+          this.editedItem.descripction2 = serviceResponse.data.descripction2
           this.alert({
             text: serviceResponse.message,
             color: 'success',

@@ -17,7 +17,7 @@
             cols="12"
           >
             <v-textarea
-              v-model="editedItem.value"
+              v-model="editedItem.objective"
               outlined
               name="input-7-3"
               dense
@@ -31,8 +31,8 @@
             class="text-end"
           >
             <base-preview-image
-              :image="typeof editedItem.image_value === 'object' ? editedItem.image_value.url : editedItem.image_value"
-              @imagen="editedItem.image_value = $event"
+              :image="typeof editedItem.image_objective === 'object' ? editedItem.image_objective.url : editedItem.image_objective"
+              @imagen="editedItem.image_objective = $event"
             />
           </v-col>
         </v-row>
@@ -62,8 +62,8 @@
       ],
       valid: false,
       editedItem: {
-        value: '',
-        image_value: undefined,
+        objective: '',
+        image_objective: undefined,
       },
     }),
     created () {
@@ -77,8 +77,8 @@
         if (serviceResponse.ok) {
           console.log(serviceResponse.data)
           if (serviceResponse.data) {
-            this.editedItem.value = serviceResponse.data.value
-            this.editedItem.image_value = serviceResponse.data.image_value
+            this.editedItem.objective = serviceResponse.data.objective
+            this.editedItem.image_objective = serviceResponse.data.image_objective
           }
         } else {
           this.alert({
@@ -89,13 +89,13 @@
       },
       async addItem () {
         const formData = new FormData()
-        formData.append('value', this.editedItem.value)
-        formData.append('image_value', this.editedItem.image_value)
+        formData.append('objective', this.editedItem.objective)
+        formData.append('image_objective', this.editedItem.image_objective)
         console.log(formData)
         const serviceResponse = await this.webUsPostActions(formData)
         if (serviceResponse.ok) {
-          this.editedItem.value = serviceResponse.data.value
-          this.editedItem.image_value = serviceResponse.data.image_value
+          this.editedItem.objective = serviceResponse.data.objective
+          this.editedItem.image_objective = serviceResponse.data.image_objective
           this.alert({
             text: serviceResponse.message,
             color: 'success',

@@ -20,25 +20,25 @@
             cols="12"
           >
             <v-text-field
+              v-model="editedItem.title"
+              label="Titulo"
               outlined
-              label="Titulo de sección"
-              placeholder="Indique el titulo"
+              dense
             />
             <v-textarea
+              v-model="editedItem.description1"
+              label="Descripción 1"
+              dense
               outlined
-              name="input-7-4"
-              label="Texto"
-              placeholder="Indique el texto"
+              name="input-7-3"
             />
-            <!-- <v-file-input
-                v-model="imagen"
-                :rules="rules"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Seleccione una imagen"
-                prepend-icon="mdi-camera"
-                label="Imagen"
-                @change="Preview_image"
-                /> -->
+            <v-textarea
+              v-model="editedItem.description2"
+              label="Descripción 1"
+              dense
+              outlined
+              name="input-7-3"
+            />
           </v-col>
           <v-col
             md="6"
@@ -47,8 +47,8 @@
             class="text-end"
           >
             <base-preview-image
-              imagen="imagen"
-              @imagen="imagen = $event"
+              :image="editedItem.image.url"
+              @imagen="editedItem.image = $event"
             />
           </v-col>
         </v-row>
@@ -58,15 +58,19 @@
       <v-btn
         class="float-none"
         color="primary"
+        @click="addItem"
       >
-        <v-icon>mdi-plus</v-icon>
-        Agregar
+        Actualizar
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data: () => ({
       rules: [
@@ -74,13 +78,63 @@
       ],
       valid: false,
       imagen: null,
-      desserts: [
-        {
-          imagen: '@/assets/fondo.jpg',
-          url: 'url test',
-          descripcion: 'descripcion test',
+      desserts: [],
+      editedItem: {
+        title: '',
+        description1: '',
+        description2: '',
+        image: {
+          url: '',
         },
-      ],
+      },
     }),
+    created () {
+      this.listItem()
+    },
+    methods: {
+      ...mapActions('configWeb', ['webDiabeticPostActions', 'webDiabeticAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.webDiabeticAllActions()
+        if (serviceResponse.ok) {
+          console.log(serviceResponse.data)
+          if (serviceResponse.data) {
+            this.editedItem.title = serviceResponse.data.title
+            this.editedItem.description1 = serviceResponse.data.description1
+            this.editedItem.description2 = serviceResponse.data.description2
+            this.editedItem.image = serviceResponse.data.image
+          }
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async addItem () {
+        const formData = new FormData()
+        formData.append('title', this.editedItem.title)
+        formData.append('description1', this.editedItem.description1)
+        formData.append('description2', this.editedItem.description2)
+        formData.append('image', this.editedItem.image)
+        console.log(formData)
+        const serviceResponse = await this.webDiabeticPostActions(formData)
+        if (serviceResponse.ok) {
+          this.editedItem.title = serviceResponse.data.title
+          this.editedItem.description1 = serviceResponse.data.description1
+          this.editedItem.description2 = serviceResponse.data.description2
+          this.editedItem.image = serviceResponse.data.image
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+    },
   }
 </script>

@@ -42,7 +42,8 @@
         >
           <template v-slot:item.imagen="{ item }">
             <v-img
-              :src="item.imagen"
+              v-if="item.image_service"
+              :src="`${$store.state.urlApi}${item.image_service.url}`"
               width="60"
             />
           </template>
@@ -129,7 +130,7 @@
                 >
                   <base-preview-image
                     imagen="imagen"
-                    @imagen="imagen = $event"
+                    @imagen="editedItem.image_service = $event"
                   />
                 </v-col>
               </v-row>
@@ -228,11 +229,13 @@
           id: undefined,
           nombre: '',
           descripcion: '',
+          image_service: undefined,
         },
         defaultItem: {
           id: undefined,
           nombre: '',
           descripcion: '',
+          image_service: undefined,
         },
       }
     },
@@ -296,7 +299,12 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          const serviceResponse = await this.serviceUpdateActions(this.editedItem)
+          console.log(this.editedItem)
+          const formData = new FormData()
+          formData.append('nombre', this.editedItem.nombre)
+          formData.append('descripcion', this.editedItem.descripcion)
+          formData.append('image_service', this.editedItem.image_service)
+          const serviceResponse = await this.serviceUpdateActions(formData)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.close()
@@ -312,7 +320,11 @@
             })
           }
         } else {
-          const serviceResponse = await this.servicePostActions(this.editedItem)
+          const formData = new FormData()
+          formData.append('nombre', this.editedItem.nombre)
+          formData.append('descripcion', this.editedItem.descripcion)
+          formData.append('image_service', this.editedItem.image_service)
+          const serviceResponse = await this.servicePostActions(formData)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.close()

@@ -35,9 +35,6 @@
                 Carrusel
               </v-tab>
               <v-tab>
-                ¿Quíenes somos?
-              </v-tab>
-              <v-tab>
                 Servicios
               </v-tab>
               <v-tab>
@@ -48,9 +45,6 @@
             <v-tabs-items v-model="tab">
               <v-tab-item>
                 <carrusel />
-              </v-tab-item>
-              <v-tab-item>
-                <info-center />
               </v-tab-item>
               <v-tab-item>
                 <services />
@@ -90,10 +84,16 @@
               color="primary"
             >
               <v-tab>
+                Nosotros
+              </v-tab>
+              <v-tab>
                 Misión
               </v-tab>
               <v-tab>
                 Visión
+              </v-tab>
+              <v-tab>
+                Objetivos
               </v-tab>
               <v-tab>
                 valores
@@ -102,15 +102,84 @@
 
             <v-tabs-items v-model="tab2">
               <v-tab-item>
+                <us />
+              </v-tab-item>
+              <v-tab-item>
                 <mission />
               </v-tab-item>
               <v-tab-item>
                 <vision />
               </v-tab-item>
               <v-tab-item>
+                <objetivo />
+              </v-tab-item>
+              <v-tab-item>
                 <value />
               </v-tab-item>
             </v-tabs-items>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+        <v-expansion-panel>
+          <v-expansion-panel-header v-slot="{ open }">
+            <v-row no-gutters>
+              <v-col cols="4">
+                Servicios
+              </v-col>
+              <v-col
+                cols="8"
+                class="text--secondary"
+              >
+                <v-fade-transition leave-absolute>
+                  <span v-if="!open">Información de la sección de servicios</span>
+                </v-fade-transition>
+              </v-col>
+            </v-row>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <service-section />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+        <v-expansion-panel>
+          <v-expansion-panel-header v-slot="{ open }">
+            <v-row no-gutters>
+              <v-col cols="4">
+                Cuidados de adultos mayores
+              </v-col>
+              <v-col
+                cols="8"
+                class="text--secondary"
+              >
+                <v-fade-transition leave-absolute>
+                  <span v-if="!open">Información de la sección de cuidados de adultos mayores</span>
+                </v-fade-transition>
+              </v-col>
+            </v-row>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <older-adult-section />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+        <v-expansion-panel>
+          <v-expansion-panel-header v-slot="{ open }">
+            <v-row no-gutters>
+              <v-col cols="4">
+                Suscripción de cuidadores
+              </v-col>
+              <v-col
+                cols="8"
+                class="text--secondary"
+              >
+                <v-fade-transition leave-absolute>
+                  <span v-if="!open">Información de la sección de suscripción de cuidadores</span>
+                </v-fade-transition>
+              </v-col>
+            </v-row>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <subcription-section />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
@@ -131,7 +200,7 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <end-page />
+            <contact-section />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -144,13 +213,17 @@
     name: 'ConfigContent',
     components: {
       Carrusel: () => import('../contentWeb/inicio/Carrusel'),
-      InfoCenter: () => import('../contentWeb/inicio/InfoCenter'),
       Services: () => import('../contentWeb/inicio/Services'),
       DowloandApp: () => import('../contentWeb/inicio/DowloandApp'),
+      Us: () => import('../contentWeb/values/Us'),
       Mission: () => import('../contentWeb/values/Mission'),
       Vision: () => import('../contentWeb/values/Vision'),
       Value: () => import('../contentWeb/values/Value'),
-      EndPage: () => import('../contentWeb/footer/Footer'),
+      Objetivo: () => import('../contentWeb/values/Objetivo'),
+      ServiceSection: () => import('../contentWeb/ServiceSection'),
+      OlderAdultSection: () => import('../contentWeb/OlderAdultSection'),
+      SubcriptionSection: () => import('../contentWeb/SubcriptionSection'),
+      ContactSection: () => import('../contentWeb/ContactSection'),
     },
     data: () => ({
       date: null,

@@ -17,10 +17,11 @@
             cols="12"
           >
             <v-textarea
+              v-model="editedItem.mission"
               outlined
-              name="input-7-4"
-              label="Misión"
-              placeholder="Indique la misón del centro de salud"
+              name="input-7-3"
+              dense
+              label="Descripción de la misión"
             />
           </v-col>
           <v-col
@@ -30,8 +31,8 @@
             class="text-end"
           >
             <base-preview-image
-              imagen="imagen"
-              @imagen="imagen = $event"
+              :image="typeof editedItem.image_mission === 'object' ? editedItem.image_mission.url : editedItem.image_mission"
+              @imagen="editedItem.image_mission = $event"
             />
           </v-col>
         </v-row>
@@ -41,8 +42,8 @@
       <v-btn
         class="float-none"
         color="primary"
+        @click="addItem"
       >
-        <v-icon>mdi-plus</v-icon>
         Actualizar
       </v-btn>
     </v-card-actions>
@@ -50,13 +51,62 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data: () => ({
       rules: [
         value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
       ],
       valid: false,
-      imagen: null,
+      editedItem: {
+        mission: '',
+        image_mission: undefined,
+      },
     }),
+    created () {
+      this.listItem()
+    },
+    methods: {
+      ...mapActions('configWeb', ['webUsPostActions', 'webUsAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.webUsAllActions()
+        if (serviceResponse.ok) {
+          console.log(serviceResponse.data)
+          if (serviceResponse.data) {
+            this.editedItem.mission = serviceResponse.data.mission
+            this.editedItem.image_mission = serviceResponse.data.image_mission
+          }
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async addItem () {
+        const formData = new FormData()
+        formData.append('mission', this.editedItem.mission)
+        formData.append('image_mission', this.editedItem.image_mission)
+        console.log(formData)
+        const serviceResponse = await this.webUsPostActions(formData)
+        if (serviceResponse.ok) {
+          this.editedItem.mission = serviceResponse.data.mission
+          this.editedItem.image_mission = serviceResponse.data.image_mission
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+    },
   }
 </script>

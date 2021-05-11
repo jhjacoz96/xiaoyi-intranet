@@ -35,6 +35,8 @@ import publication from './modules/publication'
 import filterOnePublication from './modules/filterOnePublication'
 import filterTwoPublication from './modules/filterTwoPublication'
 import filterThreePublication from './modules/filterThreePublication'
+import carrusel from './modules/carrusel'
+import configWeb from './modules/configWeb'
 
 Vue.use(Vuex)
 
@@ -73,6 +75,8 @@ export default new Vuex.Store({
     filterTwoPublication,
     filterThreePublication,
     publication,
+    carrusel,
+    configWeb,
     fileFamily,
   },
 })

@@ -68,7 +68,7 @@
     </v-subheader>
     <v-container fluid>
       <v-row>
-         <v-col cols="3">
+        <v-col cols="3">
           <base-item-master
             title="Publicaciones"
             icon="mdi-36px mdi-view-grid-plus-outline"
