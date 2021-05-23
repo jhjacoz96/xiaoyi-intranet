@@ -6,9 +6,9 @@
     <v-card
       v-bind="$attrs"
       :color="hover ? 'secondary' : 'transparent'"
-      width="140"
-      height="110"
-      class="text-center rounded-xl pa-3 ma-0"
+      :width="width"
+      :height="height"
+      class="text-center rounded-xl pa-3 ma-0 "
       :elevation="hover ? 10 : 3"
       :class="{ 'on-hover': hover }"
       @click.prevent="$router.push(to)"
@@ -42,6 +42,14 @@
       to: {
         type: String,
         default: '',
+      },
+      width: {
+        type: String,
+        default: '140',
+      },
+      height: {
+        type: String,
+        default: '110',
       },
     },
   }

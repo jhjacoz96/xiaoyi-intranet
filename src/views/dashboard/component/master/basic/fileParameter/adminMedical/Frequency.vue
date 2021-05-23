@@ -232,10 +232,10 @@
       this.listItem()
     },
     methods: {
-      ...mapActions('medicine', ['medicinePostActions', 'medicineAllActions', 'medicineDeleteActions', 'medicineGetActions', 'medicineUpdateActions']),
+      ...mapActions('frequency', ['frequencyPostActions', 'frequencyAllActions', 'frequencyDeleteActions', 'frequencyGetActions', 'frequencyUpdateActions']),
       ...mapMutations(['alert']),
       async listItem () {
-        const serviceResponse = await this.medicineAllActions()
+        const serviceResponse = await this.frequencyAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -251,7 +251,7 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm () {
-        const serviceResponse = await this.medicineDeleteActions(this.editedId)
+        const serviceResponse = await this.frequencyDeleteActions(this.editedId)
         if (serviceResponse.ok) {
           this.desserts.splice(this.editedIndex, 1)
           this.closeDelete()
@@ -275,7 +275,7 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          const serviceResponse = await this.medicineUpdateActions(this.editedItem)
+          const serviceResponse = await this.frequencyUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.close()
@@ -291,7 +291,7 @@
             })
           }
         } else {
-          const serviceResponse = await this.medicinePostActions(this.editedItem)
+          const serviceResponse = await this.frequencyPostActions(this.editedItem)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.close()

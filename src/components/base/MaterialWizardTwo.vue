@@ -82,13 +82,23 @@
 
       <v-spacer />
       <v-btn
+        v-if="internalValue !== items.length - 1"
+        :disabled="!availableSteps.includes(internalValue + 1)"
+        color="primary"
+        outlined
+        min-width="100"
+        @click="$emit('click:event', 'next')"
+      >
+        Siguiente
+      </v-btn>
+      <v-btn
         :disabled="!availableSteps.includes(internalValue + 1) || loading"
         :loading="loading"
         color="primary"
         min-width="100"
-        @click="$emit('click:next')"
+        @click="$emit('click:event', 'save')"
       >
-        {{ internalValue === items.length - 1 ? 'Guardar' : 'Siguiente' }}
+        Guardar
       </v-btn>
     </v-card-actions>
   </base-material-card>
@@ -116,13 +126,13 @@
         type: String,
         default: '',
       },
-      subtitle: {
-        type: String,
-        default: '',
-      },
       loading: {
         type: Boolean,
         default: false,
+      },
+      subtitle: {
+        type: String,
+        default: '',
       },
     },
   }

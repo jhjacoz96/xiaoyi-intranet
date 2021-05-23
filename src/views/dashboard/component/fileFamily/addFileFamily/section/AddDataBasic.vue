@@ -5,7 +5,7 @@
     </div>
     <v-form
       ref="form"
-      data-vv-scope="risk"
+      data-vv-scope="basic"
     >
       <v-row
         class="mx-auto"
@@ -16,18 +16,12 @@
           cols="6"
           sm="4"
         >
-          <v-select
-            v-model="editedItem.institution"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.institution')"
-            data-vv-name="institution"
+          <v-text-field
+            v-model="organization.institution.name"
+            disabled
             outlined
             dense
             label="institución del sistema"
-            :items="institution"
-            item-text="name"
-            validate-on-blur
-            item-value="id"
           />
         </v-col>
         <v-col
@@ -35,14 +29,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.unidad"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.unidad')"
-            data-vv-name="unidad"
+            v-model="organization.name"
             outlined
+            disabled
             label="Nombre de la unidad operativa"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -50,14 +41,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.codeOu"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.codeUo')"
-            data-vv-name="codeUo"
+            v-model="organization.code_uo"
             outlined
+            disabled
             label="Código UO"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -65,66 +53,50 @@
           sm="4"
         >
           <v-text-field
-            v-model.number="editedItem.number"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.number')"
-            data-vv-name="number"
+            v-model="organization.province.name"
             outlined
-            label="Número de área"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-autocomplete
-            v-model="editedItem.idProvince"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.province')"
-            :autocomplete="customFilter"
-            data-vv-name="province"
-            :items="states"
-            item-text="name"
-            item-value="id"
-            outlined
-            dense
+            disabled
             label="Provincia"
-            validate-on-blur
+            dense
           />
         </v-col>
         <v-col
           cols="6"
           sm="4"
         >
-          <v-autocomplete
-            v-model="editedItem.idCanton"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.canton')"
-            data-vv-name="canton"
+          <v-text-field
+            v-model="organization.canton.name"
             outlined
-            dense
+            disabled
             label="Cantón"
-            validate-on-blur
-            :autocomplete="customFilter"
-            :items="canton"
-            item-text="name"
-            item-value="id"
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.parish"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.parish')"
-            data-vv-name="parish"
             dense
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="organization.parroquia"
             outlined
+            disabled
             label="Parroquia"
+            dense
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.numero_historia"
+            v-validate="'required'"
+            disabled
+            :error-messages="errors.collect('basic.numero_historia')"
+            data-vv-name="numero_historia"
+            outlined
+            label="Número de história (*)"
+            dense
             validate-on-blur
           />
         </v-col>
@@ -133,105 +105,90 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.sector"
+            v-model.number="editedItem.numero_familia"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.numero_familia')"
+            data-vv-name="numero_familia"
+            outlined
+            label="Número de familia (*)"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.direccion_habitual"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.direccion_habitual')"
+            data-vv-name="direccion_habitual"
+            outlined
+            label="Dircción de la familia (*)"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.barrio"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.barrio')"
+            data-vv-name="barrio"
+            outlined
+            label="Barrio (*)"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.manzana"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.manzana')"
+            data-vv-name="manzana"
+            outlined
+            label="Manzana (*)"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.numero_casa"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.numero_casa')"
+            data-vv-name="numero_casa"
+            outlined
+            label="Número de casa (*)"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-select
+            v-model="editedItem.zone_id"
             v-validate="'required'"
             :error-messages="errors.collect('basic.sector')"
-            data-vv-name="sector"
-            dense
+            data-vv-name="sector (*)"
             outlined
             label="Sector"
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.apple"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.apple')"
-            data-vv-name="apple"
-            dense
-            outlined
-            label="Manzana"
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model.number="editedItem.numberFamily"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.numberFamily')"
-            data-vv-name="numberFamily"
-            outlined
-            label="Número de familia"
             dense
             validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.address"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.address')"
-            data-vv-name="address"
-            outlined
-            label="Dircción habitual de la familia"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.neighborhood"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.neighborhood')"
-            data-vv-name="neighborhood"
-            validate-on-blur
-            outlined
-            label="Barrio"
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.numberHouse"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.numberHouse')"
-            data-vv-name="numberHouse"
-            outlined
-            label="Número de casa"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-select
-            v-model="editedItem.idComunity"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.community')"
-            data-vv-name="community"
-            outlined
-            label="Comunidad"
-            dense
-            validate-on-blur
-            :items="comunity"
+            :items="zone"
             item-text="name"
             item-value="id"
           />
@@ -241,15 +198,15 @@
           sm="4"
         >
           <v-select
-            v-model="editedItem.idCulturalGroup"
+            v-model="editedItem.cultural_group_id"
             v-validate="'required'"
-            :error-messages="errors.collect('basic.culturalGroup')"
-            data-vv-name="culturalGroup"
+            :error-messages="errors.collect('basic.cultural_group_id')"
+            data-vv-name="cultural_group_id"
             outlined
-            label="Grupo cultural"
+            label="Grupo cultural (*)"
             dense
             validate-on-blur
-            :items="cuturalGroup"
+            :items="culturalGroup"
             item-text="name"
             item-value="id"
           />
@@ -259,42 +216,12 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.nomberBoss"
+            v-model="editedItem.numero_telefono"
             v-validate="'required'"
-            :error-messages="errors.collect('basic.nomberBoss')"
-            data-vv-name="nomberBoss"
-            outlined
-            label="Nombre y apellido del jefe de la familia"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.phone"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.phone')"
-            data-vv-name="phone"
+            :error-messages="errors.collect('basic.numero_telefono')"
+            data-vv-name="numero_telefono (*)"
             outlined
             label="Número de telefono"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.folderNumber"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.folderNumber')"
-            data-vv-name="folderNumber"
-            outlined
-            label="Número de carpeta"
             dense
             validate-on-blur
           />
@@ -312,59 +239,43 @@
 <script>
   import {
     mapActions,
+    mapMutations,
+    mapState,
   } from 'vuex'
   export default {
+    props: {
+      click: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data () {
       return {
+        id: undefined,
         value: '',
-        states: [
-          { name: 'Florida', abbr: 'FL', id: 1 },
-          { name: 'Georgia', abbr: 'GA', id: 2 },
-          { name: 'Nebraska', abbr: 'NE', id: 3 },
-          { name: 'California', abbr: 'CA', id: 4 },
-          { name: 'New York', abbr: 'NY', id: 5 },
-        ],
-        canton: [
-          { name: 'Zuay', abbr: 'FL', id: 1 },
-          { name: 'Quito', abbr: 'GA', id: 2 },
-          { name: 'Guayaquil', abbr: 'NE', id: 3 },
-        ],
-        institution: [
-          { name: 'Fuerzas armadas', id: 1 },
-          { name: 'MSP', id: 2 },
-        ],
-        cuturalGroup: [
-          { name: 'Inka', id: 1 },
-          { name: 'Yanomani', id: 2 },
-        ],
-        comunity: [
-          { name: 'La paz', id: 1 },
-          { name: 'Pichinca', id: 2 },
-        ],
+        states: [],
+        canton: [],
+        institution: [],
+        cuturalGroup: [],
+        comunity: [],
         editedItem: {
-          institution: 1,
-          unidad: 'd',
-          codeOu: 'd',
-          number: 2,
-          idProvince: 1,
-          idCanton: 1,
-          parish: 'dd',
-          sector: 'ddd',
-          numberFamily: 1,
-          apple: 'ddd',
-          neighborhood: 'ddd',
-          folderNumber: 12321,
-          address: 'ddd',
-          numberHouse: 22,
-          phone: '2222',
-          idComunity: 1,
-          idCulturalGroup: 1,
-          nomberBoss: 'dd',
+          numero_familia: '',
+          manzana: '',
+          barrio: '',
+          direccion_habitual: '',
+          numero_casa: '',
+          numero_telefono: '',
+          numero_historia: '',
+          zone_id: undefined,
+          cultural_group_id: undefined,
         },
         organization: {},
+        zone: [],
+        culturalGroup: [],
       }
     },
     computed: {
+      ...mapState('fileFamily', ['steps', 'fileFamily']),
       // progress () {
       //   var inputs = Object.values(this.editedItem)
       //   var count = inputs.filter(item => {
@@ -373,43 +284,57 @@
       //   return Math.min(100, (count.length / 16) * 100)
       // },
       availableSteps () {
-        const steps = [0]
         if (
-          this.editedItem.institution &&
-          this.editedItem.unidad &&
-          this.editedItem.codeOu &&
-          this.editedItem.number &&
-          this.editedItem.idProvince &&
-          this.editedItem.idCanton &&
-          this.editedItem.parish &&
-          this.editedItem.sector &&
-          this.editedItem.phone &&
-          this.editedItem.numberFamily &&
-          this.editedItem.folderNumber &&
-          this.editedItem.apple &&
-          this.editedItem.neighborhood &&
-          this.editedItem.address &&
-          this.editedItem.numberHouse &&
-          this.editedItem.idComunity &&
-          this.editedItem.idCulturalGroup &&
-          this.editedItem.nomberBoss
-        ) steps.push(1)
-        this.$emit('data', steps)
-        return steps
+          this.editedItem.numero_familia &&
+          this.editedItem.manzana &&
+          this.editedItem.barrio &&
+          this.editedItem.direccion_habitual &&
+          this.editedItem.numero_casa &&
+          this.editedItem.numero_telefono &&
+          this.editedItem.numero_historia &&
+          this.editedItem.cultural_group_id &&
+          this.editedItem.zone_id
+        ) {
+          this.setSteps(1)
+          if (this.click) {
+            if (this.id !== null) this.setFileFamily(this.editedItem)
+            else this.setDataBasic(this.editedItem)
+            this.$emit('next')
+          }
+        }
+        return '33'
       },
     },
     created () {
+      this.ShowFileFamily()
       this.listItem()
+      this.listItemZone()
+      this.listItemCulturalGroup()
     },
     methods: {
+      ...mapActions('fileFamily', ['fileFamilyPostActions', 'fileFamilyShowActions']),
       ...mapActions('configWeb', ['webOrganizationPostActions', 'webOrganizationAllActions']),
-      customFilter (item, queryText, itemText) {
-        const textOne = item.name.toLowerCase()
-        const textTwo = item.abbr.toLowerCase()
-        const searchText = queryText.toLowerCase()
-
-        return textOne.indexOf(searchText) > -1 ||
-          textTwo.indexOf(searchText) > -1
+      ...mapActions('zone', ['zoneAllActions']),
+      ...mapActions('culturalGroup', ['culturalGroupAllActions']),
+      ...mapMutations(['alert']),
+      ...mapMutations('fileFamily', ['setDataBasic', 'setSteps', 'setFileFamily', 'resetFile']),
+      async ShowFileFamily () {
+        this.resetFile()
+        this.id = this.$route.params.id
+        if (this.id !== undefined) {
+          const serviceResponse = await this.fileFamilyShowActions(this.$route.params.id)
+          if (serviceResponse.ok) {
+            this.setFileFamily(serviceResponse.data)
+            this.editedItem = Object.assign({}, serviceResponse.data)
+          } else {
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        } else {
+          this.generateCode()
+        }
       },
       async listItem () {
         const serviceResponsee = await this.webOrganizationAllActions()
@@ -421,6 +346,31 @@
             color: 'warning',
           })
         }
+      },
+      async listItemZone () {
+        const serviceResponsee = await this.zoneAllActions()
+        if (serviceResponsee.ok) {
+          this.zone = serviceResponsee.data
+        } else {
+          this.alert({
+            text: serviceResponsee.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemCulturalGroup () {
+        const serviceResponsee = await this.culturalGroupAllActions()
+        if (serviceResponsee.ok) {
+          this.culturalGroup = serviceResponsee.data
+        } else {
+          this.alert({
+            text: serviceResponsee.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      generateCode () {
+        this.editedItem.numero_historia = `FF000${Math.round(Math.random() * (900 - 100) + 100)}`
       },
     },
   }

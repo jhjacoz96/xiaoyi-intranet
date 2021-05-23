@@ -26,7 +26,7 @@
         </div>
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="miembros"
           item-key="name"
           sort-by="name"
           group-by="groupAge.name"
@@ -58,9 +58,9 @@
               </tr>
             </thead>
           </template>
-          <template v-slot:item.name="{ item }">
-            {{ item.name }} {{ item.surname }} <v-chip
-              v-if="item.pregnant === 'si'"
+          <template v-slot:item.nombre="{ item }">
+            {{ item.nombre }} {{ item.apellido }} <v-chip
+              v-if="item.embarazo"
               color="pink"
               outlined
               dark
@@ -69,8 +69,8 @@
               <v-icon>mdi-human-pregnant</v-icon>
             </v-chip>
           </template>
-          <template v-slot:item.age="{ item }">
-            {{ item.age | ageFormat }}
+          <template v-slot:item.edad="{ item }">
+            {{ age(item.fecha_nacimiento) }}
           </template>
           <!-- <template v-slot:item.accion="{ item }">
             {{ item.groupAge.name }}
@@ -138,7 +138,7 @@
                 <v-tab>
                   Datos generales
                 </v-tab>
-                <v-tab v-if="editedItem.pregnant === 'si'">
+                <v-tab v-if="editedItem.embarazo">
                   Datos de embarazo
                 </v-tab>
                 <!-- <v-tab v-if="editedItem.diabetic">
@@ -154,26 +154,9 @@
                         sm="4"
                       >
                         <v-text-field
-                          v-model="editedItem.numberHistory"
+                          v-model="editedItem.nombre"
                           v-validate="'required'"
-                          label="Número de história"
-                          outlined
-                          dense
-                          :error-messages="errors.collect('member.numberHistory')"
-                          data-vv-name="número de historia"
-                          validate-on-blur
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col
-                        cols="12"
-                        sm="4"
-                      >
-                        <v-text-field
-                          v-model="editedItem.name"
-                          v-validate="'required'"
-                          label="Nombres"
+                          label="Nombres (*)"
                           outlined
                           dense
                           :error-messages="errors.collect('member.name')"
@@ -186,9 +169,9 @@
                         sm="4"
                       >
                         <v-text-field
-                          v-model="editedItem.surname"
+                          v-model="editedItem.apellido"
                           v-validate="'required'"
-                          label="Apellidoa"
+                          label="Apellidos (*)"
                           outlined
                           dense
                           :error-messages="errors.collect('member.surname')"
@@ -202,9 +185,9 @@
                         sm="4"
                       >
                         <v-text-field
-                          v-model="editedItem.email"
+                          v-model="editedItem.correo"
                           v-validate="'required'"
-                          label="Correo electrónico"
+                          label="Correo electrónico (*)"
                           outlined
                           dense
                           :error-messages="errors.collect('member.email')"
@@ -217,11 +200,11 @@
                         sm="4"
                       >
                         <v-select
-                          v-model="editedItem.idTypeDocument"
-                          :items="typeDomument"
-                          item-text="name"
+                          v-model="editedItem.type_document_id"
+                          :items="typeDocument"
+                          item-text="nombre"
                           item-value="id"
-                          label="Tipo de documento"
+                          label="Tipo de documento (*)"
                           outlined
                           dense
                           :error-messages="errors.collect('member.idTypeDocument')"
@@ -234,8 +217,8 @@
                         sm="4"
                       >
                         <v-text-field
-                          v-model="editedItem.identificationDocument"
-                          label="Cédula"
+                          v-model="editedItem.cedula"
+                          label="Cédula (*)"
                           outlined
                           dense
                           :error-messages="errors.collect('member.identificationDocument')"
@@ -248,8 +231,8 @@
                         sm="4"
                       >
                         <v-text-field
-                          v-model="editedItem.occupation"
-                          label="Ocupación"
+                          v-model="editedItem.ocupacion"
+                          label="Ocupación (*)"
                           outlined
                           dense
                         />
@@ -268,8 +251,8 @@
                         >
                           <template v-slot:activator="{ on, attrs }">
                             <v-text-field
-                              v-model="editedItem.birthday"
-                              label="Fecha de nacimiento"
+                              v-model="editedItem.fecha_nacimiento"
+                              label="Fecha de nacimiento (*)"
                               prepend-icon="mdi-calendar"
                               outlined
                               dense
@@ -281,7 +264,7 @@
                             />
                           </template>
                           <v-date-picker
-                            v-model="editedItem.birthday"
+                            v-model="editedItem.fecha_nacimiento"
                             @input="showDate = false"
                             @change="test($event)"
                           />
@@ -292,7 +275,7 @@
                         sm="4"
                       >
                         <v-text-field
-                          :value="editedItem.age | ageFormat"
+                          :value="editedItem.edad | ageFormat"
                           label="Edad"
                           outlined
                           dense
@@ -304,12 +287,11 @@
                         sm="4"
                       >
                         <v-select
-                          v-model="editedItem.scholarship"
+                          v-model="editedItem.scholarship_id"
                           label="Escolaridad"
                           :items="scholarship"
                           item-text="name"
                           item-value="id"
-                          multiple
                           outlined
                           dense
                         />
@@ -318,25 +300,40 @@
                         cols="12"
                         sm="4"
                       >
+                        <v-select
+                          v-model="editedItem.gender_id"
+                          dense
+                          outlined
+                          label="Género (*)"
+                          item-value="id"
+                          item-text="nombre"
+                          :items="gender"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="4"
+                      >
                         <v-radio-group
-                          v-model="editedItem.vaccination"
+                          v-model="editedItem.vacunacion"
                           colum
                           :error-messages="errors.collect('member.vaccination')"
                           data-vv-name="vaccination"
                           validate-on-blur
+                          mandatory
                         >
                           <template v-slot:label>
-                            <div>¿Esquema de vacunación completo?</div>
+                            <div>¿Esquema de vacunación completo? (*)</div>
                           </template>
                           <v-radio
-                            value="si"
+                            :value="true"
                           >
                             <template v-slot:label>
                               <div>Completa</div>
                             </template>
                           </v-radio>
                           <v-radio
-                            value="no"
+                            :value="false"
                           >
                             <template v-slot:label>
                               <div>Incompleta</div>
@@ -349,54 +346,25 @@
                         sm="4"
                       >
                         <v-radio-group
-                          v-model="editedItem.gender"
-                          colum
-                          :error-messages="errors.collect('member.gender')"
-                          data-vv-name="gender"
-                          validate-on-blur
-                        >
-                          <template v-slot:label>
-                            <div>Género</div>
-                          </template>
-                          <v-radio
-                            value="f"
-                          >
-                            <template v-slot:label>
-                              <div>Femenino</div>
-                            </template>
-                          </v-radio>
-                          <v-radio
-                            value="m"
-                          >
-                            <template v-slot:label>
-                              <div>Masculino</div>
-                            </template>
-                          </v-radio>
-                        </v-radio-group>
-                      </v-col>
-                      <v-col
-                        cols="12"
-                        sm="4"
-                      >
-                        <v-radio-group
-                          v-model="editedItem.oralHealth"
+                          v-model="editedItem.salud_bucal"
                           colum
                           :error-messages="errors.collect('member.oralHealth')"
                           data-vv-name="oralHealth"
                           validate-on-blur
+                          mandatory
                         >
                           <template v-slot:label>
-                            <div>Salud bucal</div>
+                            <div>Salud bucal (*)</div>
                           </template>
                           <v-radio
-                            value="si"
+                            :value="true"
                           >
                             <template v-slot:label>
                               <div>Si</div>
                             </template>
                           </v-radio>
                           <v-radio
-                            value="no"
+                            :value="false"
                           >
                             <template v-slot:label>
                               <div>No</div>
@@ -409,9 +377,9 @@
                         sm="4"
                       >
                         <v-select
-                          v-model="editedItem.disease"
-                          label="Enfermedades"
-                          :items="disease"
+                          v-model="editedItem.patologias"
+                          label="Patologías"
+                          :items="pathology"
                           item-text="name"
                           item-value="id"
                           multiple
@@ -426,7 +394,7 @@
                         sm="4"
                       >
                         <v-select
-                          v-model="editedItem.disability"
+                          v-model="editedItem.discapacidades"
                           label="Discapacidades"
                           :items="disability"
                           item-text="name"
@@ -442,11 +410,11 @@
                         sm="4"
                       >
                         <v-select
-                          v-model="editedItem.idRelationship"
+                          v-model="editedItem.relationship_id"
                           :error-messages="errors.collect('member.idRelationship')"
                           data-vv-name="idRelationship"
                           validate-on-blur
-                          label="Parentesco"
+                          label="Parentesco (*)"
                           :items="relationship"
                           item-text="name"
                           item-value="id"
@@ -489,29 +457,59 @@
                         </v-alert>
                       </v-col>
                       <v-col
-                        v-if="editedItem.gender === 'f'"
+                        v-if="editedItem.gender_id === 2"
                         cols="12"
                         sm="4"
                       >
                         <v-radio-group
-                          v-model="editedItem.pregnant"
+                          v-model="editedItem.embarazo"
                           row
+                          mandatory
                         >
                           <template v-slot:label>
                             <div>¿Se encuentra usted embarazada?</div>
                           </template>
                           <v-radio
-                            value="si"
+                            :value="0"
+                          >
+                            <template v-slot:label>
+                              <div>No</div>
+                            </template>
+                          </v-radio>
+                          <v-radio
+                            :value="1"
                           >
                             <template v-slot:label>
                               <div>Si</div>
                             </template>
                           </v-radio>
+                        </v-radio-group>
+                      </v-col>
+                      <v-col
+                        v-if="editedItem.embarazo === 1"
+                        cols="12"
+                        sm="4"
+                      >
+                        <v-radio-group
+                          v-model="editedItem.ficha_obstetric"
+                          row
+                          mandatory
+                        >
+                          <template v-slot:label>
+                            <div>¿Desea crear una ficha clinica de obstetricia?</div>
+                          </template>
                           <v-radio
-                            value="no"
+                            :value="0"
                           >
                             <template v-slot:label>
                               <div>No</div>
+                            </template>
+                          </v-radio>
+                          <v-radio
+                            :value="1"
+                          >
+                            <template v-slot:label>
+                              <div>Si</div>
                             </template>
                           </v-radio>
                         </v-radio-group>
@@ -519,7 +517,7 @@
                     </v-row>
                   </v-container>
                 </v-tab-item>
-                <v-tab-item v-if="editedItem.pregnant === 'si'">
+                <v-tab-item v-if="editedItem.embarazo === 1">
                   <v-container class="mt-6">
                     <v-row>
                       <v-col
@@ -536,7 +534,7 @@
                         >
                           <template v-slot:activator="{ on, attrs }">
                             <v-text-field
-                              v-model="editedItem.menstruation"
+                              v-model="editedItem.prenatal.fum"
                               label="Fecha de ultima mestruación"
                               prepend-icon="mdi-calendar"
                               outlined
@@ -546,7 +544,7 @@
                             />
                           </template>
                           <v-date-picker
-                            v-model="editedItem.menstruation"
+                            v-model="editedItem.prenatal.fum"
                             @input="show6Date = false"
                           />
                         </v-menu>
@@ -555,30 +553,13 @@
                         cols="12"
                         sm="6"
                       >
-                        <v-menu
-                          v-model="show3Date"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="100px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              v-model="editedItem.birth"
-                              label="Fecha pobable de parto"
-                              prepend-icon="mdi-calendar"
-                              outlined
-                              dense
-                              v-bind="attrs"
-                              v-on="on"
-                            />
-                          </template>
-                          <v-date-picker
-                            v-model="editedItem.birth"
-                            @input="show4Date = false"
-                          />
-                        </v-menu>
+                        <v-text-field
+                          :value="date | moment('dddd, MMMM Do YYYY')"
+                          dense
+                          outlined
+                          disabled
+                          label="Fecha probable de parto"
+                        />
                       </v-col>
                       <v-col
                         cols="12"
@@ -588,7 +569,7 @@
                           Semana de gestación
                         </v-subheader>
                         <v-slider
-                          v-model="editedItem.gestationWeeks"
+                          v-model="editedItem.prenatal.semana_gestacion"
                           :thumb-size="24"
                           max="42"
                           min="1"
@@ -600,13 +581,9 @@
                         sm="6"
                       >
                         <v-select
-                          v-model="editedItem.vaccinationDt"
+                          v-model="editedItem.prenatal.vaccine_dt"
                           label="Dosis de vacunación DT"
-                          :items="vaccinationDt"
-                          item-text="name"
-                          item-value="id"
-                          multiple
-                          chips
+                          :items="vaccione"
                           outlined
                           dense
                         />
@@ -616,7 +593,7 @@
                         sm="6"
                       >
                         <v-textarea
-                          v-model="editedItem.obstetricPathologies"
+                          v-model="editedItem.prenatal.antecedentes_patologicos"
                           label="Antecedentes patológías obstétricas"
                           outlined
                           dense
@@ -635,7 +612,7 @@
                           Gestas
                         </v-subheader>
                         <v-slider
-                          v-model="editedItem.feats"
+                          v-model="editedItem.prenatal.gestas"
                           :thumb-size="24"
                           max="50"
                           min="0"
@@ -650,7 +627,7 @@
                           Partos
                         </v-subheader>
                         <v-slider
-                          v-model="editedItem.childbirth"
+                          v-model="editedItem.prenatal.partos"
                           :thumb-size="24"
                           max="50"
                           min="0"
@@ -665,7 +642,22 @@
                           Abortos
                         </v-subheader>
                         <v-slider
-                          v-model="editedItem.misbirth"
+                          v-model="editedItem.prenatal.abortos"
+                          :thumb-size="24"
+                          max="50"
+                          min="0"
+                          :thumb-label="true"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="4"
+                      >
+                        <v-subheader class="pl-0">
+                          Cesarias
+                        </v-subheader>
+                        <v-slider
+                          v-model="editedItem.prenatal.cesarias"
                           :thumb-size="24"
                           max="50"
                           min="0"
@@ -675,197 +667,6 @@
                     </v-row>
                   </v-container>
                 </v-tab-item>
-                <!-- <v-tab-item v-if="editedItem.diabetic">
-                  <v-container class="mt-6">
-                    <v-subheader>
-                      Signos vitales
-                    </v-subheader>
-                    <v-row>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-select
-                          label="Presión arterial"
-                          outlined
-                          dense
-                          :items="presion"
-                          item-text="nombre"
-                          item-value="id"
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Pulso"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Respiración"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Saturación de oxígeno"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Temperatura"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <v-container>
-                    <v-subheader>
-                      Antropometría
-                    </v-subheader>
-                    <v-row>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Peso"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Altura"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Imc"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Circunferencia abdominal"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="6"
-                      >
-                        <v-text-field
-                          label="Nivel de glusemia"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <v-container>
-                    <v-subheader>
-                      Tratamientos farmacológicos
-                    </v-subheader>
-                    <v-row>
-                      <v-col
-                        cols="6"
-                        md="5"
-                      >
-                        <v-select
-                          label="Tratameinto farmacológico"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="4"
-                      >
-                        <v-select
-                          label="Frecuencia"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-subheader>
-                      Tratamientos no farmacológicos
-                    </v-subheader>
-                    <v-row>
-                      <v-col
-                        cols="12"
-                      >
-                        <v-textarea
-                          label="Dieta"
-                          outlined
-                          multiple
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="4"
-                      >
-                        <v-text-field
-                          label="Actividad fisica"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="4"
-                      >
-                        <v-text-field
-                          label="Tiempo"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="6"
-                        md="4"
-                      >
-                        <v-select
-                          label="Frecuencia"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-tab-item> -->
               </v-tabs-items>
             </v-form>
           </v-container>
@@ -941,11 +742,11 @@
       <v-col>
         <v-data-table
           :headers="headersMortality"
-          :items="dessertsMortality"
+          :items="mortalidad"
           :items-per-page="5"
         >
-          <template v-slot:item.relationship="{ item }">
-            {{ item.name }}
+          <template v-slot:item.relationship_id="{ item }">
+            {{ getRelationship(item.relationship_id).name }}
           </template>
         </v-data-table>
       </v-col>
@@ -989,77 +790,115 @@
         <v-card-title>
           <span class="text-h5">Agregar familiar fallecido</span>
         </v-card-title>
-
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="editedItemMortality.name"
-                  label="Nombre"
-                  outlined
-                  dense
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="3"
-              >
-                <v-subheader class="pl-0 pt-0 mt-0">
-                  Edad al fallecer
-                </v-subheader>
-                <v-slider
-                  v-model="editedItemMortality.age"
-                  :thumb-size="24"
-                  max="150"
-                  min="1"
-                  :thumb-label="true"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="3"
-              >
-                <v-select
-                  v-model="editedItemMortality.idRelationship"
-                  label="Parentesco"
-                  :items="relationship"
-                  item-text="name"
-                  item-value="id"
-                  outlined
-                  dense
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-textarea
-                  v-model="editedItemMortality.cause"
-                  label="Causa de muerte"
-                  outlined
-                  dense
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+        <v-form
+          ref="form"
+          v-model="valid"
+          data-vv-scope="mortality"
+          lazy-validation
+        >
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-text-field
+                    v-model="editedItemMortality.nombre"
+                    v-validate="'required'"
+                    label="Nombres (*)"
+                    outlined
+                    dense
+                    :error-messages="errors.collect('mortality.nombres')"
+                    data-vv-name="nombres"
+                    validate-on-blur
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-text-field
+                    v-model="editedItemMortality.apellido"
+                    v-validate="'required'"
+                    label="Apellidos (*)"
+                    outlined
+                    dense
+                    :error-messages="errors.collect('mortality.apellidos')"
+                    data-vv-name="apellidos"
+                    validate-on-blur
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="3"
+                >
+                  <v-subheader class="pl-0 pt-0 mt-0">
+                    Edad al fallecer (*)
+                  </v-subheader>
+                  <v-slider
+                    v-model="editedItemMortality.edad"
+                    v-validate="'required'"
+                    :thumb-size="24"
+                    max="150"
+                    min="1"
+                    :thumb-label="true"
+                    :error-messages="errors.collect('mortality.edad')"
+                    data-vv-name="edad"
+                    validate-on-blur
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="3"
+                >
+                  <v-select
+                    v-model="editedItemMortality.relationship_id"
+                    v-validate="'required'"
+                    label="Parentesco (*)"
+                    :items="relationship"
+                    item-text="name"
+                    item-value="id"
+                    outlined
+                    dense
+                    :error-messages="errors.collect('mortality.parentesco')"
+                    data-vv-name="parentesco"
+                    validate-on-blur
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-textarea
+                    v-model="editedItemMortality.causa"
+                    v-validate="'required'"
+                    label="Causa de muerte (*)"
+                    outlined
+                    dense
+                    :error-messages="errors.collect('mortality.causa')"
+                    data-vv-name="causa"
+                    validate-on-blur
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </v-form>
         <v-card-actions>
           <v-spacer />
           <v-btn
             color="black darken-1"
             text
-            @click="close()"
+            @click="closeMortality()"
           >
             Cancelar
           </v-btn>
           <v-btn
+            :disabled="validateMortality"
             color="primary"
             text
-            @click="addItem()"
+            @click="addItemMortality()"
           >
             Guardar
           </v-btn>
@@ -1070,6 +909,19 @@
 </template>
 
 <script>
+  import {
+    mapMutations,
+    mapActions,
+    mapState,
+  } from 'vuex'
+  import {
+    calAge,
+    calFpp,
+  } from '@/utils/calAge'
+  import {
+    relationshipAllApi,
+    scholarshipAllApi,
+  } from '@/api/modules'
   export default {
     filters: {
       ageFormat (val) {
@@ -1079,8 +931,15 @@
         return age
       },
     },
+    props: {
+      click: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data () {
       return {
+        id: undefined,
         tab: null,
         valid: false,
         dialog: false,
@@ -1098,333 +957,195 @@
           {
             text: 'Nombre y apellido',
             align: 'start',
-            value: 'name',
+            value: 'nombre',
             groupable: false,
           },
           {
             text: 'Cédula',
             align: 'start',
-            value: 'identificationDocument',
+            value: 'cedula',
             groupable: false,
           },
           {
             text: 'Edad',
             align: 'start',
-            value: 'age',
+            value: 'edad',
             groupable: false,
           },
           { text: 'Grupo de edad', value: 'groupAge.name', sortable: false, align: 'right' },
           { value: 'accion', text: 'Accón', sortable: false, align: 'center' },
         ],
-        desserts: [
-          {
-            name: 'Karol',
-            surname: 'Meti',
-            ci: '26378059',
-            age: 24,
-            pregnant: 'si',
-            groupAge: {
-              id: 5,
-              name: '20-64 años',
-              value: '[20, 64]',
-            },
-          },
+        miembros: [],
+        mortalidad: [],
+        typeDocument: [],
+        relationship: [],
+        scholarship: [],
+        pathology: [],
+        disability: [],
+        gender: [],
+        vaccione: [
+          'Primera',
+          'Segunda',
+          'Refuerzo',
         ],
-        typeDomument: [
-          {
-            name: 'Ecuatoriano',
-            id: 1,
-          },
-          {
-            name: 'Extranjero',
-            id: 2,
-          },
-        ],
-        relationship: [
-          {
-            name: 'Esposo/a',
-            id: 1,
-          },
-          {
-            name: 'Hijo/a',
-            id: 2,
-          },
-          {
-            name: 'Suegro/a',
-            id: 3,
-          },
-          {
-            name: 'Sobrino/a',
-            id: 4,
-          },
-          {
-            name: 'Tío/a',
-            id: 5,
-          },
-          {
-            name: 'Nieto/a',
-            id: 6,
-          },
-          {
-            name: 'Abuelo/a',
-            id: 7,
-          },
-          {
-            name: 'Bisabuelo/a',
-            id: 8,
-          },
-          {
-            name: 'Otro...',
-            id: 9,
-          },
-        ],
-        scholarship: [
-          {
-            name: 'Básica',
-            id: 1,
-          },
-          {
-            name: 'Bachillerato',
-            id: 2,
-          },
-          {
-            name: 'Superior',
-            id: 3,
-          },
-          {
-            name: 'Especialización',
-            id: 4,
-          },
-        ],
-        disease: [
-          {
-            name: 'Diábetes',
-            diabeticActive: true,
-            id: 1,
-          },
-          {
-            name: 'Impertención',
-            diabeticActive: false,
-            id: 2,
-          },
-        ],
-        disability: [
-          {
-            name: 'Motora',
-            id: 1,
-          },
-          {
-            name: 'Sensorial',
-            id: 2,
-          },
-          {
-            name: 'Intelectual',
-            id: 3,
-          },
-          {
-            name: 'psíquica',
-            id: 4,
-          },
-        ],
-        vaccinationDt: [
-          {
-            name: 'Primera',
-            id: 1,
-          },
-          {
-            name: 'Segunda',
-            id: 2,
-          },
-          {
-            name: 'Refuerzo',
-            id: 3,
-          },
-        ],
-        groupAge: [
-          {
-            id: 1,
-            name: '0-1 año',
-            value: '[0, 1]',
-          },
-          {
-            id: 2,
-            name: '1-4 años',
-            value: '[1, 4]',
-          },
-          {
-            id: 3,
-            name: '5-9 años',
-            value: '[5, 9]',
-          },
-          {
-            id: 4,
-            name: '10-19 años',
-            value: '[10, 19]',
-          },
-          {
-            id: 5,
-            name: '20-64 años',
-            value: '[20, 64]',
-          },
-          {
-            id: 6,
-            name: '65-150 años',
-            value: '[65, 150]',
-          },
-        ],
+        groupAge: [],
         editedItem: {
-          name: '',
-          surname: '',
-          email: '',
-          diabetic: false,
-          numberHistory: '',
-          idTypeDocument: undefined,
-          identificationDocument: undefined,
-          idRelationship: undefined,
-          birthday: undefined,
+          nombre: '',
+          apellido: '',
+          type_document_id: undefined,
+          cedula: '',
+          correo: '',
+          ocupacion: '',
+          fecha_nacimiento: undefined,
+          edad: '',
+          vacunacion: undefined,
+          salud_bucal: undefined,
+          scholarship_id: undefined,
+          relationship_id: undefined,
+          gender_id: undefined,
+          patologias: [],
+          discapacidades: [],
+          embarazo: false,
+          ficha_obstetric: false,
+          prenatal: {
+            fum: undefined,
+            fpp: undefined,
+            antecedentes_patologicos: '',
+            semana_gestacion: undefined,
+            gestas: undefined,
+            partos: undefined,
+            vaccine_dt: '',
+            abortos: undefined,
+            cesarias: undefined,
+          },
           groupAge: {
             id: undefined,
             name: '',
-            value: '',
+            rank: '',
           },
-          occupation: undefined,
-          gender: undefined,
-          scholarship: [],
-          vaccination: '',
-          age: '',
-          oralHealth: '',
-          disease: [],
-          pregnant: undefined,
-          disability: [],
-          menstruation: undefined,
-          birth: undefined,
-          gestationWeeks: 1,
-          vaccinationDt: [],
-          feats: 0,
-          childbirth: 0,
-          misbirth: 0,
-          obstetricPathologies: '',
         },
         defaultItem: {
-          name: '',
-          surname: '',
-          age: '',
-          diabetic: false,
-          email: '',
-          numberHistory: '',
-          idTypeDocument: undefined,
-          identificationDocument: undefined,
-          idRelationship: undefined,
-          birthday: undefined,
-          occupation: undefined,
-          gender: undefined,
+          nombre: '',
+          apellido: '',
+          type_document_id: undefined,
+          cedula: '',
+          correo: '',
+          ocupacion: '',
+          fecha_nacimiento: undefined,
+          edad: '',
+          vacunacion: undefined,
+          salud_bucal: undefined,
+          scholarship_id: undefined,
+          relationship_id: undefined,
+          gender_id: undefined,
+          patologias: [],
+          discapacidades: [],
+          embarazo: undefined,
+          ficha_obstetric: false,
+          prenatal: {
+            fum: undefined,
+            fpp: undefined,
+            antecedentes_patologicos: '',
+            semana_gestacion: undefined,
+            gestas: undefined,
+            partos: undefined,
+            vaccine_dt: '',
+            abortos: undefined,
+            cesarias: undefined,
+          },
           groupAge: {
             id: undefined,
             name: '',
-            value: '',
+            rank: '',
           },
-          scholarship: [],
-          vaccination: '',
-          oralHealth: '',
-          disease: [],
-          pregnant: undefined,
-          disability: [],
-          menstruation: undefined,
-          birth: undefined,
-          gestationWeeks: 1,
-          vaccinationDt: [],
-          feats: 0,
-          childbirth: 0,
-          misbirth: 0,
-          obstetricPathologies: '',
         },
         headersMortality: [
           {
             text: 'Nombre y apellido',
             align: 'start',
-            value: 'name',
+            value: 'nombre',
             sortable: false,
           },
           {
             text: 'Parentesco',
             align: 'start',
-            value: 'relationship',
+            value: 'relationship_id',
             sortable: false,
           },
           {
             text: 'Edad al fallecer',
             align: 'start',
-            value: 'age',
+            value: 'edad',
             sortable: false,
           },
           {
             text: 'Causa',
             align: 'start',
-            value: 'cause',
+            value: 'causa',
             sortable: false,
           },
         ],
-        dessertsMortality: [
-          {
-            name: 'Petra Lozada',
-            age: 74,
-            cause: 'Paro cardíaco',
-            relationship: {
-              name: 'Tío/a',
-              id: 5,
-            },
-          },
-          {
-            name: 'Alfonzo ramires',
-            age: 94,
-            cause: 'Infarto',
-            relationship: {
-              name: 'Bisabuelo/a',
-              id: 8,
-            },
-          },
-        ],
         editedItemMortality: {
-          name: '',
-          idRelationship: undefined,
-          age: undefined,
-          cause: '',
+          nombre: '',
+          relationship_id: undefined,
+          edad: undefined,
+          causa: '',
         },
         defaultItemMortality: {
-          name: '',
-          idRelationship: undefined,
-          age: undefined,
-          cause: '',
+          nombre: '',
+          relationship_id: undefined,
+          edad: undefined,
+          causa: '',
         },
       }
     },
     computed: {
+      ...mapState('fileFamily', ['steps', 'fileFamily']),
       formTitle () {
         return this.editedIndex === -1 ? 'Agregar miembro' : 'Editar miembro'
       },
       availableSteps () {
-        const steps = [0]
         if (
-          this.desserts.length > 0
-        ) steps.push(2)
-        this.$emit('data', steps)
-        return steps
+          this.miembros.length > 0 &&
+          this.steps.includes(1)
+        ) {
+          this.setSteps(2)
+          if (this.click === true) {
+            this.setMember(this.miembros)
+            this.setMortality(this.mortalidad)
+            this.$emit('next')
+          }
+        }
+        return 'ddd'
       },
       validate () {
         if (
-          !this.editedItem.name ||
-          !this.editedItem.surname ||
-          !this.editedItem.email ||
-          !this.editedItem.numberHistory ||
-          !this.editedItem.idTypeDocument ||
-          !this.editedItem.identificationDocument ||
-          !this.editedItem.idRelationship ||
-          !this.editedItem.birthday ||
-          !this.editedItem.gender ||
-          !this.editedItem.vaccination ||
-          !this.editedItem.oralHealth
+          !this.editedItem.nombre ||
+          !this.editedItem.apellido ||
+          !this.editedItem.type_document_id ||
+          !this.editedItem.cedula ||
+          !this.editedItem.correo ||
+          !this.editedItem.ocupacion ||
+          !this.editedItem.fecha_nacimiento ||
+          !this.editedItem.relationship_id ||
+          !this.editedItem.gender_id
         ) return true
         else return false
+      },
+      validateMortality () {
+        if (
+          !this.editedItemMortality.nombre ||
+          !this.editedItemMortality.apellido ||
+          !this.editedItemMortality.edad ||
+          !this.editedItemMortality.causa ||
+          !this.editedItemMortality.relationship_id
+        ) return true
+        else return false
+      },
+      date () {
+        var date = new Date(calFpp(this.editedItem.prenatal.fum))
+        console.log(date)
+        return date
       },
     },
     watch: {
@@ -1432,7 +1153,108 @@
         val || this.close()
       },
     },
+    created () {
+      this.ShowFileFamily()
+      this.listItemRelationship()
+      this.listItempScholarship()
+      this.listItemPathology()
+      this.listItemDisability()
+      this.listItemTypeDocument()
+      this.listItemGroupAge()
+      this.listItemGender()
+    },
     methods: {
+      ...mapMutations(['alert']),
+      ...mapMutations('fileFamily', ['setMember', 'setMortality', 'setSteps']),
+      ...mapActions('pathology', ['pathologyAllActions']),
+      ...mapActions('disability', ['disabilityAllActions']),
+      ...mapActions('typeDocument', ['typeDocumentAllActions']),
+      ...mapActions('groupAge', ['groupAgeAllActions']),
+      ...mapActions('gender', ['genderAllActions']),
+      async ShowFileFamily () {
+        this.id = this.$route.params.id
+        if (this.id !== undefined) {
+          this.miembros = this.fileFamily.miembros
+          this.mortalidad = this.fileFamily.mortalidad
+        }
+      },
+      async listItemGroupAge () {
+        const serviceResponse = await this.groupAgeAllActions()
+        if (serviceResponse.ok) {
+          this.groupAge = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemRelationship () {
+        const serviceResponse = await relationshipAllApi()
+        if (serviceResponse.ok) {
+          this.relationship = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemTypeDocument () {
+        const serviceResponse = await this.typeDocumentAllActions()
+        if (serviceResponse.ok) {
+          this.typeDocument = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItempScholarship () {
+        const serviceResponse = await scholarshipAllApi()
+        if (serviceResponse.ok) {
+          this.scholarship = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemPathology () {
+        const serviceResponse = await this.pathologyAllActions()
+        if (serviceResponse.ok) {
+          this.pathology = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemDisability () {
+        const serviceResponse = await this.disabilityAllActions()
+        if (serviceResponse.ok) {
+          this.disability = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemGender () {
+        const serviceResponse = await this.genderAllActions()
+        if (serviceResponse.ok) {
+          this.gender = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
       customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const textTwo = item.abbr.toLowerCase()
@@ -1442,55 +1264,66 @@
           textTwo.indexOf(searchText) > -1
       },
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.miembros.indexOf(item)
         this.editedItem = Object.assign({}, item)
+        if (this.id !== null) this.test(this.editedItem.fecha_nacimiento)
         this.dialog = true
       },
       addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.miembros[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.miembros.push(this.editedItem)
         }
         this.close()
       },
+      addItemMortality () {
+        this.mortalidad.push(this.editedItemMortality)
+        this.closeMortality()
+      },
       deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.miembros.indexOf(item)
         this.dialogDelete = true
       },
       deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+        this.miembros.splice(this.editedIndex, 1)
         this.closeDelete()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
+          this.infoDiabetic = false
           this.editedItem = Object.assign({}, this.defaultItem)
+        })
+      },
+      closeMortality () {
+        this.dialog2 = false
+        this.$nextTick(() => {
+          this.editedItemMortality = Object.assign({}, this.defaultItemMortality)
         })
       },
       closeDelete () {
         this.dialogDelete = false
         this.$nextTick(() => {
+          this.infoDiabetic = false
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         })
       },
       openAlert (val) {
-        var diabetic = this.disease.find(item => item.diabeticActive)
+        var diabetic = this.pathology.find(item => item.capture)
         if (val.includes(diabetic.id)) {
           this.infoDiabetic = true
-          this.editedItem.diabetic = true
         } else {
           this.infoDiabetic = false
-          this.editedItem.diabetic = false
         }
       },
       calGroupAge (val) {
         this.groupAge.forEach(item => {
           var groupAge = []
-          groupAge = JSON.parse(item.value)
-          if (val[0] >= groupAge[0] && val[0] <= groupAge[1]) {
-            Object.assign(this.editedItem.groupAge, item)
+          groupAge = JSON.parse(item.rank)
+          if (val[0] >= groupAge[0] && val[0] < groupAge[1]) {
+            this.editedItem.groupAge = Object.assign({}, item)
           }
         })
       },
@@ -1543,9 +1376,18 @@
         return day
       },
       test (val) {
-        var age = this.calAge(this.editedItem.birthday)
-        this.editedItem.age = JSON.stringify(age)
+        var age = this.calAge(this.editedItem.fecha_nacimiento)
+        this.editedItem.edad = JSON.stringify(age)
         this.calGroupAge(age)
+      },
+      age (val) {
+        return calAge(val)
+      },
+      getRelationship (val) {
+        const v = this.relationship.find(item => {
+          return item.id === val
+        })
+        return v
       },
     },
   }

@@ -2,38 +2,59 @@
   <v-container fluid>
     <base-material-wizard
       v-model="tab"
-      :available-steps="step"
+      :available-steps="steps"
       :items="tabs"
       title="Encuesta para una nueva fichas familiares"
       subtitle="Llenado de ficha familiar"
       class="mx-auto"
+      :loading="loading"
       @click:next="next"
       @click:prev="tab--"
     >
       <v-tab-item class="pb-12">
-        <add-data-basic @data="event($event)" />
+        <add-data-basic
+          :click="click"
+          @next="click = false"
+        />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        <add-member @data="event($event)" />
+        <add-member
+          :click="click1"
+          @next="click1 = false"
+        />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        <add-classification @data="event($event)" />
+        <add-classification
+          :click="click2"
+          @next="click2 = false"
+        />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        <add-evolution-risk @data="event($event)" />
+        <add-evolution-risk
+          :click="click3"
+          @next="click3 = false"
+        />
       </v-tab-item>
 
       <v-tab-item class="pb-12">
-        <add-contamination-point @data="event($event)" />
+        <add-contamination-point
+          :click="click4"
+          @next="click4 = false"
+        />
       </v-tab-item>
     </base-material-wizard>
   </v-container>
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     name: 'DashboardFormsWizard',
     components: {
@@ -44,6 +65,7 @@
       AddContaminationPoint: () => import('./section/AddContaminationPoint'),
     },
     data: () => ({
+      loading: false,
       address: '',
       city: '',
       state: '',
@@ -53,9 +75,14 @@
       street: '',
       tab: 0,
       tabs: ['Datos generales', 'Miembros', 'Clasificación de riesgos', 'Evolución de la gestión de risgo familiar', 'Contaminación ambiental'],
+      click: false,
+      click1: false,
+      click2: false,
+      click3: false,
+      click4: false,
     }),
-
     computed: {
+      ...mapState('fileFamily', ['steps', 'fileFamily']),
       stringAccount () {
         return this.account.join(',')
       },
@@ -63,7 +90,8 @@
         if (this.tab === 0) return 'basicos'
         else if (this.tab === 1) return 'member'
         else if (this.tab === 2) return 'clasificacion'
-        return 'evolution'
+        else if (this.tab === 3) return 'evolucion'
+        return 'contamination'
       },
       // availableSteps () {
       //   const steps = [0]
@@ -82,24 +110,66 @@
       //   return steps
       // },
     },
-
     methods: {
+      ...mapActions('fileFamily', ['fileFamilyPostActions', 'fileFamilyShowActions', 'fileFamilyUpdateActions']),
+      ...mapMutations('fileFamily', ['setFileFamily', 'resetSteps']),
+      ...mapMutations(['alert']),
       next () {
+        if (this.tab === 0) this.click = true
+        else if (this.tab === 1) this.click1 = true
+        else if (this.tab === 2) this.click2 = true
+        else if (this.tab === 3) this.click3 = true
+        else if (this.tab === 4) this.click4 = true
         this.validateForm(this.scope).then(item => {
           if (!item) return
-
           if (this.tab === this.tabs.length - 1) {
-            alert('Form finished')
+            this.saveFileFamily()
           } else {
             this.tab++
           }
         })
       },
-      event (val) {
-        this.step = val
-      },
       validateForm (scope) {
         return this.$validator.validateAll(scope)
+      },
+      async saveFileFamily () {
+        this.loading = true
+        var id = this.$route.params.id
+        if (id !== undefined) {
+          const serviceResponse = await this.fileFamilyUpdateActions(this.fileFamily)
+          if (serviceResponse.ok) {
+            this.$router.push('/intranet/ficha-familiar')
+            this.loading = false
+            this.resetSteps()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.loading = false
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        } else {
+          const serviceResponse = await this.fileFamilyPostActions(this.fileFamily)
+          if (serviceResponse.ok) {
+            this.$router.push('/intranet/ficha-familiar')
+            this.loading = false
+            this.resetSteps()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.loading = false
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
       },
     },
   }

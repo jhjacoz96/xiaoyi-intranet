@@ -15,6 +15,7 @@
       </template>
       <v-card-text>
         <v-card-title>
+          <v-spacer />
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -30,32 +31,10 @@
           :items-per-page="5"
           class="elevation-1"
         >
-          <template v-slot:item.semaforizacion="{ item }">
-            <v-chip color="success">
-              {{ item.semaforizacion }}
-            </v-chip>
+          <template v-slot:item.edad="{ item }">
+            {{ age(item.fecha_nacimiento) }}
           </template>
           <template v-slot:item.accion="{ item }">
-            <input
-              type="text"
-              :value="item"
-              class="d-none"
-            >
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  x-small
-                  color="info"
-                  v-bind="attrs"
-                  class="ml-2"
-                  v-on="on"
-                >
-                  <v-icon>mdi-eye</v-icon>
-                </v-btn>
-              </template>
-              <span>Ver</span>
-            </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -65,7 +44,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="dialog = !dialog"
+                  @click="editItem(item)"
                 >
                   <v-icon>mdi-doctor</v-icon>
                 </v-btn>
@@ -102,13 +81,11 @@
                     md="6"
                   >
                     <v-select
-                      v-model="editedItem.idPresion"
-                      label="Presión arterial"
+                      v-model="editedItem.presion_arterial"
+                      label="Presión arterial (*)"
                       outlined
                       dense
                       :items="presion"
-                      item-text="nombre"
-                      item-value="id"
                     />
                   </v-col>
                   <v-col
@@ -128,7 +105,7 @@
                   >
                     <v-text-field
                       v-model="editedItem.respiracion"
-                      label="Respiración"
+                      label="Respiración (*)"
                       outlined
                       dense
                     />
@@ -138,8 +115,8 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.saturacionOxigeno"
-                      label="Saturación de oxígeno"
+                      v-model="editedItem.saturacion_oxigeno"
+                      label="Saturación de oxígeno (*)"
                       outlined
                       dense
                     />
@@ -150,7 +127,7 @@
                   >
                     <v-text-field
                       v-model="editedItem.temperatura"
-                      label="Temperatura"
+                      label="Temperatura (*)"
                       outlined
                       dense
                     />
@@ -167,8 +144,8 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.peso"
-                      label="Peso"
+                      v-model.number="editedItem.peso"
+                      label="Peso (*)"
                       outlined
                       dense
                     />
@@ -178,8 +155,8 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.altura"
-                      label="Altura"
+                      v-model.number="editedItem.altura"
+                      label="Altura (*)"
                       outlined
                       dense
                     />
@@ -189,9 +166,10 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.imc"
+                      v-model="imc"
                       label="Imc"
                       outlined
+                      disabled
                       dense
                     />
                   </v-col>
@@ -200,8 +178,8 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.circunferenciaApdominal"
-                      label="Circunferencia abdominal"
+                      v-model.number="editedItem.circunferencia"
+                      label="Circunferencia abdominal (*)"
                       outlined
                       dense
                     />
@@ -211,8 +189,8 @@
                     md="6"
                   >
                     <v-text-field
-                      v-model="editedItem.glusemia"
-                      label="Nivel de glusemia"
+                      v-model.number="editedItem.nivel_glusemia"
+                      label="Nivel de glusemia (*)"
                       outlined
                       dense
                     />
@@ -231,38 +209,36 @@
                   Tratamiento farmacológico
                 </div>
               </div>
-              <v-card-text class="d-flex">
-                <v-subheader>
-                  medicamentos
-                </v-subheader>
+              <v-card-text
+                class="text-center text-h5 d-fleX mb-6 align-center"
+              >
+                <div
+                  class=" d-inline-block float-left"
+                >
+                  Medicamentos
+                </div>
                 <v-btn
                   fab
                   color="secondary"
                   class="float-right d-inline-block"
+                  @click="addMedicine"
                 >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
-              </V-card-text>
+              </v-card-text>
               <v-card-text>
                 <tr
-                  v-for="(item, k) in editedItem.tratamientos"
+                  v-for="(item, k) in editedItem.tratamiento_farmacologico"
                   :key="k"
                 >
                   <td>
                     <v-select
-                      v-model="item.typeMedicine"
-                      label="Tipo"
-                      outlined
-                      :items="typeMedicine"
-                      dense
-                    />
-                  </td>
-                  <td>
-                    <v-select
-                      v-model="item.medicamento"
+                      v-model="item.id"
                       label="Medicamento"
                       outlined
-                      :items="medicamento"
+                      :items="medicamentos"
+                      item-text="name"
+                      item-value="id"
                       dense
                     />
                   </td>
@@ -277,26 +253,66 @@
                   </td>
                   <td>
                     <v-select
-                      v-model="item.measure"
+                      v-model="item.measure_id"
                       class="mx-2"
                       label="Medica"
                       :items="measure"
+                      item-text="name"
+                      item-value="id"
                       outlined
                       dense
                     />
                   </td>
                   <td>
-                    <v-select
-                      v-model="item.frecuencia"
-                      label="Frecuencia"
-                      outlined
-                      dense
-                      :items="frecuencia"
-                    />
+                    <v-menu
+                      ref="dialog"
+                      v-model="item.menu2Hora"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      :return-value.sync="item.hora"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="item.hora"
+                          outlined
+                          dense
+                          class="mx-2"
+                          label="Hora"
+                          prepend-icon="mdi-clock-time-four-outline"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        />
+                      </template>
+                      <v-time-picker
+                        v-if="item.menu2Hora"
+                        v-model="item.hora"
+                        outline
+                        dense
+                        class="mx-2"
+                        format="24hr"
+                        full-width
+                        @click:minute="$refs.dialog[k].save(item.hora)"
+                      />
+                    </v-menu>
+                  </td>
+                  <td>
+                    <v-btn
+                      icon
+                      dark
+                      class="mx-2"
+                      color="pink"
+                      @click="deleteMedicine(item)"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
                   </td>
                 </tr>
               </v-card-text>
-
               <div
                 class="text-center text-h4 d-fleX font-weight-bold mb-6 blue--text"
               >
@@ -306,40 +322,48 @@
                   Tratamiento no farmacológico
                 </div>
               </div>
-              <v-subheader>
-                Indicaciones de la dieta
-              </v-subheader>
               <v-card-text>
                 <v-textarea
-                  label="Descripción"
+                  v-model="editedItem.dieta"
+                  label="Dieta"
                   outlined
                   multiple
                   dense
                 />
               </v-card-text>
-              <v-card-text class="d-flex">
-                <v-subheader>
-                  Indicaciones para las actividades físicas
-                </v-subheader>
+              <v-card-text
+                class="text-center text-h5 d-fleX mb-6 align-center"
+              >
+                <div
+                  class=" d-inline-block float-left"
+                >
+                  Actividades
+                </div>
                 <v-btn
                   fab
                   color="secondary"
                   class="float-right d-inline-block"
+                  @click="addActivity"
                 >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
-              </V-card-text>
+              </v-card-text>
               <v-card-text class="justify-center">
-                <tr>
+                <tr
+                  v-for="(item, k) in editedItem.tratamiento_no_farmacologico"
+                  :key="k"
+                >
                   <td>
-                    <v-select
-                      label="Actividad fisica"
+                    <v-text-field
+                      v-model="item.actividad"
+                      label="Actividad"
                       outlined
                       dense
                     />
                   </td>
                   <td>
                     <v-text-field
+                      v-model="item.duracion"
                       label="Duración"
                       outlined
                       class="mx-2"
@@ -347,11 +371,51 @@
                     />
                   </td>
                   <td>
-                    <v-select
-                      label="Frecuencia"
-                      outlined
-                      dense
-                    />
+                    <v-menu
+                      ref="dialog1"
+                      v-model="item.menuHora"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      :return-value.sync="item.hora"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="item.hora"
+                          outlined
+                          dense
+                          class="mx-2"
+                          label="Hora"
+                          prepend-icon="mdi-clock-time-four-outline"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        />
+                      </template>
+                      <v-time-picker
+                        v-if="item.menuHora"
+                        v-model="item.hora"
+                        outline
+                        dense
+                        format="24hr"
+                        full-width
+                        @click:minute="$refs.dialog1[k].save(item.hora)"
+                      />
+                    </v-menu>
+                  </td>
+                  <td>
+                    <v-btn
+                      icon
+                      dark
+                      class="mx-2"
+                      color="pink"
+                      @click="deleteActivity(item)"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
                   </td>
                 </tr>
               </v-card-text>
@@ -364,6 +428,11 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
+  import { calAge } from '@/utils/calAge'
   export default {
     data () {
       return {
@@ -371,53 +440,61 @@
         search: '',
         step: [],
         tab: 0,
-        tabs: ['Signos vitales', 'Antropometria', 'Tratamientos'],
+        tabs: ['Signos vitales', 'Antropometría', 'Tratamientos'],
         headers: [
-          { text: 'Nombre', sortable: false, value: 'nombre' },
-          { text: 'Semafirización de alertas', sortable: false, value: 'semaforizacion' },
+          { text: 'Nombre', sortable: true, value: 'nombre' },
           { text: 'Cédula', sortable: false, value: 'cedula' },
-          { text: 'Sexo', sortable: false, value: 'sexo' },
+          { text: 'Sexo', sortable: false, value: 'gender_id.nombre' },
           { text: 'Edad', sortable: false, value: 'edad' },
-          { text: 'Sector', sortable: false, value: 'sector' },
           { text: 'Acción', sortable: false, value: 'accion' },
         ],
-        desserts: [
-          {
-            nombre: 'Aron Perez',
-            semaforizacion: 'En orden',
-            cedula: '26378059',
-            sexo: 'Masculino',
-            edad: '43A 10M 1D',
-            sector: 'Pedregal',
-          },
-        ],
-        presion: [
-          { nombre: 'Sistolica', id: 1 },
-          { nombre: 'Diastólica', id: 2 },
-        ],
+        desserts: [],
+        presion: ['Sistolica', 'Diastólica'],
+        medicamentos: [],
+        measure: [],
         editedItem: {
-          idPresion: undefined,
+          dieta: '',
+          presion_arterial: '',
           pulso: '',
           respiracion: '',
-          saturacionOxigeno: '',
           temperatura: '',
-          peso: '',
-          altura: '',
-          imc: '',
-          circunferenciaApdominal: '',
-          tratamientos: [
-            {
-              medicamento: '',
-              measure: '',
-              frecuencia: '',
-            },
-          ],
-          glusemia: '',
+          saturacion_oxigeno: '',
+          peso: 0,
+          altura: 0,
+          circunferencia: 0,
+          tratamiento_farmacologico: [],
+          tratamiento_no_farmacologico: [],
+          nivel_glusemia: 0,
         },
-        medicamento: ['Glutem', 'Avitix'],
-        typeMedicine: ['Antibióticos', 'Analgésicos', 'Aines', 'Opiodides', 'Diureticos'],
-        frecuencia: ['Cada hora', 'Cada dos horas', 'Diario'],
-        measure: ['cc', 'Tableta'],
+        defaultItem: {
+          dieta: '',
+          presion_arterial: '',
+          pulso: '',
+          respiracion: '',
+          temperatura: '',
+          saturacion_oxigeno: '',
+          peso: 0,
+          altura: 0,
+          circunferencia: 0,
+          tratamiento_farmacologico: [],
+          tratamiento_no_farmacologico: [],
+          nivel_glusemia: 0,
+        },
+        editedMedicine: {
+          id: null,
+          hora: null,
+          menu2Hora: false,
+          dosis: 0,
+          measure_id: null,
+        },
+        editedActivity: {
+          id: null,
+          actividad: '',
+          menuHora: false,
+          duracion: '',
+          hora: null,
+        },
+        typecontrolDiabetic: ['Antibióticos', 'Analgésicos', 'Aines', 'Opiodides', 'Diureticos'],
       }
     },
     computed: {
@@ -429,22 +506,26 @@
       availableSteps () {
         const steps = [0]
         if (
-          this.editedItem.idPresion &&
+          this.editedItem.presion_arterial &&
           this.editedItem.pulso &&
           this.editedItem.respiracion &&
-          this.editedItem.saturacionOxigeno &&
+          this.editedItem.saturacion_oxigeno &&
           this.editedItem.temperatura
         ) steps.push(1)
 
         if (
           this.editedItem.peso &&
           this.editedItem.altura &&
-          this.editedItem.imc &&
-          this.editedItem.circunferenciaApdominal &&
-          this.editedItem.glusemia &&
+          this.editedItem.circunferencia &&
+          this.editedItem.nivel_glusemia &&
           steps.includes(1)
         ) steps.push(2)
-
+        if (
+          this.editedItem.tratamiento_farmacologico.length > 0 &&
+          this.editedItem.tratamiento_no_farmacologico.length > 0 &&
+          this.editedItem.dieta &&
+          steps.includes(2)
+        ) steps.push(3)
         // if (
         //   this.address &&
         //   this.street &&
@@ -454,14 +535,85 @@
         // ) steps.push(3)
         return steps
       },
+      imc (val) {
+        if (this.editedItem.peso === 0 || !this.editedItem.altura === 0) return
+        var imc = (this.editedItem.peso) / Math.round(Math.pow(this.editedItem.altura, 2), -2)
+        return imc
+      },
+    },
+    created () {
+      this.listItem()
+      this.listItemMedicine()
+      this.listItemMeasure()
     },
     methods: {
+      ...mapActions('controlDiabetic', ['controlDiabeticAllActions', 'controlDiabeticUpdateActions']),
+      ...mapActions('medicine', ['medicineAllActions']),
+      ...mapActions('measure', ['measureAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.controlDiabeticAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemMedicine () {
+        const serviceResponse = await this.medicineAllActions()
+        if (serviceResponse.ok) {
+          this.medicamentos = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemMeasure () {
+        const serviceResponse = await this.measureAllActions()
+        if (serviceResponse.ok) {
+          this.measure = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item.diabetic_patient)
+        console.log(this.editedItem)
+        this.dialog = true
+      },
+      async addItem () {
+        const serviceResponse = await this.controlDiabeticUpdateActions(this.editedItem)
+        if (serviceResponse.ok) {
+          this.dialog = false
+          this.$nextTick(() => {
+            this.editedItem = Object.assign({}, this.defaultItem)
+          })
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
       next () {
         this.validateForm(this.scope).then(item => {
           if (!item) return
 
           if (this.tab === this.tabs.length - 1) {
-            alert('Form finished')
+            this.addItem()
           } else {
             this.tab++
           }
@@ -472,6 +624,23 @@
       },
       validateForm (scope) {
         return this.$validator.validateAll(scope)
+      },
+      age (val) {
+        return calAge(val)
+      },
+      addMedicine () {
+        this.editedItem.tratamiento_farmacologico.push(this.editedMedicine)
+      },
+      addActivity () {
+        this.editedItem.tratamiento_no_farmacologico.push(this.editedActivity)
+      },
+      deleteActivity (item) {
+        var index = this.editedItem.tratamiento_no_farmacologico.indexOf(item)
+        this.editedItem.tratamiento_no_farmacologico.splice(index, 1)
+      },
+      deleteMedicine (item) {
+        var index = this.editedItem.tratamiento_farmacologico.indexOf(item)
+        this.editedItem.tratamiento_farmacologico.splice(index, 1)
       },
     },
   }

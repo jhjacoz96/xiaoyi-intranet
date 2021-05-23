@@ -3,48 +3,304 @@
     <base-material-card color="primary">
       <template v-slot:heading>
         <v-row>
+          <v-col
+            md="2"
+            cols="2"
+          >
+            <v-btn
+              icon
+              large
+              @click="$router.go(-1)"
+            >
+              <v-icon>mdi-arrow-left-bold</v-icon>
+            </v-btn>
+          </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Ficha familiar
+              Seguimiento de ficha familiar
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Perminite administrar las fichas familiares
+              Perminite administrar fichas familiares de una comunidad
             </div>
           </v-col>
         </v-row>
+        <v-btn
+          absolute
+          fab
+          right
+          color="secondary"
+          @click="$router.push('/intranet/ficha-familiar/agregar')"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
       </template>
       <v-container>
-        <v-component
-          heading="hola"
-        />
-        <v-row
-          justify="center"
+        <v-card-actions class="justify-center">
+          <v-form>
+            <v-row>
+              <!-- <v-col
+                cols="4"
+              >
+                <v-select
+                  v-model="editedItemSearch.filter"
+                  label="Tipo de busqueda"
+                  :items="['Número de história', 'Cédula de miembro familiar']"
+                  outlined
+                  dense
+                />
+              </v-col> -->
+              <v-col
+                cols="6"
+              >
+                <v-text-field
+                  v-model="editedItemSearch.search"
+                  placeholder="Búsqueda"
+                  outlined
+                  dense
+                />
+              </v-col>
+              <v-col
+                cols="2"
+              >
+                <v-btn
+                  color="primary"
+                  class="ml-1"
+                  :disabled="loadingSearch"
+                  :loading="loadingSearch"
+                  @click="addItemSearch()"
+                >
+                  <v-icon>
+                    mdi-magnify
+                  </v-icon>
+                </v-btn>
+              </v-col>
+              <v-col
+                cols="2"
+              >
+                <v-btn
+                  color="primary"
+                  outlined
+                  class="ml-5"
+                  @click="dialog = true"
+                >
+                  <v-icon>
+                    mdi-filter
+                  </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-actions>
+        <v-dialog
+          v-model="dialog"
+          width="400"
         >
-          <v-col cols="3">
-            <base-item-master
-              title="Seguimiento"
-              icon="mdi-36px mdi-36px mdi-clipboard-pulse"
-              to="ficha-familiar/seguimiento"
-            />
-          </v-col>
-          <v-col cols="3">
-            <base-item-master
-              title="Iniciar nueva encuesta"
-              icon="mdi-36px mdi-36px mdi-file-document-edit"
-              to="ficha-familiar/agregar"
-            />
-          </v-col>
-        </v-row>
+          <v-card>
+            <v-container>
+              <v-card-text class="font-weight-bold text-center">
+                filtrar busqueda
+              </v-card-text>
+              <v-card-text>
+                <v-select
+                  v-model="editedItemFilter.zone_id"
+                  outlined
+                  multiple
+                  dense
+                  :items="zone"
+                  item-text="name"
+                  item-value="id"
+                  label="Zonas"
+                />
+                <v-select
+                  v-model="editedItemFilter.level_total_id"
+                  label="Niveles de riesgo"
+                  outlined
+                  dense
+                  item-text="name"
+                  item-value="id"
+                  :items="levelTotal"
+                  multiple
+                />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  color="primary"
+                  :disabled="loadingFilter"
+                  :loading="loadingFilter"
+                  @click="addItemFilter()"
+                >
+                  Filtrar
+                </v-btn>
+                <v-spacer />
+              </v-card-actions>
+            </v-container>
+          </v-card>
+        </v-dialog>
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          :items-per-page="5"
+          class="elevation-1"
+        >
+          <template v-slot:item.level_riesgo="{ item }">
+            <v-chip
+              v-if="item.level_total_id"
+              :color="item.level_total_id.color"
+            >
+              {{ item.level_total_id.name }}
+            </v-chip>
+          </template>
+          <template v-slot:item.accion="{ item }">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  fab
+                  x-small
+                  color="warning"
+                  v-bind="attrs"
+                  class="ml-2"
+                  v-on="on"
+                  @click="$router.push(`ficha-familiar/${item.id}`)"
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+              <span>Editar</span>
+            </v-tooltip>
+          </template>
+        </v-data-table>
+        <!-- <v-dialog
+          v-model="dialog"
+          max-width="500px"
+        >
+        </v-dialog> -->
       </v-container>
     </base-material-card>
   </v-container>
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
+        dialog: false,
+        loadingSearch: false,
+        loadingFilter: false,
+        headers: [
+          { text: 'Numero de historia', sortable: false, value: 'numero_historia' },
+          { text: 'Nivel de riesgo', sortable: false, value: 'level_riesgo' },
+          { text: 'Sector', sortable: false, value: 'zone_id.name' },
+          { text: 'Acción', sortable: false, align: 'center', value: 'accion' },
+        ],
+        desserts: [],
+        levelTotal: [],
+        zone: [],
+        editedItemSearch: {
+          search: '',
+          filter: '',
+        },
+        defaultItemSearch: {
+          search: '',
+          filter: '',
+        },
+        editedItemFilter: {
+          zone_id: [],
+          level_total_id: [],
+        },
+        defaultItemFilter: {
+          zone_id: [],
+          level_total_id: [],
+        },
       }
+    },
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+    },
+    created () {
+      this.listItem()
+      this.listItemZone()
+      this.listItemLevelTotal()
+    },
+    methods: {
+      ...mapActions('fileFamily', ['fileFamilyPostActions', 'fileFamilyAllActions', 'fileFamilySearchActions', 'fileFamilyFilterActions']),
+      ...mapActions('zone', ['zoneAllActions']),
+      ...mapActions('levelTotal', ['levelTotalAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.fileFamilyAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemZone () {
+        const serviceResponse = await this.zoneAllActions()
+        if (serviceResponse.ok) {
+          this.zone = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemLevelTotal () {
+        const serviceResponse = await this.levelTotalAllActions()
+        if (serviceResponse.ok) {
+          this.levelTotal = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async addItemSearch () {
+        this.loadingSearch = true
+        const serviceResponse = await this.fileFamilySearchActions(this.editedItemSearch)
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+        this.loadingSearch = false
+        this.editedItemSearch = Object.assign({}, this.defaultItemSearch)
+      },
+      async addItemFilter () {
+        this.loadingFilter = true
+        const serviceResponse = await this.fileFamilyFilterActions(this.editedItemFilter)
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+          this.close()
+        } else {
+          this.close()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItemFilter = Object.assign({}, this.defaultItemFilter)
+        })
+        this.loadingFilter = false
+      },
     },
   }
 </script>

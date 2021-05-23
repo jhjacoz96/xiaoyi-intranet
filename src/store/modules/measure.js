@@ -14,27 +14,22 @@ import {
        actions: {
            async measurePostActions (commit, payload) {
                const serviceResponse = await measurePostApi(payload)
-               console.log(serviceResponse)
                return serviceResponse
            },
            async measureAllActions (commit) {
                const serviceResponse = await measureAllApi()
-               console.log(serviceResponse)
                return serviceResponse
            },
            async measureDeleteActions (commit, payload) {
                const serviceResponse = await measureDeleteApi(payload)
-               console.log(serviceResponse)
                return serviceResponse
            },
            async measureGetActions (commit, payload) {
                const serviceResponse = await measureGetApi(payload)
-               console.log(serviceResponse)
                return serviceResponse
            },
            async measureUpdateActions (commit, payload) {
                const serviceResponse = await measureUpdateApi(payload, payload.id)
-               console.log(serviceResponse)
                return serviceResponse
            },
        },

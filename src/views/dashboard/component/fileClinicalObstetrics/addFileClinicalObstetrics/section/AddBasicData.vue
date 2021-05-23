@@ -17,14 +17,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.name"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.name')"
-            data-vv-name="name"
+            v-model="miembro.nombre"
+            disabled
             outlined
             label="Nombres"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -32,14 +29,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.surname"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.surname')"
-            data-vv-name="surname"
+            v-model="miembro.apellido"
             outlined
+            disabled
             label="Apellidos"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -47,14 +41,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.typeDocument"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.typeDocument')"
-            data-vv-name="typeDocument"
+            v-model="miembro.type_document_id.nombre"
+            disabled
             outlined
             label="Tipo de documento"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -62,14 +53,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.document"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.document')"
-            data-vv-name="document"
+            v-model="miembro.cedula"
+            disabled
             outlined
             label="Cédula"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -77,29 +65,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.bloodType"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.bloodType')"
-            data-vv-name="bloodType"
-            outlined
-            label="Tipo de sangre"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.culturalGroup"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.culturalGroup')"
-            data-vv-name="culturalGroup"
+            v-model="miembro.cultural_group_id.name"
+            disabled
             outlined
             label="Grupo cultural"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -107,14 +77,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.dateBirth"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.dateBirth')"
-            data-vv-name="dateBirth"
+            v-model="miembro.fecha_nacimiento"
             outlined
+            disabled
             label="Fecha de nacimiento"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -122,14 +89,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.age"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.age')"
-            data-vv-name="age"
+            v-model="age"
+            disabled
             outlined
             label="Edad"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -137,14 +101,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.civilStatus"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.civilStatus')"
-            data-vv-name="civilStatus"
+            v-model="miembro.zone_id.name"
+            disabled
             outlined
-            label="Estado civil"
+            label="Sector"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -152,44 +113,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.province"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.province')"
-            data-vv-name="province"
-            outlined
-            label="Provincia"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.canton"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.canton')"
-            data-vv-name="canton"
-            outlined
-            label="Cantón"
-            dense
-            validate-on-blur
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="editedItem.address"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.Address')"
-            data-vv-name="Address"
+            v-model="miembro.direccion_habitual"
+            disabled
             outlined
             label="Direccion de domicilio"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -197,14 +125,11 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.instructionLevel"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.instructionLevel')"
-            data-vv-name="instructionLevel"
+            v-model="miembro.scholarship_id.name"
+            disabled
             outlined
             label="Nivel de instrucción"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
@@ -212,27 +137,56 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.occupation"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.occupation')"
-            data-vv-name="occupation"
+            v-model="miembro.ocupacion"
+            disabled
             outlined
             label="Ocupacion"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
           cols="6"
           sm="4"
         >
-          <v-text-field
-            v-model="editedItem.disability"
+          <v-select
+            v-model="miembro.disability_id"
             v-validate="'required'"
-            :error-messages="errors.collect('basic.disability')"
-            data-vv-name="disability"
+            disabled
+            multiple
+            :items="discapacindades"
+            item-text="name"
+            item-value="id"
             outlined
-            label="Discapacidad"
+            label="Discapacidades"
+            dense
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-select
+            v-model="editedItem.type_blood_id"
+            outlined
+            :items="typeBloods"
+            item-text="name"
+            item-value="id"
+            label="Tipo de sangre"
+            dense
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-select
+            v-model="editedItem.estado_civil"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.civilStatus')"
+            data-vv-name="estado civil"
+            outlined
+            label="Estado civil"
+            :items="['Soltera/o', 'Casada/o', 'Viuda/o']"
             dense
             validate-on-blur
           />
@@ -242,10 +196,10 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.liveWith"
+            v-model="editedItem.vive_con"
             v-validate="'required'"
             :error-messages="errors.collect('basic.liveWith')"
-            data-vv-name="liveWith"
+            data-vv-name="vive con"
             outlined
             label="Vive con"
             dense
@@ -261,18 +215,19 @@
           fab
           color="secondary"
           class="float-right d-inline-block"
+          @click="addTelofono()"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </div>
       <v-container>
         <tr
-          v-for="(item, index) in editedItem.emergency"
+          v-for="(item, index) in editedItem.telefonos"
           :key="index"
         >
           <td>
             <v-text-field
-              v-model="editedItem.emergency.name"
+              v-model="item.nombre"
               outlined
               label="Nombre"
               dense
@@ -280,7 +235,7 @@
           </td>
           <td>
             <v-text-field
-              v-model="editedItem.phone"
+              v-model="item.telefono"
               class="mx-2"
               outlined
               label="Telefono"
@@ -289,12 +244,24 @@
           </td>
           <td>
             <v-select
-              v-model="editedItem.relationship"
+              v-model="item.relationship_id"
               outlined
               :items="relationship"
               label="Parentesco"
+              item-text="name"
+              item-value="id"
               dense
             />
+          </td>
+          <td>
+            <v-btn
+              color="pink"
+              icon
+              dark
+              @click="deleteTelefono(item)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
           </td>
         </tr>
       </v-container>
@@ -308,42 +275,41 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
+  import { calAge } from '@/utils/calAge'
+  import { relationshipAllApi } from '@/api/modules'
   export default {
+    props: {
+      click: {
+        type: String,
+        default: '',
+      },
+    },
     data () {
       return {
         value: '',
+        id: undefined,
         editedItem: {
-          name: '',
-          surname: '',
-          typeDocument: undefined,
-          document: '',
-          bloodType: undefined,
-          culturalGroup: undefined,
-          dateBirth: undefined,
-          age: '',
-          civilStatus: undefined,
-          province: undefined,
-          canton: undefined,
-          instructionLevel: undefined,
-          occupation: undefined,
-          liveWith: undefined,
-          emergency: [
-            {
-              name: '',
-              phone: '',
-              relationship: undefined,
-            },
-          ],
+          type_blood_id: null,
+          estado_civil: '',
+          vive_con: '',
+          telefonos: [],
         },
-        emergency: {
-          name: '',
-          phone: '',
-          relationship: undefined,
-        },
-        relationship: ['Tia', 'Abuelo', 'Mamá', 'Papa', 'Esposa'],
+        discapacindades: [],
+        typeBloods: [],
+        relationship: [],
       }
     },
     computed: {
+      ...mapState('fileClinicalObstetric', ['steps', 'fileObstetric', 'miembro']),
+      age () {
+        if (this.miembro) return calAge(this.miembro.fecha_nacimiento)
+        else return ''
+      },
       // progress () {
       //   var inputs = Object.values(this.editedItem)
       //   var count = inputs.filter(item => {
@@ -352,15 +318,100 @@
       //   return Math.min(100, (count.length / 16) * 100)
       // },
       availableSteps () {
-        const steps = [0]
-        // if (
-        // ) steps.push(1)
-        steps.push(1)
-        this.$emit('data', steps)
-        return steps
+        if (
+          this.editedItem.type_blood_id &&
+          this.editedItem.estado_civil &&
+          this.editedItem.vive_con
+        ) {
+          this.setSteps(1)
+          if (this.click === 'next') {
+            console.log('entro')
+            this.setFileObstetric(this.editedItem)
+            this.$emit('click:next')
+          }
+          if (this.click === 'save') {
+            console.log('entro')
+            this.setFileObstetric(this.editedItem)
+            this.$emit('click:save')
+          }
+        }
+        return ''
       },
     },
+    created () {
+      this.getFileObstetric()
+      this.itemDIsability()
+      this.itemTypeBlood()
+      this.itemRelationship()
+    },
     methods: {
+      ...mapMutations(['alert']),
+      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions', 'fileClinicalObstetricCheckActions']),
+      ...mapMutations('fileClinicalObstetric', ['setSteps', 'setFileObstetric', 'setMiembro', 'resetFileObstetric']),
+      ...mapActions('disability', ['disabilityAllActions']),
+      ...mapActions('typeBlood', ['typeBloodAllActions']),
+      async itemDIsability () {
+        const serviceResponse = await this.disabilityAllActions()
+        if (serviceResponse.ok) {
+          this.discapacindades = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async itemTypeBlood () {
+        const serviceResponse = await this.typeBloodAllActions()
+        if (serviceResponse.ok) {
+          this.typeBloods = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async itemRelationship () {
+        const serviceResponse = await relationshipAllApi()
+        if (serviceResponse.ok) {
+          this.relationship = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async getFileObstetric () {
+        this.resetFileObstetric()
+        this.id = this.$route.params.id
+        if (this.id !== undefined) {
+          const serviceResponse = await this.fileClinicalObstetricGetActions(this.$route.params.id)
+          if (serviceResponse.ok) {
+            this.setFileObstetric(serviceResponse.data)
+            this.editedItem = Object.assign({}, serviceResponse.data)
+            this.checkMember(serviceResponse.data.cedula)
+          } else {
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
+        }
+      },
+      addTelofono () {
+        var telefono = {
+          nombre: '',
+          telefono: '',
+          relationship_id: null,
+        }
+        this.editedItem.telefonos.push(telefono)
+      },
+      deleteTelefono (val) {
+        var index = this.editedItem.telefonos.indexOf(val)
+        this.editedItem.telefonos.splice(index, 1)
+      },
       customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const textTwo = item.abbr.toLowerCase()
@@ -368,6 +419,17 @@
 
         return textOne.indexOf(searchText) > -1 ||
           textTwo.indexOf(searchText) > -1
+      },
+      async checkMember (val) {
+        const serviceResponse = await this.fileClinicalObstetricCheckActions(val)
+        if (serviceResponse.ok) {
+          this.setMiembro(serviceResponse.data)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
     },
   }

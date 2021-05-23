@@ -19,16 +19,17 @@
             Loquios
           </p>
           <v-radio-group
-            v-model="editedItem.inmediato.loquios"
+            v-model="editedItem.loquios"
             row
+            mandatory
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -40,16 +41,17 @@
             Imvolución uterina
           </p>
           <v-radio-group
-            v-model="editedItem.inmediato.involucion"
+            v-model="editedItem.involucion_uterina"
             row
+            mandatory
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -57,22 +59,13 @@
           cols="6"
           sm="4"
         >
-          <p class="text-h6 font-weight-light">
-            Dolor
-          </p>
-          <v-radio-group
-            v-model="editedItem.inmediato.dolor"
-            row
-          >
-            <v-radio
-              label="Si"
-              value="si"
-            />
-            <v-radio
-              label="No"
-              value="no"
-            />
-          </v-radio-group>
+          <v-select
+            v-model="editedItem.dolor_eva"
+            label="Dolor eva"
+            :items="[1, 2, 3, 4, 5]"
+            outlined
+            dense
+          />
         </v-col>
         <v-col
           cols="6"
@@ -82,31 +75,31 @@
             Lactancia
           </p>
           <v-radio-group
-            v-model="editedItem.inmediato.lactancia"
+            v-model="editedItem.educacion_lactancia"
             row
+            mandatory
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
+              @click.prevent="editedItem.satisfaccion_lactancia = null"
             />
           </v-radio-group>
         </v-col>
 
         <v-col
-          v-if="editedItem.inmediato.lactancia === 'si'"
+          v-if="editedItem.educacion_lactancia === 1"
           cols="6"
           sm="4"
         >
           <v-select
-            v-movel="editedItem.inmediato.satisfaccion"
+            v-model="editedItem.satisfaccion_lactancia"
             label="Nivel de satifacción"
-            :items="text"
-            item-text="text"
-            item-value="value"
+            :items="[1, 2, 3, 4, 5]"
             outlined
             dense
           />
@@ -167,8 +160,8 @@
                 <td>FC</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[0]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[0]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -186,8 +179,8 @@
                 <td>Sistólica</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[1]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[1]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -205,8 +198,8 @@
                 <td>Diastólica</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[2]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[2]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -224,8 +217,8 @@
                 <td>FR</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[3]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[3]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr><tr>
@@ -242,8 +235,8 @@
                 <td>T(*C)</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[4]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[4]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -261,8 +254,8 @@
                 <td>Sat</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[5]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[5]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -280,8 +273,8 @@
                 <td>Estado de conciencia</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[6]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[6]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -299,8 +292,8 @@
                 <td>Proteinuria</td>
                 <td>
                   <v-select
-                    v-model="editedItem.inmediato.scoreMama[7]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_inmediato[7]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -318,7 +311,7 @@
                   colspan="10"
                   class="warning white--text text-center"
                 >
-                  4
+                  {{ editedItem.score_mama_inmediato }}
                 </td>
               </tr>
             </tbody>
@@ -328,7 +321,7 @@
       <div class="text-center text-h4 mt-10 font-weight-bold mb-6 blue--text">
         Mediato
       </div>
-      <v-row>
+      <!-- <v-row>
         <v-col
           cols="6"
           sm="4"
@@ -337,7 +330,7 @@
             ¿Se realizó aseo?
           </p>
           <v-radio-group
-            v-model="editedItem.mediato.aseo"
+            v-model="editedItem.aseo"
             row
           >
             <v-radio
@@ -350,7 +343,7 @@
             />
           </v-radio-group>
         </v-col>
-      </v-row>
+      </v-row> -->
       <div class="mt-4 my-3">
         <p class="text-h6 font-weight-regular">
           Score mama
@@ -406,8 +399,8 @@
                 <td>FC</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[0]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[0]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -425,8 +418,8 @@
                 <td>Sistólica</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[1]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[1]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -444,8 +437,8 @@
                 <td>Diastólica</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[2]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[2]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -463,8 +456,8 @@
                 <td>FR</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[3]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[3]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr><tr>
@@ -481,8 +474,8 @@
                 <td>T(*C)</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[4]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[4]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -500,8 +493,8 @@
                 <td>Sat</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[5]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[5]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -519,8 +512,8 @@
                 <td>Estado de conciencia</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[6]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[6]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -538,8 +531,8 @@
                 <td>Proteinuria</td>
                 <td>
                   <v-select
-                    v-model="editedItem.mediato.scoreMama[7]"
-                    :items="[1,2,3]"
+                    v-model="score_mama_mediato[7]"
+                    :items="[0,1,2,3]"
                   />
                 </td>
               </tr>
@@ -557,7 +550,7 @@
                   colspan="10"
                   class="warning white--text text-center"
                 >
-                  4
+                  {{ editedItem.score_mama_mediato }}
                 </td>
               </tr>
             </tbody>
@@ -601,16 +594,17 @@
               Educación a la paciente y/o familiar
             </p>
             <v-radio-group
-              v-model="editedItem.tardio.educacion"
+              v-model="editedItem.educacion_paciente"
               row
+              mandatory
             >
               <v-radio
                 label="Si"
-                value="si"
+                :value="1"
               />
               <v-radio
                 label="No"
-                value="no"
+                :value="0"
               />
             </v-radio-group>
           </v-col>
@@ -622,16 +616,17 @@
               ¿Se informó, educó a la paciente y/o familiar a identificar depreción post parto?
             </p>
             <v-radio-group
-              v-model="editedItem.tardio.depresion"
+              v-model="editedItem.educacion_depresion"
               row
+              mandatory
             >
               <v-radio
                 label="Si"
-                value="si"
+                :value="1"
               />
               <v-radio
                 label="No"
-                value="no"
+                :value="0"
               />
             </v-radio-group>
           </v-col>
@@ -643,16 +638,17 @@
               ¿Se proporcionó número de telefono para consultar?
             </p>
             <v-radio-group
-              v-model="editedItem.tardio.informar"
+              v-model="editedItem.proporcionar_telefono"
               row
+              mandatory
             >
               <v-radio
                 label="Si"
-                value="si"
+                :value="1"
               />
               <v-radio
                 label="No"
-                value="no"
+                :value="0"
               />
             </v-radio-group>
           </v-col>
@@ -660,14 +656,11 @@
             cols="12"
           >
             <v-select
-              v-model="editedItem.tardio.alarma"
+              v-model="editedItem.señal_alarma"
               label="señales de alarmas en las que se educó a la paciente"
               outlined
               :items="senalesAlarma"
-              item-text="text"
-              item-value="value"
               dense
-              multiple
             />
           </v-col>
         </v-row>
@@ -682,103 +675,99 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
+    props: {
+      click: {
+        type: String,
+        default: '',
+      },
+    },
     data () {
       return {
         value: '',
         editedItem: {
-          inmediato: {
-            loquios: '',
-            involucion: '',
-            dolor: '',
-            lactancia: '',
-            satisfaccion: '',
-            scoreMama: [],
-          },
-          mediato: {
-            aseo: '',
-            scoreMama: [],
-          },
-          tardio: {
-            informar: '',
-            depresion: '',
-            educacion: '',
-            alarma: undefined,
-          },
+          loquios: true,
+          involucion_uterina: true,
+          dolor_eva: 0,
+          educacion_lactancia: true,
+          satisfaccion_lactancia: 0,
+          score_mama_inmediato: 0,
+          score_mama_mediato: 0,
+          educacion_paciente: false,
+          educacion_depresion: false,
+          proporcionar_telefono: true,
+          señal_alarma: '',
         },
-
-        headersMediato: [
-          {
-            text: 'Fecha',
-            align: 'start',
-            value: 'fecha',
-          },
-          { text: 'Hora', value: 'hora' },
-          { text: 'Total', value: 'total' },
-        ],
-        dessertsMediato: [
-          {
-            fecha: '20-10-2010',
-            hora: '20:!0',
-            total: 159,
-          },
-        ],
+        score_mama_mediato: [],
+        score_mama_inmediato: [],
         senalesAlarma: [
-          {
-            text: 'Signos de infección',
-            value: 1,
-          },
-          {
-            text: 'Cuidado de la herida por Cesárea ',
-            value: 2,
-          },
-          {
-            text: 'Cuidado de la Episiorrafia',
-            value: 3,
-          },
-          {
-            text: 'Cantidad normal de salida de loquios',
-            value: 4,
-          },
-          {
-            text: 'Cuidado de los pezones',
-            value: 5,
-          },
-          {
-            text: 'Señales de HTA',
-            value: 6,
-          },
-          {
-            text: 'Signos y síntomas de infección de las vías urinarias',
-            value: 7,
-          },
-          {
-            text: 'Signos y síntomas de infección de las vías urinarias',
-            value: 8,
-          },
-          {
-            text: 'Alimentos que debe evitar en su dieta',
-            value: 9,
-          },
+          'Signos de infección',
+          'Cuidado de la herida por Cesárea ',
+          'Cuidado de la Episiorrafia',
+          'Cantidad normal de salida de loquios',
+          'Cuidado de los pezones',
+          'Señales de HTA',
+          'Signos y síntomas de infección de las vías urinarias',
+          'Signos y síntomas de infección de las vías urinarias',
+          'Alimentos que debe evitar en su dieta',
         ],
       }
     },
     computed: {
+      ...mapState('fileClinicalObstetric', ['steps', 'fileObstetric']),
       availableSteps () {
-        const steps = [0]
-        // if (
-        // ) steps.push(1)
-        steps.push(1)
-        this.$emit('data', steps)
-        return steps
+        if (
+          this.steps.includes(5)
+        ) {
+          this.setSteps(6)
+          if (this.click) {
+            if (this.click === 'next') {
+              console.log('entro')
+              this.setFileObstetric(this.editedItem)
+              this.$emit('click:next')
+            }
+            if (this.click === 'save') {
+              console.log('entro')
+              this.setFileObstetric(this.editedItem)
+              this.$emit('click:save')
+            }
+          }
+        }
+        return ''
       },
     },
-    metdods: {
+    watch: {
+      score_mama_inmediato (value) {
+        var count = 0
+        value.forEach(item => {
+          count += item
+        })
+        this.editedItem.score_mama_inmediato = count
+      },
+      score_mama_mediato (value) {
+        var count = 0
+        value.forEach(item => {
+          count += item
+        })
+        this.editedItem.score_mama_mediato = count
+      },
+    },
+    created () {
+      this.editedItem = Object.assign({}, this.fileObstetric)
+    },
+    methods: {
+      ...mapMutations(['alert']),
+      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions']),
+      ...mapMutations('fileClinicalObstetric', ['setSteps', 'setFileObstetric']),
       customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const textTwo = item.abbr.toLowerCase()
         const searchText = queryText.toLowerCase()
-
         return textOne.indexOf(searchText) > -1 ||
           textTwo.indexOf(searchText) > -1
       },

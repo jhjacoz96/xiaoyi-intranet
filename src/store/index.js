@@ -19,6 +19,7 @@ import employee from './modules/employee'
 import role from './modules/role'
 import presentation from './modules/presentation'
 import medicine from './modules/medicine'
+import frequency from './modules/frequency'
 import measure from './modules/measure'
 import typeBlood from './modules/typeBlood'
 import culturalGroup from './modules/culturalGroup'
@@ -37,6 +38,8 @@ import filterTwoPublication from './modules/filterTwoPublication'
 import filterThreePublication from './modules/filterThreePublication'
 import carrusel from './modules/carrusel'
 import configWeb from './modules/configWeb'
+import controlDiabetic from './modules/controlDiabetic'
+import fileClinicalObstetric from './modules/fileClinicalObstetric'
 
 Vue.use(Vuex)
 
@@ -59,6 +62,7 @@ export default new Vuex.Store({
     employee,
     presentation,
     medicine,
+    frequency,
     measure,
     typeBlood,
     culturalGroup,
@@ -78,5 +82,7 @@ export default new Vuex.Store({
     carrusel,
     configWeb,
     fileFamily,
+    controlDiabetic,
+    fileClinicalObstetric,
   },
 })

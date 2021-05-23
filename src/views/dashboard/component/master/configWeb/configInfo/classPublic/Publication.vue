@@ -194,7 +194,7 @@
                     Imagen miniatura
                   </p>
                   <base-preview-image
-                    imagen="imagen"
+                    :image="typeof editedItem.image_mini === 'object' ? editedItem.image_mini.url : editedItem.image_mini"
                     @imagen="editedItem.image_mini = $event"
                   />
                 </v-col>

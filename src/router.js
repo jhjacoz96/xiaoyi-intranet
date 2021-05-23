@@ -286,16 +286,6 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/master/config/fileParameter/ConfigRisk'),
         },
         {
-          name: 'Encuesta de ficha familiar',
-          path: 'ficha-familiar/encuesta',
-          component: () => import('@/views/dashboard/component/fileFamily/addFileFamily/Add'),
-        },
-        {
-          name: 'Seguimiento de ficha familiar',
-          path: 'ficha-familiar/seguimiento',
-          component: () => import('@/views/dashboard/component/fileFamily/tracingFileFamily/TracingFileFamily'),
-        },
-        {
           name: 'Ficha familiar',
           path: 'ficha-familiar',
           component: () => import('@/views/dashboard/component/fileFamily/FileFamily'),
@@ -303,6 +293,12 @@ const router = new Router({
         {
           name: 'Agregar ficha familiar',
           path: 'ficha-familiar/agregar',
+          component: () => import('@/views/dashboard/component/fileFamily/addFileFamily/Add.vue'),
+        },
+        {
+          name: 'Editar ficha familiar',
+          path: 'ficha-familiar/:id',
+          props: true,
           component: () => import('@/views/dashboard/component/fileFamily/addFileFamily/Add.vue'),
         },
         {
@@ -326,8 +322,14 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/fileClinicalObstetrics/tracingFileClinicalObstetrics/TracingFileClinicalObstetrics'),
         },
         {
-          name: 'Registro de ficha clinica de obstetricia',
-          path: 'ficha-clinica-obstetricia/registrar',
+          name: 'Agregar de ficha clinica de obstetricia',
+          path: 'ficha-clinica-obstetricia/agregar',
+          component: () => import('@/views/dashboard/component/fileClinicalObstetrics/addFileClinicalObstetrics/AddFileClinicalObstetrics'),
+        },
+        {
+          name: 'Actualizar de ficha clinica de obstetricia',
+          path: 'ficha-clinica-obstetricia/actualizar/:id',
+          props: true,
           component: () => import('@/views/dashboard/component/fileClinicalObstetrics/addFileClinicalObstetrics/AddFileClinicalObstetrics'),
         },
         {

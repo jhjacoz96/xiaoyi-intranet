@@ -19,14 +19,58 @@
           cols="6"
           sm="4"
         >
-          <v-select
-            v-model="editedItem.pathology"
+          <v-textarea
+            v-model="editedItem.antecentedes_prenatales"
             v-validate="'required'"
-            :error-messages="errors.collect('basic.pathology')"
-            data-vv-name="pathology"
+            :error-messages="errors.collect('basic.antecentedes_prenatales')"
+            data-vv-name="antecedntes prenatales"
             outlined
-            label="Patologias personales"
-            i
+            label="Antecedentes prenatales"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-textarea
+            v-model="editedItem.antecentedes_paternos"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.antecentedes_paternos')"
+            data-vv-name="antecedntes paternos"
+            outlined
+            label="Antecedentes paternos"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-textarea
+            v-model="editedItem.antecentedes_maternos"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.antecentedes_maternos')"
+            data-vv-name="antecedntes maternos"
+            outlined
+            label="Antecedentes maternos"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-textarea
+            v-model="editedItem.antecentedes_patologicos"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.antecentedes_patologicos')"
+            data-vv-name="antecedntes patológicos"
+            outlined
+            label="Antecedentes patológicos"
             dense
             validate-on-blur
           />
@@ -36,12 +80,16 @@
           sm="4"
         >
           <v-select
-            v-model="editedItem.psychotropic "
+            v-model="editedItem.sustancias_sicotropicas"
             v-validate="'required'"
-            :error-messages="errors.collect('basic.psychotropic ')"
-            data-vv-name="psychotropic "
+            :error-messages="errors.collect('basic.psychotropic')"
+            data-vv-name="sustancias psicotrópicas"
             outlined
-            label="Sustancia psicotroficas"
+            :items="sustancias_sicotroficas"
+            multiple
+            item-text="name"
+            item-value="id"
+            label="Sustancia psicotrópicas"
             dense
             validate-on-blur
           />
@@ -51,7 +99,7 @@
           sm="4"
         >
           <v-text-field
-            v-model="editedItem.medicine "
+            v-model="editedItem.medicamentos"
             v-validate="'required'"
             :error-messages="errors.collect('basic.medicine')"
             data-vv-name="medicine "
@@ -74,10 +122,10 @@
           sm="4"
         >
           <v-subheader class="pl-0">
-            Número de hijos vivos
+            Número de gestas
           </v-subheader>
           <v-slider
-            v-model="editedItem.nroHijosVivos"
+            v-model="editedItem.gestas"
             :thumb-size="24"
             max="50"
             min="0"
@@ -92,7 +140,7 @@
             Número de abortos
           </v-subheader>
           <v-slider
-            v-model="editedItem.nroAbortos"
+            v-model="editedItem.abortos"
             :thumb-size="24"
             max="50"
             min="0"
@@ -104,10 +152,10 @@
           sm="4"
         >
           <v-subheader class="pl-0">
-            Número de embarazos
+            Número de cesarias
           </v-subheader>
           <v-slider
-            v-model="editedItem.nroEmbarazos"
+            v-model="editedItem.cesarias"
             :thumb-size="24"
             max="50"
             min="0"
@@ -119,22 +167,15 @@
           sm="4"
         >
           <v-subheader class="pl-0">
-            Tipo de embrazo
+            Número de partos
           </v-subheader>
-          <v-radio-group
-            v-model="editedItem.tipoEmbarazo"
-            mandatory
-            row
-          >
-            <v-radio
-              label="Vaginal"
-              value="vaginal"
-            />
-            <v-radio
-              label="Cesaria"
-              value="cesarea"
-            />
-          </v-radio-group>
+          <v-slider
+            v-model="editedItem.partos"
+            :thumb-size="24"
+            max="50"
+            min="0"
+            :thumb-label="true"
+          />
         </v-col>
       </v-row>
     </v-form>
@@ -147,33 +188,81 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
+  import {
+    psyshotrophicAllApi,
+  } from '@/api/modules'
   export default {
+    props: {
+      click: {
+        type: String,
+        default: '',
+      },
+    },
     data () {
       return {
         value: '',
         editedItem: {
-          pathology: undefined,
-          psychotropic: undefined,
-          medicine: '',
-          nroEmbarazos: 0,
-          nroAbortos: 0,
-          nroHijosVivos: 0,
-          tipoEmbarazo: '',
+          antecentedes_prenatales: '',
+          antecentedes_paternos: '',
+          antecentedes_maternos: '',
+          antecentedes_patologicos: '',
+          sustancias_sicotropicas: [],
+          medicamentos: '',
+          gestas: 0,
+          abortos: 0,
+          cesarias: 0,
+          partos: 0,
         },
-        relationship: ['Tia', 'Abuelo', 'Mamá', 'Papa', 'Esposa'],
+        sustancias_sicotroficas: [],
       }
     },
     computed: {
+      ...mapState('fileClinicalObstetric', ['steps', 'fileObstetric']),
       availableSteps () {
-        const steps = [0]
-        // if (
-        // ) steps.push(1)
-        steps.push(2)
-        this.$emit('data', steps)
-        return steps
+        if (
+          this.steps.includes(1)
+        ) {
+          this.setSteps(2)
+          if (this.click) {
+            if (this.click === 'next') {
+              console.log('entro')
+              this.setFileObstetric(this.editedItem)
+              this.$emit('click:next')
+            }
+            if (this.click === 'save') {
+              console.log('entro')
+              this.setFileObstetric(this.editedItem)
+              this.$emit('click:save')
+            }
+          }
+        }
+        return ''
       },
     },
+    created () {
+      this.editedItem = Object.assign({}, this.fileObstetric)
+      this.itemPsicotropic()
+    },
     methods: {
+      ...mapMutations(['alert']),
+      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions']),
+      ...mapMutations('fileClinicalObstetric', ['setSteps', 'setFileObstetric']),
+      async itemPsicotropic () {
+        const serviceResponse = await psyshotrophicAllApi()
+        if (serviceResponse.ok) {
+          this.sustancias_sicotroficas = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
       customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const textTwo = item.abbr.toLowerCase()

@@ -12,45 +12,19 @@
         fab
         color="secondary"
         class="float-right d-inline-block"
+        @click="pushContaminacion"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </div>
     <v-card-text>
       <tr
-        v-for="(item, index) in desserts"
+        v-for="(item, index) in contaminacion"
         :key="index"
       >
         <td>
-          <v-menu
-            v-model="show2Date"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="100px"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="item.dateReport"
-                label="Fecha de informe"
-                prepend-icon="mdi-calendar"
-                outlined
-                dense
-                v-bind="attrs"
-                v-on="on"
-              />
-            </template>
-            <v-date-picker
-              v-model="item.dateReport"
-              @input="showDate = false"
-              @change="test($event)"
-            />
-          </v-menu>
-        </td>
-        <td>
           <v-select
-            v-model="item.typeContamination"
+            v-model="item.tipo_contaminacion"
             label="Tipo/descripción de contaminante"
             outlined
             class="ml-2 mr-2"
@@ -60,10 +34,22 @@
         </td>
         <td>
           <v-text-field
+            v-model="item.causas"
             label="Causante de la contaminación"
             outlined
             dense
           />
+        </td>
+        <td>
+          <v-btn
+            icon
+            color="pink"
+            class="ml-2"
+            dark
+            @click="deleteContaminacion(item)"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
         </td>
       </tr>
     </v-card-text>
@@ -79,6 +65,7 @@
         fab
         color="secondary"
         class="float-right d-inline-block"
+        @click="pushSitios"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -87,60 +74,107 @@
       class="text-center justify-center justify-content-center"
     >
       <tr
-        v-for="(item, index) in desserts1"
+        v-for="(item, index) in sitios_tratamiento"
         :key="index"
       >
         <td>
           <v-text-field
-            v-model="item.place"
+            v-model="item.lugar"
             label="Nombre del lugar o la persona"
             outlined
             dense
           />
         </td>
+        <td>
+          <v-btn
+            icon
+            color="pink"
+            class="ml-2"
+            dark
+            @click="deleteLugar(item)"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </td>
       </tr>
     </v-card-text>
+    <div
+      class="d-none"
+    >
+      {{ availableSteps }}
+    </div>
   </v-container>
 </template>
 
 <script>
+  import {
+    mapState,
+    mapMutations,
+  } from 'vuex'
   export default {
+    props: {
+      click: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data () {
       return {
         showDate: false,
         show2Date: false,
-        desserts: [
-          {
-            dateReport: undefined,
-            typeContamination: undefined,
-            cause: '',
-            placeTreatment: undefined,
-          },
-        ],
+        contaminacion: [],
+        sitios_tratamiento: [],
         editedItem: {
-          dateReport: undefined,
-          typeContamination: undefined,
-          cause: '',
-          placeTreatment: undefined,
+          tipo_contaminacion: '',
+          causas: '',
         },
-        desserts1: [
-          {
-            place: undefined,
-          },
-        ],
         editedItem1: {
-          place: undefined,
+          lugar: '',
         },
       }
     },
     computed: {
+      ...mapState('fileFamily', ['steps', 'fileFamily']),
       availableSteps () {
-        const steps = [0]
-        if (
-          this.desserts.length > 0
-        ) steps.push(4)
-        this.$emit('data', steps)
-        return steps
+        if (this.steps.includes(4)) {
+          this.setSteps(5)
+          if (this.click) {
+            this.setContaminacion({
+              contaminacion: this.contaminacion,
+              sitios_tratamiento: this.sitios_tratamiento,
+            })
+            this.$emit('next')
+          }
+        }
+        return ''
+      },
+    },
+    created () {
+      this.listItem()
+    },
+    methods: {
+      ...mapMutations('fileFamily', ['setSteps', 'setContaminacion']),
+      ...mapMutations(['alert']),
+      listItem () {
+        this.id = this.$route.params.id
+        if (this.id !== undefined) {
+          this.contaminacion = this.fileFamily.contaminacion
+          this.sitios_tratamiento = this.fileFamily.sitios_tratamiento
+        }
+      },
+      pushContaminacion () {
+        this.contaminacion.push(this.editedItem)
+      },
+      pushSitios () {
+        this.sitios_tratamiento.push(this.editedItem1)
+      },
+      deleteContaminacion (val) {
+        var index = this.contaminacion.indexOf(val)
+        this.contaminacion.splice(index, 1)
+      },
+      deleteLugar (val) {
+        var index = this.sitios_tratamiento.indexOf(val)
+        this.sitios_tratamiento.splice(index, 1)
       },
     },
   }

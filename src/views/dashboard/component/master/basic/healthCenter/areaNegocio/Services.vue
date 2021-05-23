@@ -40,10 +40,10 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.imagen="{ item }">
+          <template v-slot:item.image_service="{ item }">
             <v-img
-              v-if="item.image_service"
-              :src="`${$store.state.urlApi}${item.image_service.url}`"
+              v-if="item.image"
+              :src="`${$store.state.urlApi}${item.image.url}`"
               width="60"
             />
           </template>
@@ -87,22 +87,10 @@
         v-model="dialog"
         max-width="500px"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2 d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            New Item
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
-
           <v-card-text>
             <v-container>
               <v-row>
@@ -129,7 +117,7 @@
                   cols="12"
                 >
                   <base-preview-image
-                    imagen="imagen"
+                    :image="typeof editedItem.image_service === 'object' ? editedItem.image_service.url : editedItem.image_service"
                     @imagen="editedItem.image_service = $event"
                   />
                 </v-col>
@@ -199,15 +187,16 @@
         search: '',
         dialog: false,
         dialogDelete: false,
-        imagen: null,
+        image_service: null,
         editedId: undefined,
         editedIndex: -1,
+        services: [],
         headers: [
           {
-            text: 'Imagen',
+            text: 'image_service',
             align: 'center',
             sortable: false,
-            value: 'imagen',
+            value: 'image_service',
           },
           {
             text: 'Nombre',
@@ -260,6 +249,7 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.serviceAllActions()
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -324,7 +314,9 @@
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
           formData.append('image_service', this.editedItem.image_service)
+          console.log(this.editedItem)
           const serviceResponse = await this.servicePostActions(formData)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.close()

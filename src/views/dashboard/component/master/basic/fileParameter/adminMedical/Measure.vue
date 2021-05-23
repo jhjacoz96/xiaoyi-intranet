@@ -92,7 +92,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.nombre"
+                    v-model="editedItem.name"
                     label="Nombre"
                     outlined
                   />

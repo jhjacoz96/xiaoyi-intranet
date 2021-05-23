@@ -130,12 +130,6 @@
                 </v-row>
               </v-card-text>
               <v-card-actions class="justify-center">
-                <v-btn
-                  color="primary"
-                  outlined
-                >
-                  Limpiar
-                </v-btn>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -223,21 +217,6 @@
               </template>
               <span>Editar</span>
             </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  fab
-                  x-small
-                  color="pink"
-                  v-bind="attrs"
-                  class="ml-2"
-                  v-on="on"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Eliminar</span>
-            </v-tooltip>
           </template>
         </v-data-table>
         <!-- <v-dialog
@@ -251,6 +230,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -258,26 +241,31 @@
         search: '',
         headers: [
           { text: 'Numero de historia', sortable: false, value: 'codigo' },
-          { text: 'Jefe del hogar', sortable: false, value: 'jefe' },
-          { text: 'Provincia', sortable: false, value: 'provincia' },
-          { text: 'Cantón', sortable: false, value: 'canton' },
-          { text: 'Parroquia', sortable: false, value: 'parroquia' },
-          { text: 'Unidad', sortable: false, value: 'unidad' },
+          { text: 'Nivel de riesgo', sortable: false, value: 'levelRiesgo' },
           { text: 'Sector', sortable: false, value: 'sector' },
           { text: 'Acción', sortable: false, align: 'center', value: 'accion' },
         ],
-        desserts: [
-          {
-            codigo: 1,
-            jefe: 'Ali Jose Valero Mejías',
-            provincia: 'Quito',
-            canton: 'Quito',
-            parroquia: 'San isabel',
-            unidad: 'Santa isabel',
-            sector: 'Pedregal',
-          },
-        ],
+        desserts: [],
       }
+    },
+    created () {
+      this.listItem()
+    },
+    methods: {
+      ...mapActions('fileFamily', ['fileFamilyPostActions', 'fileFamilyAllActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.fileFamilyAllActions()
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
     },
   }
 </script>

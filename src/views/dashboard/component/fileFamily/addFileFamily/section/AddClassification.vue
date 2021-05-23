@@ -28,10 +28,10 @@
       <v-card-text>
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="riesgos"
           item-key="name"
           sort-by="name"
-          group-by="clasificacion.name"
+          group-by="risk_classification_id.name"
           :disable-pagination="true"
           group-by-value="name"
           show-group-by
@@ -52,71 +52,17 @@
                     style="color:rgb(0,0,0,0.8)"
                   >{{ props.props.headers[1].text }}</span>
                 </th>
-                <th>
-                  <span
-                    class="font-weight-light"
-                    style="color:rgb(0,0,0,0.8)"
-                  >{{ props.props.headers[2].text }}</span>
-                </th>
-                <th>
-                  <span
-                    class="font-weight-light"
-                    style="color:rgb(0,0,0,0.8)"
-                  >{{ props.props.headers[3].text }}</span>
-                </th>
-                <th>
-                  <span
-                    class="font-weight-light"
-                    style="color:rgb(0,0,0,0.8)"
-                  >{{ props.props.headers[4].text }}</span>
-                </th>
-                <th>
-                  <span
-                    class="font-weight-light"
-                    style="color:rgb(0,0,0,0.8)"
-                  >{{ props.props.headers[5].text }}</span>
-                </th>
               </tr>
             </thead>
           </template>
-          <template v-slot:item.notRisk="{ item }">
-            <v-checkbox
-              v-model="item.notRisk"
-              color="green darken-1"
-              value="item.notRisk"
-              hide-details
-            />
-          </template>
-          <template v-slot:item.veryLowRisk="{ item }">
-            <v-checkbox
-              v-model="item.veryLowRisk"
-              color="yellow darken-1"
-              value="item.notRisk"
-              hide-details
-            />
-          </template>
-          <template v-slot:item.lowRisk="{ item }">
-            <v-checkbox
-              v-model="item.lowRisk"
-              color="yellow darken-2"
-              value="item.notRisk"
-              hide-details
-            />
-          </template>
-          <template v-slot:item.moderateRisk="{ item }">
-            <v-checkbox
-              v-model="item.moderateRisk"
-              color="yellow darken-3"
-              value="item.notRisk"
-              hide-details
-            />
-          </template>
-          <template v-slot:item.highRisk="{ item }">
-            <v-checkbox
-              v-model="item.highRisk"
-              color="yellow darken-4"
-              value="item.notRisk"
-              hide-details
+          <template v-slot:item.nivel="{ item }">
+            <v-select
+              v-model="item.level_risk_id"
+              label="Seleccione el nivel de riesgo"
+              :items="levelRisk"
+              item-text="name"
+              item-value="id"
+              @change="getRisk(item, item.level_risk_id)"
             />
           </template>
           <template v-slot:item.risk="{ item }">
@@ -140,9 +86,27 @@
               <span class="mx-5 font-weight-bold">{{ group }}</span>
             </td>
           </template>
+          <template v-slot:group.header="{ group, headers, toggle, isOpen }">
+            <td :colspan="headers.length">
+              <v-btn
+                :ref="group"
+                x-small
+                icon
+                @click="toggle"
+              >
+                <v-icon v-if="isOpen">
+                  mdi-plus
+                </v-icon>
+                <v-icon v-else>
+                  mdi-minus
+                </v-icon>
+              </v-btn>
+              <span class="mx-5 font-weight-bold">{{ group }}</span>
+            </td>
+          </template>
         </v-data-table>
       </v-card-text>
-      <v-card-text>
+      <!-- <v-card-text>
         <v-simple-table>
           <template v-slot:default>
             <tr>
@@ -186,8 +150,13 @@
             </tr>
           </template>
         </v-simple-table>
+      </v-card-text> -->
+      <v-card-text class="text-center">
+        <div>
+          Riesgo total: <span class="font-weight-light">{{ colorRisk.name }}</span>
+        </div>
       </v-card-text>
-      <v-card-text>
+      <!-- <v-card-text>
         <v-simple-table>
           <template v-slot:default>
             <tr>
@@ -209,6 +178,15 @@
             </tr>
           </template>
         </v-simple-table>
+      </v-card-text> -->
+      <v-card-text>
+        <v-progress-linear
+          v-model="total_risk"
+          height="25"
+          :color="colorRisk.color"
+        >
+          <strong>{{ total_risk }}</strong>
+        </v-progress-linear>
       </v-card-text>
       <v-dialog
         v-model="dialog"
@@ -233,55 +211,19 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr
+                      v-for="(item, index) in levelTotal"
+                      :key="index"
+                    >
                       <td>
-                        Sin riesgo
+                        {{ item.name }}
                       </td>
                       <td>
                         <v-chip
                           dark
-                          color="green darken-1"
+                          :color="item.color"
                         >
-                          0
-                        </v-chip>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        Bajo
-                      </td>
-                      <td>
-                        <v-chip
-                          dark
-                          color="yellow darken-1"
-                        >
-                          1-14
-                        </v-chip>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        Medio
-                      </td>
-                      <td>
-                        <v-chip
-                          dark
-                          color="yellow darken-2"
-                        >
-                          15-34
-                        </v-chip>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        Alto
-                      </td>
-                      <td>
-                        <v-chip
-                          dark
-                          color="yellow darken-3"
-                        >
-                          35-72
+                          {{ JSON.parse(item.rank)[0] }} - {{ JSON.parse(item.rank)[1] }}
                         </v-chip>
                       </td>
                     </tr>
@@ -312,114 +254,168 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
+    props: {
+      click: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data () {
       return {
+        interval: {},
+        knowledge: 33,
         dialog: false,
-        value: '',
         headers: [
           {
             text: 'Riesgos',
-            value: 'risk',
+            value: 'name',
             sortable: false,
             align: 'left',
             groupable: false,
           },
+          { text: 'Clasificación de riesgos', value: 'risk_classification_id.name', sortable: false, align: 'right' },
           {
-            text: 'Sin riesgos',
-            value: 'notRisk',
+            text: 'Niveles de riesgos',
+            value: 'nivel',
             align: 'center',
             groupable: false,
-          },
-          {
-            text: 'Riesgo muy bajo',
-            value: 'veryLowRisk',
-            align: 'center',
-            groupable: false,
-          },
-          {
-            text: 'Riesgo bajo',
-            value: 'lowRisk',
-            groupable: false,
-            align: 'center',
-          },
-          {
-            text: 'Riesgo moderado',
-            value: 'moderateRisk',
-            groupable: false,
-            align: 'center',
-          },
-          {
-            text: 'Riesgo alto',
-            value: 'highRisk',
-            align: 'center',
-            groupable: false,
-          },
-          {
-            text: 'Clasificación',
-            value: 'clasificacion.name',
-            sortable: false,
-            align: 'rigtht',
           },
         ],
-        desserts: [
-          {
-            risk: {
-              name: 'Personas con vacinación incompleta',
-              id: 1,
-            },
-            clasificacion: {
-              name: 'Riesgos biológicos',
-              id: 1,
-            },
-            notRisk: true,
-            veryLowRisk: true,
-            lowRisk: true,
-            moderateRisk: true,
-            highRisk: true,
-          },
-          {
-            risk: {
-              name: 'Personas con malnutrición',
-              id: 2,
-            },
-            clasificacion: {
-              name: 'Riesgos biológicos',
-              id: 1,
-            },
-            notRisk: true,
-            veryLowRisk: true,
-            lowRisk: true,
-            moderateRisk: true,
-            highRisk: true,
-          },
-          {
-            risk: {
-              name: 'Consumo de agua insegura',
-              id: 3,
-            },
-            clasificacion: {
-              name: 'Riesgos sanitarios',
-              id: 2,
-            },
-            notRisk: true,
-            veryLowRisk: true,
-            lowRisk: true,
-            moderateRisk: true,
-            highRisk: true,
-          },
-        ],
+        riesgos: [],
+        levelRisk: [],
+        riskClassification: [],
+        getLevel: undefined,
+        levelTotal: [],
+        total_risk: 0,
+        level_total_id: undefined,
       }
     },
     computed: {
+      ...mapState('fileFamily', ['steps', 'fileFamily']),
       availableSteps () {
-        const steps = [0]
         if (
-          this.desserts.length > 0
-        ) steps.push(3)
-        this.$emit('data', steps)
-        return steps
+          this.riesgos.filter(item => {
+            return item.level_risk_id
+          }).length === this.riesgos.length &&
+          this.riesgos.length !== 0 &&
+          this.steps.includes(2)
+        ) {
+          if (this.click) {
+            this.setRisks({
+              riesgos: this.riesgos,
+              level_total_id: this.level_total_id,
+              total_risk: this.total_risk,
+            })
+            this.$emit('next')
+          }
+          this.setSteps(3)
+        }
+        return ''
+      },
+      colorRisk () {
+        var level = 'green'
+        this.levelTotal.forEach(item => {
+          const rank = JSON.parse(item.rank)
+          if (this.total_risk >= rank[0] && this.total_risk <= rank[1]) {
+            level = item
+            this.level_total_id = item.id
+          }
+        })
+        return level
+      },
+    },
+    created () {
+      this.ShowFileFamily()
+      this.listItemLevelRisk()
+      this.listItemRiskClassification()
+      this.listItemLevelTotal()
+    },
+    methods: {
+      ...mapActions('levelRisk', ['levelRiskAllActions']),
+      ...mapActions('levelTotal', ['levelTotalAllActions']),
+      ...mapActions('risk', ['riskAllActions']),
+      ...mapActions('riskClassification', ['riskClassificationAllActions']),
+      ...mapMutations('fileFamily', ['setRisks', 'setSteps']),
+      ...mapMutations(['alert']),
+      async ShowFileFamily () {
+        this.id = this.$route.params.id
+        if (this.id !== undefined) {
+          this.riesgos = this.fileFamily.riesgos
+        } else {
+          this.listItemRisk()
+        }
+      },
+      async listItemRisk () {
+        const serviceResponse = await this.riskAllActions()
+        if (serviceResponse.ok) {
+          this.riesgos = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemLevelTotal () {
+        const serviceResponse = await this.levelTotalAllActions()
+        if (serviceResponse.ok) {
+          this.levelTotal = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemLevelRisk () {
+        const serviceResponse = await this.levelRiskAllActions()
+        if (serviceResponse.ok) {
+          this.levelRisk = serviceResponse.data
+          if (this.id !== undefined) this.calValueRisk()
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemRiskClassification () {
+        const serviceResponse = await this.riskClassificationAllActions()
+        if (serviceResponse.ok) {
+          this.riskClassification = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      getRisk (risk, level) {
+        var index = this.riesgos.indexOf(risk)
+        this.riesgos[index].level_risk_id = level
+        this.calValueRisk()
+      },
+      calValueRisk () {
+        this.total_risk = 0
+        this.riesgos.forEach(item => {
+          var valueLvl = this.levelRisk.find(v => {
+            return item.level_risk_id === v.id
+          })
+          if (valueLvl !== undefined) this.total_risk = this.total_risk + valueLvl.value
+        })
       },
     },
   }
 </script>
+
+<style scoped>
+.v-progress-circular {
+  margin: 1rem;
+}
+</style>

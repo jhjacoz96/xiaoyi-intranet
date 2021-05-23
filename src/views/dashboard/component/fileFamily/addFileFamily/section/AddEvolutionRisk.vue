@@ -6,10 +6,10 @@
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="desserts"
+        :items="evolucion"
         item-key="name"
         sort-by="name"
-        group-by="clasificacion.name"
+        group-by="risk_classification_id.name"
         :disable-pagination="true"
         group-by-value="name"
         show-group-by
@@ -29,18 +29,6 @@
                   class="font-weight-light"
                   style="color:rgb(0,0,0,0.8)"
                 >{{ props.props.headers[1].text }}</span>
-              </th>
-              <th>
-                <span
-                  class="font-weight-light"
-                  style="color:rgb(0,0,0,0.8)"
-                >{{ props.props.headers[2].text }}</span>
-              </th>
-              <th>
-                <span
-                  class="font-weight-light"
-                  style="color:rgb(0,0,0,0.8)"
-                >{{ props.props.headers[3].text }}</span>
               </th>
             </tr>
           </thead>
@@ -63,11 +51,8 @@
             <span class="mx-5 font-weight-bold">{{ group }}</span>
           </td>
         </template>
-        <template v-slot:item.risk="{ item }">
+        <template v-slot:item.name="{ item }">
           {{ item.name }}
-        </template>
-        <template v-slot:item.id="{ item }">
-          {{ item.id }}
         </template>
         <template v-slot:item.accion="{ item }">
           <v-tooltip bottom>
@@ -102,7 +87,7 @@
             <span>Evaluar actividad</span>
           </v-tooltip>
         </template>
-        <template v-slot:item.activity="{ item }">
+        <!-- <template v-slot:item.activity="{ item }">
           <v-template v-if="item.activity.dateAnalysis !== undefined">
             {{ item.activity.dateAnalysis | moment("dddd, MMMM Do YYYY") }}
           </v-template>
@@ -117,7 +102,7 @@
           <v-template v-else>
             Sin registros
           </v-template>
-        </template>
+        </template> -->
       </v-data-table>
     </v-card-text>
     <v-dialog
@@ -129,30 +114,45 @@
           <span class="text-h5">Programar actividades</span>
         </v-card-title>
         <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-              >
-                <v-textarea
-                  v-model="editedItem.activity.commitment"
-                  label="Compromiso de la familia"
-                  outlined
-                  name="input-7-4"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-textarea
-                  v-model="editedItem.activity.commitmentTeamHealth"
-                  label="Compromiso del equipo de salud"
-                  outlined
-                  name="input-7-4"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
+          <v-form
+            ref="form"
+            v-model="valid"
+            data-vv-scope="actividad"
+            lazy-validation
+          >
+            <v-container>
+              <v-row>
+                <v-col
+                  cols="12"
+                >
+                  <v-textarea
+                    v-model="editedItem.compromiso_familiar"
+                    v-validate="'required'"
+                    label="Compromiso de la familia"
+                    outlined
+                    name="input-7-4"
+                    :error-messages="errors.collect('actividad.compromiso_familiar')"
+                    data-vv-name="compromiso familiar"
+                    validate-on-blur
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                >
+                  <v-textarea
+                    v-model="editedItem.compromiso_equipo"
+                    v-validate="'required'"
+                    label="Compromiso del equipo de salud"
+                    outlined
+                    name="input-7-4"
+                    :error-messages="errors.collect('actividad.compromiso_equipo')"
+                    data-vv-name="compromiso equipo médico"
+                    validate-on-blur
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -164,6 +164,7 @@
             Cancelar
           </v-btn>
           <v-btn
+            :disabled="validateCompromiso"
             color="primary"
             text
             @click="addItemActivity()"
@@ -182,15 +183,12 @@
           <span class="text-h5">Evaluación de actividad</span>
         </v-card-title>
         <v-card-text>
-          <div class="text-h5 blue--text text-center mb-2">
-            Actividad programada  ({{ editedItem.activity.dateAnalysis | moment("DD MMMM  YYYY") }})
-          </div>
           <v-row>
             <v-col cols="5">
               <span class="font-weight-medium">Compromiso de la familia</span>
             </v-col>
             <v-col cols="6">
-              <span>{{ editedItem.activity.commitment }}</span>
+              <span>{{ editedItem.compromiso_familiar }}</span>
             </v-col>
           </v-row>
           <v-row>
@@ -198,7 +196,7 @@
               <span class="font-weight-medium">Compromiso del equipo de salud</span>
             </v-col>
             <v-col cols="6">
-              {{ editedItem.activity.commitmentTeamHealth }}
+              {{ editedItem.compromiso_equipo }}
             </v-col>
           </v-row>
         </v-card-text>
@@ -206,42 +204,57 @@
           <div class="text-h5 blue--text text-center mb-2">
             Evaluar
           </div>
-          <v-row>
-            <v-col
-              cols="12"
-            >
-              <v-subheader>
-                ¿Cumplió con la actividad?
-              </v-subheader>
-              <v-radio-group
-                v-model="editedItem.evaluation.fulfilled"
-                row
+          <v-form
+            ref="form"
+            v-model="valid1"
+            data-vv-scope="evaluacion"
+            lazy-validation
+          >
+            <v-row>
+              <v-col
+                cols="12"
               >
-                <v-radio
-                  label="Si"
-                  value="si"
+                <v-subheader>
+                  ¿Cumplió con la actividad?
+                </v-subheader>
+                <v-radio-group
+                  v-model="editedItem.cumplio"
+                  v-validate="'required'"
+                  row
+                  :error-messages="errors.collect('evaluacion.cumplio')"
+                  data-vv-name="cumplio"
+                  validate-on-blur
+                >
+                  <v-radio
+                    label="Si"
+                    value="si"
+                    @click="editedItem.causas = ''"
+                  />
+                  <v-radio
+                    label="No"
+                    value="no"
+                    @click="editedItem.causas = ''"
+                  />
+                  <v-radio
+                    label="Parcial"
+                    value="parcial"
+                    @click="editedItem.causas = ''"
+                  />
+                </v-radio-group>
+              </v-col>
+              <v-col
+                v-if="editedItem.cumplio !== 'si'"
+                cols="12"
+              >
+                <v-textarea
+                  v-model="editedItem.causas"
+                  label="Causas de incumplimiento y observaciones"
+                  outlined
+                  name="input-7-4"
                 />
-                <v-radio
-                  label="No"
-                  value="no"
-                />
-                <v-radio
-                  label="Parcial"
-                  value="parcial"
-                />
-              </v-radio-group>
-            </v-col>
-            <v-col
-              cols="12"
-            >
-              <v-textarea
-                v-model="editedItem.evaluation.cause"
-                label="Causas de incumplimiento y observaciones"
-                outlined
-                name="input-7-4"
-              />
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -253,6 +266,7 @@
             Cancelar
           </v-btn>
           <v-btn
+            :disabled="validateEvaluacion"
             color="primary"
             text
             @click="addItemEvaluation()"
@@ -271,21 +285,28 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
+    props: {
+      click: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data () {
       return {
+        id: null,
         dialogActivity: false,
         editedIndex: undefined,
         dialogEvaluation: false,
         value: '',
+        valid: false,
+        valid1: false,
         headers: [
-          {
-            text: 'id',
-            value: 'id',
-            sortable: false,
-            align: 'left',
-            groupable: false,
-          },
           {
             text: 'Riesgo',
             value: 'name',
@@ -294,22 +315,8 @@
             groupable: false,
           },
           {
-            text: 'Fecha de analisis',
-            value: 'activity',
-            sortable: false,
-            align: 'left',
-            groupable: false,
-          },
-          {
-            text: 'Fecha de evaluación',
-            value: 'evaluation',
-            sortable: false,
-            align: 'left',
-            groupable: false,
-          },
-          {
             text: 'Clasificación',
-            value: 'clasificacion.name',
+            value: 'risk_classification_id.name',
             sortable: false,
             align: 'rigtht',
           },
@@ -319,131 +326,135 @@
             sortable: false,
           },
         ],
-        desserts: [
-          {
-            name: 'Personas con vacinación incompleta',
-            id: 1,
-            activity: {
-              dateAnalysis: undefined,
-              commitment: '',
-              commitmentTeamHealth: '',
-            },
-            evaluation: {
-              dateEvaluation: undefined,
-              fulfilled: undefined,
-              cause: '',
-            },
-            clasificacion: {
-              name: 'Riesgos biológicos',
-              id: 1,
-            },
-          },
-          {
-            name: 'Personas con malnutrición',
-            id: 2,
-            activity: {
-              dateAnalysis: undefined,
-              commitment: '',
-              commitmentTeamHealth: '',
-            },
-            evaluation: {
-              dateEvaluation: undefined,
-              fulfilled: undefined,
-              cause: '',
-            },
-            clasificacion: {
-              name: 'Riesgos biológicos',
-              id: 1,
-            },
-          },
-
-          {
-            name: 'Consumo de agua insegura',
-            id: 3,
-            clasificacion: {
-              name: 'Riesgos sanitarios',
-              id: 2,
-            },
-            activity: {
-              dateAnalysis: undefined,
-              commitment: '',
-              commitmentTeamHealth: '',
-            },
-            evaluation: {
-              dateEvaluation: undefined,
-              fulfilled: undefined,
-              cause: '',
-            },
-          },
-        ],
         editedItem: {
-          activity: {
-            dateAnalysis: undefined,
-            commitment: '',
-            commitmentTeamHealth: '',
-          },
-          evaluation: {
-            dateEvaluation: undefined,
-            fulfilled: undefined,
-            cause: '',
-          },
+          compromiso_familiar: '',
+          compromiso_equipo: '',
+          cumplio: '',
+          causas: '',
         },
         defaultItem: {
-          activity: {
-            dateAnalysis: undefined,
-            commitment: '',
-            commitmentTeamHealth: '',
-          },
-          evaluation: {
-            dateEvaluation: undefined,
-            fulfilled: undefined,
-            cause: '',
-          },
+          compromiso_familiar: '',
+          compromiso_equipo: '',
+          cumplio: '',
+          causas: '',
         },
-        closeActivity () {
-          this.dialogActivity = false
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-          })
-        },
-        closeEvaluation () {
-          this.dialogEvaluation = false
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-          })
-        },
-        editedActivity (item) {
-          this.editedIndex = this.desserts.indexOf(item)
-          Object.assign(this.editedItem.activity, item.activity)
-          this.editedItem.activity.dateAnalysis = new Date()
-          this.dialogActivity = true
-        },
-        editedEvaluation (item) {
-          this.editedIndex = this.desserts.indexOf(item)
-          Object.assign(this.editedItem, item)
-          this.editedItem.evaluation.dateEvaluation = new Date()
-          this.dialogEvaluation = true
-        },
-        addItemActivity () {
-          Object.assign(this.desserts[this.editedIndex].activity, this.editedItem.activity)
-          this.closeActivity()
-        },
-        addItemEvaluation () {
-          Object.assign(this.desserts[this.editedIndex].evaluation, this.editedItem.evaluation)
-          this.closeEvaluation()
-        },
+        evolucion: [],
+        levelRisk: [],
       }
     },
     computed: {
+      ...mapState('fileFamily', ['steps', 'fileFamily']),
       availableSteps () {
-        const steps = [0]
         if (
-          this.desserts.length > 0
-        ) steps.push(4)
-        this.$emit('data', steps)
-        return steps
+          this.evolucion.filter(item => {
+            return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
+          }).length === this.evolucion.length &&
+          this.evolucion.filter(item => {
+            return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
+          }).length !== 0 &&
+          this.steps.includes(3)
+        ) {
+          if (this.click) {
+            this.setEvaluation(this.evolucion)
+            this.$emit('next')
+          }
+          this.setSteps(4)
+        }
+        return ''
+      },
+      validateCompromiso () {
+        if (
+          !this.editedItem.compromiso_familiar ||
+          !this.editedItem.compromiso_equipo
+        ) return true
+        else return false
+      },
+      validateEvaluacion () {
+        if (
+          !this.editedItem.cumplio
+        ) return true
+        else return false
+      },
+    },
+    created () {
+      this.listItemLevelRisk()
+    },
+    methods: {
+      ...mapActions('levelRisk', ['levelRiskAllActions']),
+      ...mapMutations('fileFamily', ['setSteps', 'setEvaluation']),
+      ...mapMutations(['alert']),
+      async listItemLevelRisk () {
+        const serviceResponse = await this.levelRiskAllActions()
+        if (serviceResponse.ok) {
+          this.levelRisk = serviceResponse.data
+          this.filterEvolution()
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      filterEvolution () {
+        this.id = this.$route.params.id
+        this.evolucion = this.fileFamily.riesgos.map(item => {
+          if (this.id !== undefined) {
+            return {
+              ...item,
+              compromiso_familiar: item.compromiso_familiar,
+              compromiso_equipo: item.compromiso_familiar,
+              cumplio: item.cumplio,
+              causas: item.causas,
+            }
+          } else {
+            return {
+              ...item,
+              compromiso_familiar: '',
+              compromiso_equipo: '',
+              cumplio: '',
+              causas: '',
+            }
+          }
+        }).filter(item => {
+          var levelRisk = this.levelRisk.find(v => {
+            return item.level_risk_id === v.id
+          })
+          return levelRisk.value !== 0
+        })
+      },
+      closeActivity () {
+        this.dialogActivity = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+      closeEvaluation () {
+        this.dialogEvaluation = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+      editedActivity (item) {
+        this.editedIndex = this.evolucion.indexOf(item)
+        Object.assign(this.editedItem, item)
+        this.dialogActivity = true
+      },
+      editedEvaluation (item) {
+        this.editedIndex = this.evolucion.indexOf(item)
+        Object.assign(this.editedItem, item)
+        this.dialogEvaluation = true
+      },
+      addItemActivity () {
+        Object.assign(this.evolucion[this.editedIndex], this.editedItem)
+        // this.setEvaluation(this.evolucion)
+        this.closeActivity()
+      },
+      addItemEvaluation () {
+        Object.assign(this.evolucion[this.editedIndex], this.editedItem)
+        // this.setEvaluation(this.evolucion)
+        this.closeEvaluation()
       },
     },
   }

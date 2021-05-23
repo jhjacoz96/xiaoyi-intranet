@@ -15,22 +15,28 @@
           cols="6"
         >
           <v-text-field
-            v-model="editedItem.modoParto"
+            v-model="editedItem.dar_luz"
+            v-validate="'required'"
             label="¿Cómo desea dar a luz?"
             outlined
             dense
-            disabled
+            :error-messages="errors.collect('basic.dar_luz')"
+            data-vv-name="estado civil"
+            validate-on-blur
           />
         </v-col>
         <v-col
           cols="6"
         >
           <v-text-field
-            v-model="editedItem.acompanante"
+            v-model="editedItem.nombre_acompanate"
+            v-validate="'required'"
             label="Nombre del acompañante"
             outlined
             dense
-            disabled
+            :error-messages="errors.collect('basic.nombre_acompanate')"
+            data-vv-name="nombre del acompañante"
+            validate-on-blur
           />
         </v-col>
         <v-col
@@ -41,17 +47,17 @@
             ¿Si fuera necesario, aceptaria que su hijo recibiera fórmula?
           </v-subheader>
           <v-radio-group
-            v-model="editedItem.formula"
-            mandatory
+            v-model="editedItem.aceptaria_formula"
             row
+            mandatory
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -63,17 +69,17 @@
             En caso de hemorragia ¿aceptaría la administración de algún hemoderivado?
           </v-subheader>
           <v-radio-group
-            v-model="editedItem.administracionHemoderivado"
+            v-model="editedItem.administrar_hemoderivado"
             mandatory
             row
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -82,20 +88,20 @@
           sm="6"
         >
           <v-subheader class="pl-0">
-            ¿Harealizado estimulación durante el embarazo?
+            ¿Ha realizado estimulación durante el embarazo?
           </v-subheader>
           <v-radio-group
-            v-model="editedItem.estimulacion"
+            v-model="editedItem.estimulacion_embarazo"
             mandatory
             row
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -107,17 +113,17 @@
             ¿Ha asistido alguna capacitación prenatal?
           </v-subheader>
           <v-radio-group
-            v-model="editedItem.capacitacion"
+            v-model="editedItem.capacitacion_prenatal"
             mandatory
             row
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -129,17 +135,17 @@
             ¿Desea la administrción de epidural?
           </v-subheader>
           <v-radio-group
-            v-model="editedItem.epidural"
+            v-model="editedItem.capacitacion_epidural"
             mandatory
             row
           >
             <v-radio
               label="Si"
-              value="si"
+              :value="1"
             />
             <v-radio
               label="No"
-              value="no"
+              :value="0"
             />
           </v-radio-group>
         </v-col>
@@ -154,7 +160,18 @@
 </template>
 
 <script>
+  import {
+    mapState,
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
+    props: {
+      click: {
+        type: String,
+        default: '',
+      },
+    },
     data () {
       return {
         dialog: false,
@@ -162,62 +179,48 @@
         show2Date: false,
         showDate: false,
         editedItem: {
-          modoParto: '',
-          acompanante: '',
-          formula: '',
-          administracionHemoderivado: '',
-          estimulacion: '',
-          capacitacion: '',
-          epidural: '',
+          dar_luz: '',
+          nombre_acompanate: '',
+          aceptaria_formula: false,
+          administrar_hemoderivado: false,
+          estimulacion_embarazo: false,
+          capacitacion_prenatal: false,
+          capacitacion_epidural: false,
         },
-        editedItem2: {
-          observacion: '',
-        },
-        relationship: ['Tia', 'Abuelo', 'Mamá', 'Papa', 'Esposa'],
-        headers: [
-          {
-            text: 'Fecha de control',
-            value: 'fechaControl',
-          },
-          { text: 'Observación', sortable: false, value: 'observacion' },
-        ],
-        desserts: [
-          {
-            fechaControl: '20-10-2020',
-            observacion: 'dddeodkeodekodekodkeo',
-          },
-        ],
-        headersControl: [
-          {
-            text: 'Fecha de consulta',
-            sortable: false,
-            value: 'fechaConsulta',
-          },
-          {
-            text: 'Peso',
-            sortable: false,
-            value: 'peso',
-          },
-        ],
-        dessertsControl: [
-          {
-            fechaConsulta: '20-10-2020',
-            peso: 3,
-          },
-        ],
       }
     },
     computed: {
+      ...mapState('fileClinicalObstetric', ['steps', 'fileObstetric']),
       availableSteps () {
-        const steps = [0]
-        // if (
-        // ) steps.push(1)
-        steps.push(4)
-        this.$emit('data', steps)
-        return steps
+        if (
+          this.editedItem.dar_luz &&
+          this.editedItem.nombre_acompanate &&
+          this.steps.includes(3)
+        ) {
+          this.setSteps(4)
+          if (this.click) {
+            if (this.click === 'next') {
+              console.log('entro')
+              this.setFileObstetric(this.editedItem)
+              this.$emit('click:next')
+            }
+            if (this.click === 'save') {
+              console.log('entro')
+              this.setFileObstetric(this.editedItem)
+              this.$emit('click:save')
+            }
+          }
+        }
+        return ''
       },
     },
+    created () {
+      this.editedItem = Object.assign({}, this.fileObstetric)
+    },
     methods: {
+      ...mapMutations(['alert']),
+      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions']),
+      ...mapMutations('fileClinicalObstetric', ['setSteps', 'setFileObstetric']),
       customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const textTwo = item.abbr.toLowerCase()
