@@ -24,7 +24,7 @@
       >
         <td>
           <v-select
-            v-model="item.tipo_contaminacion"
+            v-model="item.tipo_contaminación"
             label="Tipo/descripción de contaminante"
             outlined
             class="ml-2 mr-2"
@@ -125,7 +125,7 @@
         contaminacion: [],
         sitios_tratamiento: [],
         editedItem: {
-          tipo_contaminacion: '',
+          tipo_contaminación: '',
           causas: '',
         },
         editedItem1: {

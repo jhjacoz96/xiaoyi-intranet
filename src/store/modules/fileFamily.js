@@ -5,6 +5,8 @@ import {
     fileFamilySearchApi,
     fileFamilyFilterApi,
     fileFamilyAllApi,
+    fileFamilyVerifyEmailApi,
+    fileFamilyVerifyDocumentApi,
   } from '@/api/modules'
 
 export default {
@@ -19,12 +21,12 @@ export default {
       numero_historia: '',
       numero_telefono: '',
       numero_casa: '',
-      zone_id: undefined,
-      cultural_group_id: undefined,
+      zone_id: null,
+      cultural_group_id: null,
       miembros: [],
       mortalidad: [],
       riesgos: [],
-      level_total_id: undefined,
+      level_total_id: null,
       total_risk: 0,
       evaluacion: [],
       contaminacion: [],
@@ -38,12 +40,12 @@ export default {
       numero_historia: '',
       numero_telefono: '',
       numero_casa: '',
-      zone_id: undefined,
-      cultural_group_id: undefined,
+      zone_id: null,
+      cultural_group_id: null,
       miembros: [],
       mortalidad: [],
       riesgos: [],
-      level_total_id: undefined,
+      level_total_id: null,
       total_risk: 0,
       evaluacion: [],
       contaminacion: [],
@@ -97,6 +99,14 @@ export default {
     },
     async fileFamilyShowActions (commit, payload) {
       const serviceResponse = await fileFamilyShowApi(payload)
+      return serviceResponse
+    },
+    async fileFamilyVerifyDocumentActions (commit, payload) {
+      const serviceResponse = await fileFamilyVerifyDocumentApi(payload)
+      return serviceResponse
+    },
+    async fileFamilyVerifyEmailActions (commit, payload) {
+      const serviceResponse = await fileFamilyVerifyEmailApi(payload)
       return serviceResponse
     },
     async fileFamilySearchActions (commit, payload) {

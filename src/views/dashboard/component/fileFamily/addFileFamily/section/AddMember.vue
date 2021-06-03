@@ -84,14 +84,14 @@
             >
               <v-icon>mdi-account-edit</v-icon>
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               x-small
               fab
               class="ml-2"
               @click="deleteItem(item)"
             >
               <v-icon>mdi-account-remove</v-icon>
-            </v-btn>
+            </v-btn> -->
           </template>
           <template v-slot:group.header="{ group, headers, toggle, isOpen }">
             <td :colspan="headers.length">
@@ -187,13 +187,20 @@
                         <v-text-field
                           v-model="editedItem.correo"
                           v-validate="'required'"
-                          label="Correo electrónico (*)"
+                          label="Correo electrónico"
                           outlined
                           dense
                           :error-messages="errors.collect('member.email')"
                           data-vv-name="surname"
                           validate-on-blur
+                          @blur="verifyEmail()"
                         />
+                        <div
+                          v-if="msotrarMensajeCorreo"
+                          class="red--text text-h6 font-weight-light mt-0"
+                        >
+                          {{ mensajeCorreo }}
+                        </div>
                       </v-col>
                       <v-col
                         cols="12"
@@ -221,10 +228,14 @@
                           label="Cédula (*)"
                           outlined
                           dense
-                          :error-messages="errors.collect('member.identificationDocument')"
-                          data-vv-name="identificationDocument"
-                          validate-on-blur
+                          @blur="verifyDocument()"
                         />
+                        <div
+                          v-if="msotrarMensajeCedula"
+                          class="red--text text-h6 font-weight-light mt-0"
+                        >
+                          {{ mensajeCedula }}
+                        </div>
                       </v-col>
                       <v-col
                         cols="12"
@@ -232,7 +243,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.ocupacion"
-                          label="Ocupación (*)"
+                          label="Ocupación"
                           outlined
                           dense
                         />
@@ -478,35 +489,7 @@
                           </v-radio>
                           <v-radio
                             :value="1"
-                          >
-                            <template v-slot:label>
-                              <div>Si</div>
-                            </template>
-                          </v-radio>
-                        </v-radio-group>
-                      </v-col>
-                      <v-col
-                        v-if="editedItem.embarazo === 1"
-                        cols="12"
-                        sm="4"
-                      >
-                        <v-radio-group
-                          v-model="editedItem.ficha_obstetric"
-                          row
-                          mandatory
-                        >
-                          <template v-slot:label>
-                            <div>¿Desea crear una ficha clinica de obstetricia?</div>
-                          </template>
-                          <v-radio
-                            :value="0"
-                          >
-                            <template v-slot:label>
-                              <div>No</div>
-                            </template>
-                          </v-radio>
-                          <v-radio
-                            :value="1"
+                            @click.prevent="generateCode()"
                           >
                             <template v-slot:label>
                               <div>Si</div>
@@ -559,6 +542,18 @@
                           outlined
                           disabled
                           label="Fecha probable de parto"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="6"
+                        sm="4"
+                      >
+                        <v-text-field
+                          v-model="editedItem.prenatal.numero_historia"
+                          disabled
+                          outlined
+                          label="Número de história"
+                          dense
                         />
                       </v-col>
                       <v-col
@@ -746,7 +741,7 @@
           :items-per-page="5"
         >
           <template v-slot:item.relationship_id="{ item }">
-            {{ getRelationship(item.relationship_id).name }}
+            {{ item.relationship_id }}
           </template>
         </v-data-table>
       </v-col>
@@ -953,6 +948,10 @@
         showDate: false,
         infoDiabetic: false,
         editedIndex: -1,
+        mensajeCedula: 'Esta cédula ya se encuentra asociada a una ficha familiar existente',
+        msotrarMensajeCedula: false,
+        mensajeCorreo: 'Este correo no está disponible',
+        msotrarMensajeCorreo: false,
         headers: [
           {
             text: 'Nombre y apellido',
@@ -992,34 +991,35 @@
         editedItem: {
           nombre: '',
           apellido: '',
-          type_document_id: undefined,
+          type_document_id: null,
           cedula: '',
           correo: '',
           ocupacion: '',
-          fecha_nacimiento: undefined,
+          fecha_nacimiento: null,
           edad: '',
-          vacunacion: undefined,
-          salud_bucal: undefined,
-          scholarship_id: undefined,
-          relationship_id: undefined,
-          gender_id: undefined,
+          vacunacion: false,
+          salud_bucal: false,
+          scholarship_id: null,
+          relationship_id: null,
+          gender_id: null,
           patologias: [],
           discapacidades: [],
           embarazo: false,
           ficha_obstetric: false,
           prenatal: {
-            fum: undefined,
-            fpp: undefined,
+            fum: null,
+            fpp: null,
             antecedentes_patologicos: '',
-            semana_gestacion: undefined,
-            gestas: undefined,
-            partos: undefined,
+            semana_gestacion: 0,
+            gestas: 0,
+            numero_historia: null,
+            partos: 0,
             vaccine_dt: '',
-            abortos: undefined,
-            cesarias: undefined,
+            abortos: 0,
+            cesarias: 0,
           },
           groupAge: {
-            id: undefined,
+            id: null,
             name: '',
             rank: '',
           },
@@ -1027,34 +1027,35 @@
         defaultItem: {
           nombre: '',
           apellido: '',
-          type_document_id: undefined,
+          type_document_id: null,
           cedula: '',
           correo: '',
           ocupacion: '',
-          fecha_nacimiento: undefined,
+          fecha_nacimiento: null,
           edad: '',
-          vacunacion: undefined,
-          salud_bucal: undefined,
-          scholarship_id: undefined,
-          relationship_id: undefined,
-          gender_id: undefined,
+          vacunacion: false,
+          salud_bucal: false,
+          scholarship_id: null,
+          relationship_id: null,
+          gender_id: null,
           patologias: [],
           discapacidades: [],
-          embarazo: undefined,
+          embarazo: false,
           ficha_obstetric: false,
           prenatal: {
-            fum: undefined,
-            fpp: undefined,
+            fum: null,
+            fpp: null,
             antecedentes_patologicos: '',
-            semana_gestacion: undefined,
-            gestas: undefined,
-            partos: undefined,
+            semana_gestacion: 0,
+            numero_historia: null,
+            gestas: 0,
+            partos: 0,
             vaccine_dt: '',
-            abortos: undefined,
-            cesarias: undefined,
+            abortos: 0,
+            cesarias: 0,
           },
           groupAge: {
-            id: undefined,
+            id: null,
             name: '',
             rank: '',
           },
@@ -1087,14 +1088,14 @@
         ],
         editedItemMortality: {
           nombre: '',
-          relationship_id: undefined,
-          edad: undefined,
+          relationship_id: null,
+          edad: 0,
           causa: '',
         },
         defaultItemMortality: {
           nombre: '',
-          relationship_id: undefined,
-          edad: undefined,
+          relationship_id: null,
+          edad: 0,
           causa: '',
         },
       }
@@ -1124,8 +1125,6 @@
           !this.editedItem.apellido ||
           !this.editedItem.type_document_id ||
           !this.editedItem.cedula ||
-          !this.editedItem.correo ||
-          !this.editedItem.ocupacion ||
           !this.editedItem.fecha_nacimiento ||
           !this.editedItem.relationship_id ||
           !this.editedItem.gender_id
@@ -1166,6 +1165,7 @@
     methods: {
       ...mapMutations(['alert']),
       ...mapMutations('fileFamily', ['setMember', 'setMortality', 'setSteps']),
+      ...mapActions('fileFamily', ['fileFamilyVerifyDocumentActions', 'fileFamilyVerifyEmailActions']),
       ...mapActions('pathology', ['pathologyAllActions']),
       ...mapActions('disability', ['disabilityAllActions']),
       ...mapActions('typeDocument', ['typeDocumentAllActions']),
@@ -1175,6 +1175,7 @@
         this.id = this.$route.params.id
         if (this.id !== undefined) {
           this.miembros = this.fileFamily.miembros
+          console.log(this.miembros)
           this.mortalidad = this.fileFamily.mortalidad
         }
       },
@@ -1274,6 +1275,7 @@
           Object.assign(this.miembros[this.editedIndex], this.editedItem)
         } else {
           this.miembros.push(this.editedItem)
+          console.log(this.miembros)
         }
         this.close()
       },
@@ -1388,6 +1390,31 @@
           return item.id === val
         })
         return v
+      },
+      async verifyDocument () {
+        if (this.editedItem.cedula) {
+          const serviceResponse = await this.fileFamilyVerifyDocumentActions(this.editedItem.cedula)
+          console.log(serviceResponse)
+          if (serviceResponse.ok) {
+            this.msotrarMensajeCedula = true
+          } else {
+            this.msotrarMensajeCedula = false
+          }
+        }
+      },
+      async verifyEmail () {
+        if (this.editedItem.correo) {
+          const serviceResponse = await this.fileFamilyVerifyEmailActions(this.editedItem.correo)
+          console.log(serviceResponse)
+          if (serviceResponse.ok) {
+            this.msotrarMensajeCorreo = true
+          } else {
+            this.msotrarMensajeCorreo = false
+          }
+        }
+      },
+      generateCode () {
+        this.editedItem.prenatal.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
       },
     },
   }

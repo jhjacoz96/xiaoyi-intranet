@@ -15,6 +15,7 @@ import {
             steps: [0],
             miembro: null,
             fileObstetric: {
+                numero_historia: '',
                 member_id: null,
                 telefonos: [],
                 fum: null,
@@ -74,6 +75,7 @@ import {
                 sustancias_sicotropicas: [],
             },
             defaultFileObstetric: {
+                numero_historia: '',
                 member_id: null,
                 telefonos: [],
                 fum: null,

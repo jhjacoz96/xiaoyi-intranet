@@ -24,6 +24,9 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 const moment = require('moment')
 require('moment/locale/es')
 Vue.use(require('vue-moment'), {

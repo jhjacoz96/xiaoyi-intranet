@@ -30,6 +30,8 @@
           :search="search"
           :items-per-page="5"
           class="elevation-1"
+          :loading="loadingDataTable"
+          loading-text="Cargando... Porfavor espere"
         >
           <template v-slot:item.edad="{ item }">
             {{ age(item.fecha_nacimiento) }}
@@ -148,6 +150,7 @@
                       label="Peso (*)"
                       outlined
                       dense
+                      suffix="Mtrs"
                     />
                   </v-col>
                   <v-col
@@ -159,6 +162,7 @@
                       label="Altura (*)"
                       outlined
                       dense
+                      suffix="Kg"
                     />
                   </v-col>
                   <v-col
@@ -233,6 +237,17 @@
                 >
                   <td>
                     <v-select
+                      v-model="item.presentation_id"
+                      label="Presentación"
+                      outlined
+                      :items="presentation"
+                      item-text="name"
+                      item-value="id"
+                      dense
+                    />
+                  </td>
+                  <td>
+                    <v-select
                       v-model="item.id"
                       label="Medicamento"
                       outlined
@@ -255,7 +270,7 @@
                     <v-select
                       v-model="item.measure_id"
                       class="mx-2"
-                      label="Medica"
+                      label="Unidad de medida"
                       :items="measure"
                       item-text="name"
                       item-value="id"
@@ -452,6 +467,9 @@
         presion: ['Sistolica', 'Diastólica'],
         medicamentos: [],
         measure: [],
+        presentation: [],
+        loadingDataTable: false,
+        steps: [0],
         editedItem: {
           dieta: '',
           presion_arterial: '',
@@ -480,25 +498,11 @@
           tratamiento_no_farmacologico: [],
           nivel_glusemia: 0,
         },
-        editedMedicine: {
-          id: null,
-          hora: null,
-          menu2Hora: false,
-          dosis: 0,
-          measure_id: null,
-        },
-        editedActivity: {
-          id: null,
-          actividad: '',
-          menuHora: false,
-          duracion: '',
-          hora: null,
-        },
         typecontrolDiabetic: ['Antibióticos', 'Analgésicos', 'Aines', 'Opiodides', 'Diureticos'],
       }
     },
     computed: {
-      cope () {
+      scope () {
         if (this.tab === 0) return 'signos'
         else if (this.tab === 1) return 'antropometria'
         return 'tramientos'
@@ -535,23 +539,31 @@
         // ) steps.push(3)
         return steps
       },
-      imc (val) {
-        if (this.editedItem.peso === 0 || !this.editedItem.altura === 0) return
+      imc () {
+        if (!this.editedItem.peso || !this.editedItem.altura) return 0
         var imc = (this.editedItem.peso) / Math.round(Math.pow(this.editedItem.altura, 2), -2)
         return imc
+      },
+    },
+    watch: {
+      dialog (val) {
+        val || this.close()
       },
     },
     created () {
       this.listItem()
       this.listItemMedicine()
+      this.listItemPresentation()
       this.listItemMeasure()
     },
     methods: {
       ...mapActions('controlDiabetic', ['controlDiabeticAllActions', 'controlDiabeticUpdateActions']),
       ...mapActions('medicine', ['medicineAllActions']),
       ...mapActions('measure', ['measureAllActions']),
+      ...mapActions('presentation', ['presentationAllActions']),
       ...mapMutations(['alert']),
       async listItem () {
+        this.loadingDataTable = true
         const serviceResponse = await this.controlDiabeticAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
@@ -561,11 +573,23 @@
             color: 'warning',
           })
         }
+        this.loadingDataTable = false
       },
       async listItemMedicine () {
         const serviceResponse = await this.medicineAllActions()
         if (serviceResponse.ok) {
           this.medicamentos = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemPresentation () {
+        const serviceResponse = await this.presentationAllActions()
+        if (serviceResponse.ok) {
+          this.presentation = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -593,20 +617,24 @@
       async addItem () {
         const serviceResponse = await this.controlDiabeticUpdateActions(this.editedItem)
         if (serviceResponse.ok) {
-          this.dialog = false
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-          })
+          this.close()
           this.alert({
             text: serviceResponse.message,
             color: 'success',
           })
         } else {
+          this.close()
           this.alert({
             text: serviceResponse.message.text,
             color: 'warning',
           })
         }
+      },
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+        })
       },
       next () {
         this.validateForm(this.scope).then(item => {
@@ -629,10 +657,26 @@
         return calAge(val)
       },
       addMedicine () {
-        this.editedItem.tratamiento_farmacologico.push(this.editedMedicine)
+        const editedMedicine = {
+          id: null,
+          hora: null,
+          menu2Hora: false,
+          dosis: 0,
+          measure_id: null,
+          presentation_id: null,
+        }
+        this.editedItem.tratamiento_farmacologico.push(editedMedicine)
       },
       addActivity () {
-        this.editedItem.tratamiento_no_farmacologico.push(this.editedActivity)
+        const editedActivity = {
+          id: null,
+          actividad: '',
+          menuHora: false,
+          duracion: '',
+          hora: null,
+          presentation_id: null,
+        }
+        this.editedItem.tratamiento_no_farmacologico.push(editedActivity)
       },
       deleteActivity (item) {
         var index = this.editedItem.tratamiento_no_farmacologico.indexOf(item)

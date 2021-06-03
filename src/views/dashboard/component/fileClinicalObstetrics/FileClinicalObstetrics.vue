@@ -36,6 +36,7 @@
         v-model="dialog"
         max-width="500"
       >
+        v
         <v-card>
           <v-card-title>
             <span class="text-h5">Virificar paciente</span>

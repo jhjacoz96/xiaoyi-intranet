@@ -17,78 +17,6 @@
           sm="4"
         >
           <v-text-field
-            v-model="organization.institution.name"
-            disabled
-            outlined
-            dense
-            label="institución del sistema"
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="organization.name"
-            outlined
-            disabled
-            label="Nombre de la unidad operativa"
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="organization.code_uo"
-            outlined
-            disabled
-            label="Código UO"
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="organization.province.name"
-            outlined
-            disabled
-            label="Provincia"
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="organization.canton.name"
-            outlined
-            disabled
-            label="Cantón"
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
-            v-model="organization.parroquia"
-            outlined
-            disabled
-            label="Parroquia"
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="6"
-          sm="4"
-        >
-          <v-text-field
             v-model="editedItem.numero_historia"
             v-validate="'required'"
             disabled
@@ -183,9 +111,9 @@
             v-model="editedItem.zone_id"
             v-validate="'required'"
             :error-messages="errors.collect('basic.sector')"
-            data-vv-name="sector (*)"
+            data-vv-name="parroquia"
             outlined
-            label="Sector"
+            label="Parroquia (*)"
             dense
             validate-on-blur
             :items="zone"
@@ -219,9 +147,9 @@
             v-model="editedItem.numero_telefono"
             v-validate="'required'"
             :error-messages="errors.collect('basic.numero_telefono')"
-            data-vv-name="numero_telefono (*)"
+            data-vv-name="número telefono"
             outlined
-            label="Número de telefono"
+            label="Número de telefono (*)"
             dense
             validate-on-blur
           />

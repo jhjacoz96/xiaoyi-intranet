@@ -378,8 +378,10 @@
         var date = new Date(calFpp(this.editedItem.fum))
         return date
       },
-      imc (val) {
-        if (this.editedItem.peso === 0 || !this.editedItem.talla === 0) return
+      imc () {
+        console.log(this.editedItem.peso)
+        console.log(this.editedItem.talla)
+        if (!this.editedItem.peso | !this.editedItem.talla) return 0
         var imc = (this.editedItem.peso) / Math.round(Math.pow(this.editedItem.talla, 2), -2)
         return imc
       },

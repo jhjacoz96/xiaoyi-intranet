@@ -56,6 +56,7 @@
     </v-card-text>
     <v-card-actions class="justify-end">
       <v-btn
+        :disabled="validated"
         class="float-none"
         color="primary"
         @click="addItem"
@@ -88,6 +89,17 @@
         },
       },
     }),
+    computed: {
+      validated () {
+        if (
+          this.editedItem.title &&
+          this.editedItem.description1 &&
+          this.editedItem.description2 &&
+          this.editedItem.image
+        ) return false
+        return true
+      },
+    },
     created () {
       this.listItem()
     },
@@ -116,7 +128,8 @@
         formData.append('title', this.editedItem.title)
         formData.append('description1', this.editedItem.description1)
         formData.append('description2', this.editedItem.description2)
-        formData.append('image', this.editedItem.image)
+        formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+        console.log(formData)
         console.log(formData)
         const serviceResponse = await this.webDiabeticPostActions(formData)
         if (serviceResponse.ok) {

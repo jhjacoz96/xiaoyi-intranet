@@ -40,6 +40,7 @@ import carrusel from './modules/carrusel'
 import configWeb from './modules/configWeb'
 import controlDiabetic from './modules/controlDiabetic'
 import fileClinicalObstetric from './modules/fileClinicalObstetric'
+import fileClinicalNeonatology from './modules/fileClinicalNeonatology'
 
 Vue.use(Vuex)
 
@@ -84,5 +85,6 @@ export default new Vuex.Store({
     fileFamily,
     controlDiabetic,
     fileClinicalObstetric,
+    fileClinicalNeonatology,
   },
 })

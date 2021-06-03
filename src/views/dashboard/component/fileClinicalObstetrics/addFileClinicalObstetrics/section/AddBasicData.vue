@@ -7,9 +7,11 @@
       ref="form"
       data-vv-scope="basic"
     >
+      <v-subheader>
+        Datos básicos de la paciente
+      </v-subheader>
       <v-row
         class="mx-auto"
-        justify="space-around"
         style="max-width: 900px;"
       >
         <v-col
@@ -37,6 +39,7 @@
           />
         </v-col>
         <v-col
+          v-if="miembro.type_document_id !== null"
           cols="6"
           sm="4"
         >
@@ -49,6 +52,7 @@
           />
         </v-col>
         <v-col
+          v-if="miembro.cedula !== null"
           cols="6"
           sm="4"
         >
@@ -159,6 +163,27 @@
             outlined
             label="Discapacidades"
             dense
+          />
+        </v-col>
+      </v-row>
+      <v-subheader>
+        Datos básicos de la ficha clinica de obstetricia
+      </v-subheader>
+      <v-row
+        class="mx-auto"
+        style="max-width: 900px;"
+      >
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.numero_historia"
+            outlined
+            disabled
+            label="Número de historia"
+            dense
+            validate-on-blur
           />
         </v-col>
         <v-col
@@ -294,6 +319,7 @@
         value: '',
         id: undefined,
         editedItem: {
+          numero_historia: '',
           type_blood_id: null,
           estado_civil: '',
           vive_con: '',
@@ -388,6 +414,7 @@
         this.id = this.$route.params.id
         if (this.id !== undefined) {
           const serviceResponse = await this.fileClinicalObstetricGetActions(this.$route.params.id)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.setFileObstetric(serviceResponse.data)
             this.editedItem = Object.assign({}, serviceResponse.data)
@@ -398,6 +425,8 @@
               color: 'warning',
             })
           }
+        } else {
+          this.generateCode()
         }
       },
       addTelofono () {
@@ -430,6 +459,9 @@
             color: 'warning',
           })
         }
+      },
+      generateCode () {
+        this.editedItem.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
       },
     },
   }

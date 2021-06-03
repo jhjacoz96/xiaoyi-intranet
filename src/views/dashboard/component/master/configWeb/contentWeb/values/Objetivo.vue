@@ -40,6 +40,7 @@
     </v-card-text>
     <v-card-actions class="justify-end">
       <v-btn
+        :disabled="validated"
         class="float-none"
         color="primary"
         @click="addItem"
@@ -66,6 +67,15 @@
         image_objective: undefined,
       },
     }),
+    computed: {
+      validated () {
+        if (
+          this.editedItem.objective &&
+          this.editedItem.image_objective
+        ) return false
+        return true
+      },
+    },
     created () {
       this.listItem()
     },
@@ -90,7 +100,7 @@
       async addItem () {
         const formData = new FormData()
         formData.append('objective', this.editedItem.objective)
-        formData.append('image_objective', this.editedItem.image_objective)
+        formData.append('image_objective', this.editedItem.image_objective === 'string' ? null : this.editedItem.image_objective)
         console.log(formData)
         const serviceResponse = await this.webUsPostActions(formData)
         if (serviceResponse.ok) {

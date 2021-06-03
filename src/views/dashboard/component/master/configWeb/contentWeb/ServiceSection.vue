@@ -16,13 +16,13 @@
             sm="6"
             cols="12"
           >
-            <v-text-field
+            <v-textarea
               v-model="editedItem.description1"
               outlined
               dense
               label="Descripción 1"
             />
-            <v-text-field
+            <v-textarea
               v-model="editedItem.description2"
               outlined
               dense
@@ -34,6 +34,7 @@
     </v-card-text>
     <v-card-actions class="justify-end">
       <v-btn
+        :disabled="validated"
         class="float-none"
         color="primary"
         @click="addItem"
@@ -50,13 +51,24 @@
     mapMutations,
   } from 'vuex'
   export default {
-    data: () => ({
-      valid: false,
-      editedItem: {
-        description1: '',
-        description2: '',
+    data () {
+      return {
+        valid: false,
+        editedItem: {
+          description1: '',
+          description2: '',
+        },
+      }
+    },
+    computed: {
+      validated () {
+        if (
+          this.editedItem.description1 &&
+          this.editedItem.description2
+        ) return false
+        return true
       },
-    }),
+    },
     created () {
       this.listItem()
     },
@@ -66,10 +78,9 @@
       async listItem () {
         const serviceResponse = await this.webServiceAllActions()
         if (serviceResponse.ok) {
-          console.log(serviceResponse.data)
           if (serviceResponse.data) {
-            this.editedItem.descripction1 = serviceResponse.data.descripction1
-            this.editedItem.descripction2 = serviceResponse.data.descripction2
+            this.editedItem.description1 = serviceResponse.data.description1
+            this.editedItem.description2 = serviceResponse.data.description2
           }
         } else {
           this.alert({
@@ -79,10 +90,11 @@
         }
       },
       async addItem () {
+        console.log(this.editedItem)
         const serviceResponse = await this.webServicePostActions(this.editedItem)
         if (serviceResponse.ok) {
-          this.editedItem.descripction1 = serviceResponse.data.descripction1
-          this.editedItem.descripction2 = serviceResponse.data.descripction2
+          this.editedItem.description1 = serviceResponse.data.description1
+          this.editedItem.description2 = serviceResponse.data.description2
           this.alert({
             text: serviceResponse.message,
             color: 'success',

@@ -314,7 +314,12 @@ const router = new Router({
         {
           name: 'Registro de ficha clinica de neonatología',
           path: 'ficha-clinica-neonatologia/agregar',
-          component: () => import('@/views/dashboard/component/fileClinicalNeonatology/FileClinicalNeonatology'),
+          component: () => import('@/views/dashboard/component/fileClinicalNeonatology/addFileClinicalNeonatology/AddFileClinicalNeonatology'),
+        },
+        {
+          name: 'Actualizar de ficha clinica de neonatología',
+          path: 'ficha-clinica-neonatologia/actualizar/:id',
+          component: () => import('@/views/dashboard/component/fileClinicalNeonatology/addFileClinicalNeonatology/AddFileClinicalNeonatology'),
         },
         {
           name: 'Control y seguimiento de ficha clinica de obstetricia',

@@ -164,7 +164,7 @@
                         outlined
                         dense
                         :items="filterTwo"
-                        :disabled="editedItem.filter_one_publication_id !== undefined ? false : true"
+                        :disabled="filterTwo.length > 0 ? false : true"
                         item-text="name"
                         item-value="id"
                         @change="getFilterThree($event)"
@@ -180,7 +180,7 @@
                         :items="filterThree"
                         item-text="name"
                         item-value="id"
-                        :disabled="editedItem.filter_two_publication_id !== undefined ? false : true"
+                        :disabled="filterThree.length > 0 ? false : true"
                         outlined
                         dense
                       />
@@ -199,6 +199,41 @@
                   />
                 </v-col>
                 <v-col
+                  cols="6"
+                >
+                  <v-select
+                    v-model="editedItem.type_resource"
+                    :disabled="editedIndex !== -1"
+                    :items="['image', 'video', 'document']"
+                    outlined
+                    label="Tipo de recurso"
+                    dense
+                    @click.prevent="editedItem.resource = null"
+                  />
+                </v-col>
+                <v-col
+                  cols="6"
+                >
+                  <v-file-input
+                    v-if="editedItem.type_resource==='image' || editedItem.type_resource==='document'"
+                    v-model="editedItem.resource"
+                    :disabled="editedIndex !== -1"
+                    label="Seleccione la imagen"
+                    outlined
+                    dense
+                    class="ml-2"
+                  />
+                  <v-text-field
+                    v-else
+                    v-model="editedItem.resource"
+                    :disabled="editedIndex !== -1"
+                    label="Ingrese el link de video de youtube"
+                    outlined
+                    dense
+                    class="ml-2"
+                  />
+                </v-col>
+                <v-col
                   cols="12"
                 >
                   <p class="text-h6 font-weight-regular">
@@ -210,7 +245,7 @@
                     :config="editorOption"
                   />
                 </v-col>
-                <v-col
+                <!-- <v-col
                   cols="12"
                 >
                   <div class="mt-4 my-3">
@@ -270,7 +305,7 @@
                       </td>
                     </tr>
                   </v-card-text>
-                </v-col>
+                </v-col> -->
               </v-row>
             </v-container>
           </v-card-text>
@@ -285,6 +320,8 @@
               Cancelar
             </v-btn>
             <v-btn
+              :loading="loaderDialog"
+              :disabled="loaderDialog"
               color="primary"
               text
               @click="addItem()"
@@ -312,6 +349,8 @@
               Cancelar
             </v-btn>
             <v-btn
+              :loading="loaderDialogDelete"
+              :disabled="loaderDialogDelete"
               color="pink"
               text
               @click="deleteItemConfirm"
@@ -354,6 +393,8 @@
         search: '',
         dialog: false,
         dialogDelete: false,
+        loaderDialog: false,
+        loaderDialogDelete: false,
         editedIndex: -1,
         editedId: undefined,
         headers: [
@@ -390,30 +431,22 @@
         editedItem: {
           name: '',
           description: '',
-          filter_three_publication_id: undefined,
-          filter_two_publication_id: undefined,
-          filter_one_publication_id: undefined,
+          filter_three_publication_id: null,
+          filter_two_publication_id: null,
+          filter_one_publication_id: null,
           image_mini: undefined,
-          resources: [
-            {
-              type_resource: undefined,
-              url: undefined,
-            },
-          ],
+          resource: null,
+          type_resource: '',
         },
         defaultItem: {
           name: '',
           description: '',
-          filter_three_publication_id: undefined,
-          filter_two_publication_id: undefined,
-          filter_one_publication_id: undefined,
+          filter_three_publication_id: null,
+          filter_two_publication_id: null,
+          filter_one_publication_id: null,
           image_mini: undefined,
-          resources: [
-            {
-              type_resource: undefined,
-              url: undefined,
-            },
-          ],
+          resource: null,
+          type_resource: '',
         },
       }
     },
@@ -490,15 +523,18 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm () {
+        this.loaderDialogDelete = true
         const serviceResponse = await this.publicationDeleteActions(this.editedId)
         if (serviceResponse.ok) {
           this.desserts.splice(this.editedIndex, 1)
+          this.loaderDialogDelete = false
           this.closeDelete()
           this.alert({
             text: serviceResponse.message,
             color: 'success',
           })
         } else {
+          this.loaderDialogDelete = false
           this.closeDelete()
           this.alert({
             text: serviceResponse.message.text,
@@ -511,10 +547,12 @@
         Object.assign(this.editedItem, item)
         this.editedId = item.id
         this.dialog = true
+        if (this.editedItem.filter_one_publication_id) this.getFilterTwo(this.editedItem.filter_one_publication_id)
+        if (this.editedItem.filter_two_publication_id) this.getFilterThree(this.editedItem.filter_two_publication_id)
       },
       async addItem () {
+        this.loaderDialog = true
         if (this.editedIndex > -1) {
-          this.editedItem.resources.forEach(this.formatYoutube)
           console.log(this.editedItem)
           const formData = new FormData()
           formData.append('name', this.editedItem.name)
@@ -523,17 +561,20 @@
           formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
           formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
           formData.append('image_mini', this.editedItem.image_mini)
-          formData.append('resources', JSON.stringify(this.editedItem.resources))
+          formData.append('resource', this.editedItem.resource)
+          formData.append('type_resource', this.editedItem.type_resource)
 
-          const serviceResponse = await this.publicationUpdateActions(formData)
+          const serviceResponse = await this.publicationUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.loaderDialog = false
             this.close()
             this.alert({
               text: serviceResponse.message,
               color: 'success',
             })
           } else {
+            this.loaderDialog = false
             this.close()
             this.alert({
               text: serviceResponse.message.text,
@@ -541,7 +582,7 @@
             })
           }
         } else {
-          this.editedItem.resources.forEach(this.formatYoutube)
+          // this.formatYoutube()
           console.log(this.editedItem)
           const formData = new FormData()
           formData.append('name', this.editedItem.name)
@@ -550,16 +591,19 @@
           formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
           formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
           formData.append('image_mini', this.editedItem.image_mini)
-          formData.append('resources', JSON.stringify(this.editedItem.resources))
+          formData.append('resource', this.editedItem.resource)
+          formData.append('type_resource', this.editedItem.type_resource)
           const serviceResponse = await this.publicationPostActions(formData)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
+            this.loaderDialog = false
             this.close()
             this.alert({
               text: serviceResponse.message,
               color: 'success',
             })
           } else {
+            this.loaderDialog = false
             this.close()
             this.alert({
               text: serviceResponse.message.text,
@@ -591,10 +635,9 @@
         var index = this.editedItem.resources.indexOf(val)
         this.editedItem.resources.splice(index, 1)
       },
-      formatYoutube (val) {
-        if (val.type_resource === 'video' && val.url.length > 11) {
-          var index = this.editedItem.resources.indexOf(val)
-          this.editedItem.resources[index].url = val.url.toString().split('').reverse().join('').slice(0, 11).split('').reverse().join('')
+      formatYoutube () {
+        if (this.editedItem.type_resource === 'video' && this.editedItem.resource.length > 11) {
+          this.editedItem.resource = this.editedItem.resource.toString().split('').reverse().join('').slice(0, 11).split('').reverse().join('')
         }
       },
     },

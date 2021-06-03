@@ -40,6 +40,7 @@
     </v-card-text>
     <v-card-actions class="justify-end">
       <v-btn
+        :disabled="validated"
         class="float-none"
         color="primary"
         @click="addItem"
@@ -56,16 +57,27 @@
     mapMutations,
   } from 'vuex'
   export default {
-    data: () => ({
-      rules: [
-        value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
-      ],
-      valid: false,
-      editedItem: {
-        mission: '',
-        image_mission: undefined,
+    data () {
+      return {
+        rules: [
+          value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
+        ],
+        valid: false,
+        editedItem: {
+          mission: '',
+          image_mission: undefined,
+        },
+      }
+    },
+    computed: {
+      validated () {
+        if (
+          this.editedItem.mission &&
+          this.editedItem.image_mission
+        ) return false
+        return true
       },
-    }),
+    },
     created () {
       this.listItem()
     },
@@ -79,6 +91,7 @@
           if (serviceResponse.data) {
             this.editedItem.mission = serviceResponse.data.mission
             this.editedItem.image_mission = serviceResponse.data.image_mission
+            console.log(this.editedItem)
           }
         } else {
           this.alert({
@@ -90,7 +103,7 @@
       async addItem () {
         const formData = new FormData()
         formData.append('mission', this.editedItem.mission)
-        formData.append('image_mission', this.editedItem.image_mission)
+        formData.append('image_mission', typeof this.editedItem.image_mission === 'string' ? null : this.editedItem.image_mission)
         console.log(formData)
         const serviceResponse = await this.webUsPostActions(formData)
         if (serviceResponse.ok) {

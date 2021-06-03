@@ -136,7 +136,9 @@
         this.loading = true
         var id = this.$route.params.id
         if (id !== undefined) {
+          console.log(this.fileFamily)
           const serviceResponse = await this.fileFamilyUpdateActions(this.fileFamily)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.$router.push('/intranet/ficha-familiar')
             this.loading = false
@@ -154,6 +156,7 @@
           }
         } else {
           const serviceResponse = await this.fileFamilyPostActions(this.fileFamily)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.$router.push('/intranet/ficha-familiar')
             this.loading = false

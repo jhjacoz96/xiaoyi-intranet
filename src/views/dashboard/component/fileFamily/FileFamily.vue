@@ -142,6 +142,8 @@
           :items="desserts"
           :items-per-page="5"
           class="elevation-1"
+          :loading="loadingDataTable"
+          loading-text="Cargando... Porfavor espere"
         >
           <template v-slot:item.level_riesgo="{ item }">
             <v-chip
@@ -155,18 +157,18 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  fab
                   x-small
-                  color="warning"
+                  fab
+                  color="info"
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
                   @click="$router.push(`ficha-familiar/${item.id}`)"
                 >
-                  <v-icon>mdi-pencil</v-icon>
+                  <v-icon>mdi-account-group</v-icon>
                 </v-btn>
               </template>
-              <span>Editar</span>
+              <span>Visualizar ficha familiar</span>
             </v-tooltip>
           </template>
         </v-data-table>
@@ -191,10 +193,11 @@
         dialog: false,
         loadingSearch: false,
         loadingFilter: false,
+        loadingDataTable: false,
         headers: [
           { text: 'Numero de historia', sortable: false, value: 'numero_historia' },
           { text: 'Nivel de riesgo', sortable: false, value: 'level_riesgo' },
-          { text: 'Sector', sortable: false, value: 'zone_id.name' },
+          { text: 'Parroquia', sortable: false, value: 'zone_id.name' },
           { text: 'Acción', sortable: false, align: 'center', value: 'accion' },
         ],
         desserts: [],
@@ -234,6 +237,7 @@
       ...mapActions('levelTotal', ['levelTotalAllActions']),
       ...mapMutations(['alert']),
       async listItem () {
+        this.loadingDataTable = true
         const serviceResponse = await this.fileFamilyAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
@@ -243,6 +247,7 @@
             color: 'warning',
           })
         }
+        this.loadingDataTable = false
       },
       async listItemZone () {
         const serviceResponse = await this.zoneAllActions()

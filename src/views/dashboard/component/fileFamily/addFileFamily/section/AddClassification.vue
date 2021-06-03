@@ -181,7 +181,7 @@
       </v-card-text> -->
       <v-card-text>
         <v-progress-linear
-          v-model="total_risk"
+          :value="total_risk"
           height="25"
           :color="colorRisk.color"
         >

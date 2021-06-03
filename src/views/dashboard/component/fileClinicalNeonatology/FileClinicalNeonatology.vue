@@ -57,6 +57,7 @@
                   cols="12"
                 >
                   <v-text-field
+                    v-model="cedula"
                     label="Número de cédula"
                     outlined
                   />
@@ -70,12 +71,16 @@
             <v-btn
               color="black darken-1"
               text
+              @click="close"
             >
               Cancelar
             </v-btn>
             <v-btn
               color="primary"
               text
+              :diasabled="loading"
+              :loading="loading"
+              @click="fileObstetricc()"
             >
               Verificar
             </v-btn>
@@ -87,11 +92,55 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapState,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
         dialog: false,
+        editedIndex: -1,
+        cedula: '',
+        loading: false,
       }
+    },
+    computed: {
+      ...mapState('fileClinicalObstetric', ['fileObstetric', 'miembro']),
+    },
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+    },
+    methods: {
+      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricCheckActions']),
+      ...mapMutations('fileClinicalNeonatology', ['setMiembro']),
+      ...mapMutations(['alert']),
+      async fileObstetricc () {
+        this.loading = true
+        const serviceResponse = await this.fileClinicalObstetricCheckActions(this.cedula)
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.setMiembro(serviceResponse.data)
+          this.$router.push('/intranet/ficha-clinica-neonatologia/agregar')
+          this.loading = false
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+          this.loading = false
+        }
+      },
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.loading = false
+          this.editedIndex = -1
+        })
+      },
     },
   }
 </script>

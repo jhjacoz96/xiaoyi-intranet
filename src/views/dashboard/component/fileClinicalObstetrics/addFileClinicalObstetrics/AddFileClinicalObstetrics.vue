@@ -11,12 +11,12 @@
       @click:event="event($event)"
       @click:next="next"
       @click:prev="tab--"
-      @click:save="save"
+      @click:save="confirmSave"
     >
       <v-tab-item class="pb-12">
         <add-basic-data
           :click="click"
-          @click:save="save"
+          @click:save="confirmSave"
           @click:next="next"
         />
       </v-tab-item>
@@ -24,7 +24,7 @@
       <v-tab-item class="pb-12">
         <add-record
           :click="click1"
-          @click:save="save"
+          @click:save="confirmSave"
           @click:next="next"
         />
       </v-tab-item>
@@ -32,7 +32,7 @@
       <v-tab-item class="pb-12">
         <add-obstetric-data
           :click="click2"
-          @click:save="save"
+          @click:save="confirmSave"
           @click:next="next"
         />
       </v-tab-item>
@@ -40,7 +40,7 @@
       <v-tab-item class="pb-12">
         <add-plan-birth
           :click="click3"
-          @click:save="save"
+          @click:save="confirmSave"
           @click:next="next"
         />
       </v-tab-item>
@@ -48,7 +48,7 @@
       <v-tab-item class="pb-12">
         <add-birth
           :click="click4"
-          @click:save="save"
+          @click:save="confirmSave"
           @click:next="next"
         />
       </v-tab-item>
@@ -56,11 +56,39 @@
       <v-tab-item class="pb-12">
         <add-puerperium
           :click="click5"
-          @click:save="save"
+          @click:save="confirmSave"
           @click:next="next"
         />
       </v-tab-item>
     </base-material-wizard-two>
+    <v-dialog
+      v-model="dialogConfirm"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          ¿Está seguro de realizar esta acción?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="black darken-1"
+            text
+            @click="dialogConfirm = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="pinck"
+            text
+            @click="save"
+          >
+            Confirmar
+          </v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -81,6 +109,7 @@
       AddPuerperium: () => import('./section/AddPuerperium'),
     },
     data: () => ({
+      dialogConfirm: false,
       click: '',
       click1: '',
       click2: '',
@@ -112,12 +141,12 @@
       ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions', 'fileClinicalObstetricUpdateActions', 'fileClinicalObstetricPostActions']),
       ...mapMutations('fileClinicalObstetric', ['setSteps', 'resetSteps']),
       next () {
-        if (this.tab === 0) this.click = null
-        if (this.tab === 1) this.click1 = null
-        if (this.tab === 2) this.click2 = null
-        if (this.tab === 3) this.click3 = null
-        if (this.tab === 4) this.click4 = null
-        if (this.tab === 5) this.click5 = null
+        if (this.tab === 0) this.click = ''
+        if (this.tab === 1) this.click1 = ''
+        if (this.tab === 2) this.click2 = ''
+        if (this.tab === 3) this.click3 = ''
+        if (this.tab === 4) this.click4 = ''
+        if (this.tab === 5) this.click5 = ''
         this.validateForm(this.scope).then(item => {
           if (!item) return
 
@@ -129,15 +158,18 @@
         })
       },
       save () {
-        if (this.tab === 0) this.click = null
-        if (this.tab === 1) this.click1 = null
-        if (this.tab === 2) this.click2 = null
-        if (this.tab === 3) this.click3 = null
-        if (this.tab === 4) this.click4 = true
-        if (this.tab === 5) this.click5 = null
         this.addFile()
       },
+      confirmSave () {
+        if (this.tab === 0) this.click = ''
+        if (this.tab === 1) this.click1 = ''
+        if (this.tab === 2) this.click2 = ''
+        if (this.tab === 3) this.click3 = ''
+        if (this.tab === 4) this.click4 = ''
+        this.dialogConfirm = true
+      },
       async addFile () {
+        this.dialogConfirm = false
         this.loading = true
         console.log(this.$route.params.id)
         if (this.$route.params.id) {

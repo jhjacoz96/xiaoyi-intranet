@@ -234,7 +234,7 @@
       </v-row>
       <div class="mt-4 my-3">
         <div class="d-inline-block">
-          <span class="text-h5">Farmacos aministrados</span>
+          <span class="text-h5">Farmacos administrados</span>
         </div>
         <v-btn
           fab
@@ -253,7 +253,7 @@
           <td>
             <v-select
               v-model="item.presentation_id"
-              label="Tipo"
+              label="Presentación"
               item-text="name"
               item-value="id"
               outlined
@@ -286,7 +286,7 @@
             <v-select
               v-model="item.measure_id"
               class="ml-2"
-              label="Medida"
+              label="Unidad de medida"
               :items="medida"
               item-text="name"
               item-value="id"

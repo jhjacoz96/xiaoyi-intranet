@@ -10,7 +10,7 @@
       <v-col cols="5">
         <v-textarea
           v-model="editedItem.description1"
-          label="Descripción 1"
+          label="Descripción de sección de contáctanos"
           name="7-3"
           outlined
         />
@@ -18,7 +18,7 @@
       <v-col cols="5">
         <v-textarea
           v-model="editedItem.description2"
-          label="Descripción 2"
+          label="Descripción de sección de enviar comentario"
           outlined
         />
       </v-col>

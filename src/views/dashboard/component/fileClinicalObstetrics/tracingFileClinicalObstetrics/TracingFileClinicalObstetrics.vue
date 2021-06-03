@@ -134,7 +134,25 @@
           :expanded.sync="expanded"
           item-key="id"
           show-expand
+          :loading="loadingDataTable"
+          loading-text="Cargando... Porfavor espere"
         >
+          <template v-slot:item.embarazo="{ item }">
+            <v-chip
+              v-if="item.embarazo"
+              color="success"
+              class="white--text"
+            >
+              Si
+            </v-chip>
+            <v-chip
+              v-else
+              color="pink"
+              class="white--text"
+            >
+              No
+            </v-chip>
+          </template>
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <v-container>
@@ -145,7 +163,7 @@
                     cols="4"
                   >
                     <base-item-master
-                      :title="`Ficha #${file.id}`"
+                      :title="`#${file.numero_historia}`"
                       width="110"
                       height="80"
                       icon="mdi-36px mdi-human-pregnant"
@@ -203,12 +221,13 @@
         singleExpand: false,
         loadingSearch: false,
         loadingFilter: false,
+        loadingDataTable: false,
         headers: [
-          { text: 'Id', sortable: false, value: 'id' },
           { text: 'Nombres y apellidos', sortable: false, value: 'nombre' },
           { text: 'Cédula', sortable: false, value: 'cedula' },
           { text: 'Edad', sortable: false, value: 'edad' },
-          { text: 'Sector', sortable: false, value: 'zone_id.name' },
+          { text: 'En estado de embarazo', align: 'center', sortable: false, value: 'embarazo' },
+          { text: 'Parroquia', sortable: false, value: 'zone_id.name' },
         ],
         desserts: [],
         groupAge: [],
@@ -239,6 +258,7 @@
       ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricAllActions', 'fileClinicalObstetricSearchActions', 'fileClinicalObstetricFilterActions']),
       ...mapActions('groupAge', ['groupAgeAllActions']),
       async listItem () {
+        this.loadingDataTable = true
         const serviceResponse = await this.fileClinicalObstetricAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
@@ -248,6 +268,7 @@
             color: 'warning',
           })
         }
+        this.loadingDataTable = false
       },
       async listItemGroupAge () {
         const serviceResponse = await this.groupAgeAllActions()
