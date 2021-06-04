@@ -49,7 +49,7 @@
           sm="5"
         >
           <v-text-field
-            :value="date | moment('dddd, MMMM Do YYYY')"
+            :value="moment(date).locale('es').format('dddd, MMMM Do YYYY')"
             dense
             outlined
             disabled

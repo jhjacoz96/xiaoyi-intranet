@@ -182,13 +182,13 @@
           icon: 'mdi-account-voice',
           title: 'Atención al paciente',
           can: 'patient_care_access',
-          group: 'patient_care',
+          group: '',
           children: [
             {
-              icon: 'mdi-comment',
+              icon: '',
               title: 'Evaluar sugerencias',
               can: 'evaluate_suggestion_access',
-              to: 'intranet/atencion-paciente/evaluar-sugerencias',
+              to: 'intranet/evaluar-sugerencias',
             },
           ],
         },

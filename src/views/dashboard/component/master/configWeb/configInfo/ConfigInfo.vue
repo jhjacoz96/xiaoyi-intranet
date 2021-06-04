@@ -47,6 +47,13 @@
             to="configuracion-web/tercer-filtro-busqueda"
           />
         </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Tipos de comentarios"
+            icon="mdi-36px mdi-view-grid-plus-outline"
+            to="configuracion-web/tipo-comentario"
+          />
+        </v-col>
         <!-- <v-col cols="3">
           <base-item-master
             title="Recursos de multimedia"

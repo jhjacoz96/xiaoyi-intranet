@@ -352,6 +352,7 @@
       },
       mapArray (item) {
         return {
+          id: item.id || null,
           name: item.name,
           description: item.description,
           rank: JSON.parse(item.rank),
@@ -359,6 +360,7 @@
       },
       mapString (item) {
         return {
+          id: item.id || null,
           name: item.name,
           description: item.description,
           rank: JSON.stringify(item.rank),

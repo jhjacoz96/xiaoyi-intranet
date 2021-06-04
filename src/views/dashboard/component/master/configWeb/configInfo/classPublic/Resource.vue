@@ -105,16 +105,7 @@
           <v-card-text id="create">
             <v-container>
               <v-row class="justify-end">
-                <!-- <v-col
-                  cols="6"
-                >
-                  <v-switch
-                    v-model="editedItem.viewType"
-                    class="ml-14"
-                    inset
-                    label="¿Habilitar?"
-                  />
-                </v-col> -->
+                ->
                 <v-col
                   cols="6"
                 >

@@ -61,9 +61,9 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ThreeFilter'),
         },
         {
-          name: 'Publicaciones',
-          path: 'configuracion-web/preguntas-frecuentes',
-          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Faq'),
+          name: 'Tipo de comentarios',
+          path: 'configuracion-web/tipo-comentario',
+          component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/TypeComment'),
         },
         {
           name: 'Configuración de publicaciones',
@@ -71,7 +71,7 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/ConfigPublic'),
         },
         {
-          name: 'Recursos de publicaciones',
+          name: 'Publicaciones',
           path: 'configuracion-web/publicaciones',
           component: () => import('@/views/dashboard/component/master/configWeb/configInfo/classPublic/Publication'),
         },
@@ -349,8 +349,8 @@ const router = new Router({
         },
         {
           name: 'Evaluar sugerencias y comentarios',
-          path: 'atencion-paciente/evaluar-sugerencias',
-          component: () => import('@/views/dashboard/component/patientCare/evaluateSuggestion/EvaluateSuggestion'),
+          path: 'evaluar-sugerencias',
+          component: () => import('@/views/dashboard/component/patientCare/EvaluateSuggestion'),
         },
         {
           name: 'Reportes',

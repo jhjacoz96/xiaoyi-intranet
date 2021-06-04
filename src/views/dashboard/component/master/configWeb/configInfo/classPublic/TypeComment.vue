@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Niveles de riesgos totales
+              Tipos de comentarios
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar los rangos totales para los niveles de riesgos
+              Permite gestionar los tipos de comentarios en el portal web.
             </div>
           </v-col>
         </v-row>
@@ -40,15 +40,6 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.min="{ item }">
-            {{ item.rango }}
-          </template>
-          <template v-slot:item.color="{ item }">
-            <v-avatar
-              size="36"
-              :color="item.color"
-            />
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -112,56 +103,9 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.name"
-                    label="Nivel de riesgo"
-                    dense
+                    v-model="editedItem.nombre"
+                    label="Nombre"
                     outlined
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <label class="font-weight-light text-h5">Indique el rango </label>
-                  <v-range-slider
-                    v-model="editedItem.rank"
-                    :max="max"
-                    :min="min"
-                    hide-details
-                    class="align-center"
-                  >
-                    <template v-slot:prepend>
-                      <v-text-field
-                        :value="editedItem.rank[0]"
-                        class="mt-0 pt-0"
-                        hide-details
-                        single-line
-                        type="number"
-                        style="width: 60px"
-                        @change="$set(editedItem.rank, 0, $event)"
-                      />
-                    </template>
-                    <template v-slot:append>
-                      <v-text-field
-                        :value="editedItem.rank[1]"
-                        class="mt-0 pt-0"
-                        hide-details
-                        single-line
-                        type="number"
-                        style="width: 60px"
-                        @change="$set(editedItem.rank, 1, $event)"
-                      />
-                    </template>
-                  </v-range-slider>
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <label class="font-weight-light text-h5">Asignar color</label>
-                  <v-color-picker
-                    v-model="editedItem.color"
-                    dot-size="25"
-                    swatches-max-height="200"
-                    hide-mode-switch
-                    hide-canvas
-                    mode="hexa"
                   />
                 </v-col>
               </v-row>
@@ -221,27 +165,27 @@
 
 <script>
   import {
-    mapActions,
     mapMutations,
   } from 'vuex'
+  import {
+    typeCommentPostApi,
+    typeCommentDeleteApi,
+    typeCommentUpdateApi,
+    typeCommentAllApi,
+  } from '@/api/modules'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
-        max: 120,
-        min: 0,
         dialogDelete: false,
+        imagen: null,
         editedIndex: -1,
         editedId: undefined,
         headers: [
           {
             text: 'Nombre',
-            value: 'name',
-          },
-          {
-            text: 'Color',
-            value: 'color',
+            value: 'nombre',
           },
           {
             text: 'Acción',
@@ -252,20 +196,18 @@
         ],
         desserts: [],
         editedItem: {
-          color: '',
-          name: '',
-          rank: [0, 0],
+          nombre: '',
+          id: null,
         },
         defaultItem: {
-          name: '',
-          color: '',
-          rank: [0, 0],
+          nombre: '',
+          id: null,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar rango total' : 'Editar rango total'
+        return this.editedIndex === -1 ? 'Agregar tipo de comentario' : 'Editar tipo de comentario'
       },
     },
     watch: {
@@ -280,12 +222,12 @@
       this.listItem()
     },
     methods: {
-      ...mapActions('levelTotal', ['levelTotalPostActions', 'levelTotalAllActions', 'levelTotalDeleteActions', 'levelTotalGetActions', 'levelTotalUpdateActions']),
       ...mapMutations(['alert']),
       async listItem () {
-        const serviceResponse = await this.levelTotalAllActions()
+        const serviceResponse = await typeCommentAllApi()
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
-          this.desserts = serviceResponse.data.map(this.mapArray)
+          this.desserts = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -299,7 +241,7 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm () {
-        const serviceResponse = await this.levelTotalDeleteActions(this.editedId)
+        const serviceResponse = await typeCommentDeleteApi(this.editedId)
         if (serviceResponse.ok) {
           this.desserts.splice(this.editedIndex, 1)
           this.closeDelete()
@@ -318,12 +260,13 @@
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         this.editedId = item.id
-        Object.assign(this.editedItem, item)
+        this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          const serviceResponse = await this.levelTotalUpdateActions(this.mapString(this.editedItem))
+          const serviceResponse = await typeCommentUpdateApi(this.editedItem, this.editedItem.id)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.close()
@@ -339,9 +282,9 @@
             })
           }
         } else {
-          const serviceResponse = await this.levelTotalPostActions(this.mapString(this.editedItem))
+          const serviceResponse = await typeCommentPostApi(this.editedItem)
           if (serviceResponse.ok) {
-            this.desserts.push(this.mapArray(serviceResponse.data))
+            this.desserts.push(serviceResponse.data)
             this.close()
             this.alert({
               text: serviceResponse.message,
@@ -371,22 +314,6 @@
           this.editedIndex = -1
           this.editedId = undefined
         })
-      },
-      mapArray (item) {
-        return {
-          id: item.id ? item.id : null,
-          name: item.name,
-          color: item.color,
-          rank: JSON.parse(item.rank),
-        }
-      },
-      mapString (item) {
-        return {
-          id: item.id ? item.id : null,
-          name: item.name,
-          color: item.color,
-          rank: JSON.stringify(item.rank),
-        }
       },
     },
   }

@@ -482,6 +482,7 @@
                           </template>
                           <v-radio
                             :value="0"
+                            :disabled="editedItem.embarazo === 1 ? true : false"
                           >
                             <template v-slot:label>
                               <div>No</div>
@@ -489,6 +490,7 @@
                           </v-radio>
                           <v-radio
                             :value="1"
+                            :disabled="editedItem.embarazo === 1 ? true : false"
                             @click.prevent="generateCode()"
                           >
                             <template v-slot:label>
@@ -537,7 +539,7 @@
                         sm="6"
                       >
                         <v-text-field
-                          :value="date | moment('dddd, MMMM Do YYYY')"
+                          :value="moment(date).locale('es').format('dddd, MMMM Do YYYY')"
                           dense
                           outlined
                           disabled
@@ -1405,7 +1407,6 @@
       async verifyEmail () {
         if (this.editedItem.correo) {
           const serviceResponse = await this.fileFamilyVerifyEmailActions(this.editedItem.correo)
-          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.msotrarMensajeCorreo = true
           } else {
@@ -1414,7 +1415,28 @@
         }
       },
       generateCode () {
-        this.editedItem.prenatal.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
+        if (this.editedItem.prenatal !== null) {
+          if ( this.$route.params.id && this.editedItem.prenatal.id) {
+             this.editedItem.prenatal.id = null
+          }
+          this.editedItem.prenatal.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
+        }
+        if (this.$route.params.id && this.editedItem.prenatal === null) {
+          var prenatal = {
+            fum: '',
+            fpp: '',
+            antecedentes_patologicos: '',
+            semana_gestacion: 0,
+            numero_historia: '',
+            gestas: 0,
+            partos: 0,
+            vaccine_dt: '',
+            abortos: 0,
+            cesarias: 0,
+          }
+          this.editedItem.prenatal = Object.assign({}, prenatal)
+          this.editedItem.prenatal.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
+        }
       },
     },
   }
