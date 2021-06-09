@@ -94,12 +94,10 @@
       async listItem () {
         const serviceResponse = await this.webUsAllActions()
         if (serviceResponse.ok) {
-          console.log(serviceResponse.data)
           if (serviceResponse.data) {
             this.editedItem.description1 = serviceResponse.data.description1
             this.editedItem.description2 = serviceResponse.data.description2
             this.editedItem.image_us = serviceResponse.data.image_us
-            console.log(this.editedItem)
           }
         } else {
           this.alert({
@@ -113,7 +111,6 @@
         formData.append('description1', this.editedItem.description1)
         formData.append('description2', this.editedItem.description2)
         formData.append('image_us', typeof this.editedItem.image_us === 'string' ? null : this.editedItem.image_us)
-        console.log(formData)
         const serviceResponse = await this.webUsPostActions(formData)
         if (serviceResponse.ok) {
           this.editedItem.description1 = serviceResponse.data.description1

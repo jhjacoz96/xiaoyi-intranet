@@ -178,7 +178,6 @@
         const serviceResponse = await this.riskClassificationAllActions()
         if (serviceResponse.ok) {
           this.riskClassification = serviceResponse.data
-          console.log(this.riskClassification)
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -194,7 +193,6 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          console.log(this.editedItem)
           const serviceResponse = await this.riskUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)

@@ -77,7 +77,6 @@
       async listItem () {
         const serviceResponsee = await this.webSubcriptionAllActions()
         if (serviceResponsee.ok) {
-          console.log(serviceResponsee.data)
           if (serviceResponsee.data) {
             this.editedItem.description1 = serviceResponsee.data.description1
             this.editedItem.description2 = serviceResponsee.data.description2

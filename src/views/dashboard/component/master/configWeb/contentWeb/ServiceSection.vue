@@ -90,7 +90,6 @@
         }
       },
       async addItem () {
-        console.log(this.editedItem)
         const serviceResponse = await this.webServicePostActions(this.editedItem)
         if (serviceResponse.ok) {
           this.editedItem.description1 = serviceResponse.data.description1

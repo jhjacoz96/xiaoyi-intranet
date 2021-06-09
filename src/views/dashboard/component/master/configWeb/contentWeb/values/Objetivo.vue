@@ -85,7 +85,6 @@
       async listItem () {
         const serviceResponse = await this.webUsAllActions()
         if (serviceResponse.ok) {
-          console.log(serviceResponse.data)
           if (serviceResponse.data) {
             this.editedItem.objective = serviceResponse.data.objective
             this.editedItem.image_objective = serviceResponse.data.image_objective
@@ -101,7 +100,6 @@
         const formData = new FormData()
         formData.append('objective', this.editedItem.objective)
         formData.append('image_objective', this.editedItem.image_objective === 'string' ? null : this.editedItem.image_objective)
-        console.log(formData)
         const serviceResponse = await this.webUsPostActions(formData)
         if (serviceResponse.ok) {
           this.editedItem.objective = serviceResponse.data.objective

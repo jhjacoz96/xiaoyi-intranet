@@ -166,7 +166,6 @@
         this.dialog = true
       },
       async editedConfirm () {
-        console.log(this.editedItem)
         this.editedItem.view_web = !this.editedItem.view_web
         const serviceResponse = await this.serviceUpdateActions(this.editedItem)
         if (serviceResponse.ok) {

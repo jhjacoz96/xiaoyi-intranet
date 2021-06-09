@@ -169,7 +169,6 @@
       },
       async addItem () {
         const serviceResponsee = await this.webContactPostActions(this.editedItem)
-        console.log(serviceResponsee)
         if (serviceResponsee.ok) {
           Object.assign(this.editedItem, serviceResponsee.data)
           this.alert({

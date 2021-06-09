@@ -87,7 +87,6 @@
       async listItem () {
         const serviceResponse = await this.webUsAllActions()
         if (serviceResponse.ok) {
-          console.log(serviceResponse.data)
           if (serviceResponse.data) {
             this.editedItem.mission = serviceResponse.data.mission
             this.editedItem.image_mission = serviceResponse.data.image_mission
@@ -104,7 +103,6 @@
         const formData = new FormData()
         formData.append('mission', this.editedItem.mission)
         formData.append('image_mission', typeof this.editedItem.image_mission === 'string' ? null : this.editedItem.image_mission)
-        console.log(formData)
         const serviceResponse = await this.webUsPostActions(formData)
         if (serviceResponse.ok) {
           this.editedItem.mission = serviceResponse.data.mission

@@ -32,7 +32,6 @@
     </base-material-card>
   </v-container>
 </template>
-
 <script>
   export default {
     name: 'ConfigWeb',

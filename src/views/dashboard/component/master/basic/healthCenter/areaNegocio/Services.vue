@@ -249,7 +249,6 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.serviceAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -289,7 +288,6 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          console.log(this.editedItem)
           const formData = new FormData()
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
@@ -314,9 +312,7 @@
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
           formData.append('image_service', this.editedItem.image_service)
-          console.log(this.editedItem)
           const serviceResponse = await this.servicePostActions(formData)
-          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.close()

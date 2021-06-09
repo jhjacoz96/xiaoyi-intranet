@@ -20,7 +20,7 @@
               Grupos poblacionales
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar las zonas a las que el centro de salud le hace cobertura
+              Permite gestionar las parroquias a las que el centro de salud le hace cobertura
             </div>
           </v-col>
         </v-row>
@@ -253,7 +253,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar grupo poblacional' : 'Editar grupo poblacional'
+        return this.editedIndex === -1 ? 'Agregar parroquia' : 'Editar parroquia'
       },
     },
     watch: {

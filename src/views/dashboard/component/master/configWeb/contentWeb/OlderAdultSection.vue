@@ -85,7 +85,6 @@
       async listItem () {
         const serviceResponsee = await this.webOlderAdultAllActions()
         if (serviceResponsee.ok) {
-          console.log(serviceResponsee.data)
           if (serviceResponsee.data) {
             this.editedItem.title = serviceResponsee.data.title
             this.editedItem.description1 = serviceResponsee.data.description1
