@@ -287,7 +287,6 @@
       },
       async listItemPathology () {
         const serviceResponse = await this.pathologyAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.pathology = serviceResponse.data
         } else {
@@ -325,7 +324,6 @@
       async addItemFilter () {
         this.loadingFilter = true
         const serviceResponse = await this.fileFamilyFilterActions(this.editedItemFilter)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           this.close()

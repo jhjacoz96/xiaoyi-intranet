@@ -275,7 +275,6 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await commentAllApi()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -304,7 +303,6 @@
       async addItem () {
         this.loading = true
         const serviceResponse = await commentUpdateApi(this.editedItem, this.editedItem.id)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
           this.close()

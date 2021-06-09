@@ -391,12 +391,10 @@
           this.setSteps(5)
           if (this.click) {
             if (this.click === 'next') {
-              console.log('entro')
               this.setFileObstetric(this.editedItem)
               this.$emit('click:next')
             }
             if (this.click === 'save') {
-              console.log('entro')
               this.setFileObstetric(this.editedItem)
               this.$emit('click:save')
             }
@@ -425,16 +423,13 @@
         var v = val
         this.gestacion.forEach(item => {
           var semana = JSON.parse(item.rank)
-          console.log(semana)
           if (semana[0] <= v && v <= semana[1]) {
-            console.log(item)
             this.editedItem.descripcion_gestacion = item.name
           }
         })
       },
       async itemGestation () {
         const serviceResponse = await gestationWeekAllApi()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.gestacion = serviceResponse.data
         } else {

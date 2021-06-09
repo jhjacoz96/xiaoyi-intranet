@@ -90,7 +90,6 @@
           if (serviceResponse.data) {
             this.editedItem.mission = serviceResponse.data.mission
             this.editedItem.image_mission = serviceResponse.data.image_mission
-            console.log(this.editedItem)
           }
         } else {
           this.alert({

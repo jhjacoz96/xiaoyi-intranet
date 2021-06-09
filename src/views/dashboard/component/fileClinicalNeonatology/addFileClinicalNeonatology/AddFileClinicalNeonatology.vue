@@ -157,9 +157,7 @@
         this.dialogConfirm = false
         this.loading = true
         if (this.$route.params.id) {
-          console.log('editar')
           const serviceResponse = await this.fileClinicalNeonatologyUpdateActions(this.fileNeonatology)
-          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()
@@ -175,9 +173,7 @@
             })
           }
         } else {
-          console.log('guardar')
           const serviceResponse = await this.fileClinicalNeonatologyPostActions(this.fileNeonatology)
-          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()

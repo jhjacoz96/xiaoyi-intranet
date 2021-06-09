@@ -188,7 +188,6 @@
         const serviceResponse = await this.employeeAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
-          console.log(this.desserts)
         } else {
           this.alert({
             text: serviceResponse.message.text,

@@ -363,12 +363,10 @@
           this.setSteps(3)
           if (this.click) {
             if (this.click === 'next') {
-              console.log('entro')
               this.setFileObstetric(this.editedItem)
               this.$emit('click:next')
             }
             if (this.click === 'save') {
-              console.log('entro')
               this.setFileObstetric(this.editedItem)
               this.$emit('click:save')
             }
@@ -381,8 +379,6 @@
         return date
       },
       imc () {
-        console.log(this.editedItem.peso)
-        console.log(this.editedItem.talla)
         if (!this.editedItem.peso | !this.editedItem.talla) return 0
         var imc = (this.editedItem.peso) / Math.round(Math.pow(this.editedItem.talla, 2), -2)
         return imc

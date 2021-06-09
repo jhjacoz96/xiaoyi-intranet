@@ -178,7 +178,6 @@
         const serviceResponse = await this.roleAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
-          console.log(this.desserts)
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -205,7 +204,6 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          console.log(this.editedItem)
           const serviceResponse = await this.roleAssignPermissionActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)

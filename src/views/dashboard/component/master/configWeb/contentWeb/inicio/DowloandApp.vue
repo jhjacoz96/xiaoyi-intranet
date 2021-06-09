@@ -109,7 +109,6 @@
       async listItem () {
         const serviceResponse = await this.webDiabeticAllActions()
         if (serviceResponse.ok) {
-          console.log(serviceResponse.data)
           if (serviceResponse.data) {
             this.editedItem.title = serviceResponse.data.title
             this.editedItem.description1 = serviceResponse.data.description1
@@ -129,8 +128,6 @@
         formData.append('description1', this.editedItem.description1)
         formData.append('description2', this.editedItem.description2)
         formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
-        console.log(formData)
-        console.log(formData)
         const serviceResponse = await this.webDiabeticPostActions(formData)
         if (serviceResponse.ok) {
           this.editedItem.title = serviceResponse.data.title

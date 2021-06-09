@@ -121,7 +121,6 @@
       async fileObstetricc () {
         this.loading = true
         const serviceResponse = await this.fileClinicalObstetricCheckActions(this.cedula)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
           this.$router.push('/intranet/ficha-clinica-neonatologia/agregar')

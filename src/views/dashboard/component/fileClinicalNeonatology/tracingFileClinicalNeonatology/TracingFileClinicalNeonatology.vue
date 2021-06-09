@@ -248,7 +248,6 @@
       async addItemSearch () {
         this.loadingSearch = true
         const serviceResponse = await this.fileClinicalNeonatologySearchActions(this.editedItemSearch)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {

@@ -352,12 +352,10 @@
         ) {
           this.setSteps(1)
           if (this.click === 'next') {
-            console.log('entro')
             this.setFileObstetric(this.editedItem)
             this.$emit('click:next')
           }
           if (this.click === 'save') {
-            console.log('entro')
             this.setFileObstetric(this.editedItem)
             this.$emit('click:save')
           }
@@ -415,7 +413,6 @@
         this.id = this.$route.params.id
         if (this.id !== undefined) {
           const serviceResponse = await this.fileClinicalObstetricGetActions(this.$route.params.id)
-          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.setFileObstetric(serviceResponse.data)
             this.editedItem = Object.assign({}, serviceResponse.data)
@@ -452,7 +449,6 @@
       },
       async checkMember (val) {
         const serviceResponse = await this.fileClinicalObstetricCheckActions(val)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
         } else {
