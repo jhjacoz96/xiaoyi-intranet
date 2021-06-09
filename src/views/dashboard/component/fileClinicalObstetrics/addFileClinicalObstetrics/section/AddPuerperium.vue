@@ -661,6 +661,16 @@
               dense
             />
           </v-col>
+          <v-col
+            cols="12"
+          >
+            <v-textarea
+              v-model="editedItem.recomendaciones"
+              label="Recomendaciones"
+              outlined
+              dense
+            />
+          </v-col>
         </v-row>
       </v-container>
     </v-form>
@@ -698,6 +708,7 @@
           score_mama_mediato: 0,
           educacion_paciente: false,
           educacion_depresion: false,
+          recomendaciones: '',
           proporcionar_telefono: true,
           señal_alarma: '',
         },

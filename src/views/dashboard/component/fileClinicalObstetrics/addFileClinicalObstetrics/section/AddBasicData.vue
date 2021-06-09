@@ -11,6 +11,7 @@
         Datos básicos de la paciente
       </v-subheader>
       <v-row
+        v-if="miembro"
         class="mx-auto"
         style="max-width: 900px;"
       >
@@ -451,6 +452,7 @@
       },
       async checkMember (val) {
         const serviceResponse = await this.fileClinicalObstetricCheckActions(val)
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
         } else {

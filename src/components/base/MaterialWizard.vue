@@ -24,7 +24,7 @@
             {{ title }}
           </div>
           <div class="text-subtitle-1 font-weight-light">
-            {{ subtitle }}
+            {{ subtitle }} dde
           </div>
         </v-col>
       </v-row>

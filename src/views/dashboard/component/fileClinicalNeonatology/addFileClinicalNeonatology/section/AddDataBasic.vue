@@ -27,12 +27,13 @@
             :error-messages="errors.collect('basic.numero_historia')"
             data-vv-name="número historia"
             outlined
-            label="Número de historia de la ficha clinica de obstetricia"
+            label="Número de historia de la ficha clinica de neonatogía"
             dense
             validate-on-blur
           />
         </v-col>
         <v-col
+          v-if="miembro"
           cols="12"
           sm="6"
         >
@@ -40,7 +41,7 @@
             v-model="editedItem.pregnant_id"
             v-validate="'required'"
             :error-messages="errors.collect('basic.pregnant_id')"
-            data-vv-name="número de historia de ficha clínica de obstetricia"
+            data-vv-name="Asignar ficha clínica de obstetricia"
             :items="miembro.prenatal_todos"
             item-text="numero_historia"
             item-value="id"

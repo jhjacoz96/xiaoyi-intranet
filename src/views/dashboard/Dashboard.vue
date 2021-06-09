@@ -2,6 +2,7 @@
   <v-container
     id="dashboard"
     tag="section"
+    fluid
   >
     <v-row>
       <v-col
@@ -37,7 +38,7 @@
         <base-material-stats-card
           color="info"
           icon="mdi-account-group"
-          title="cantidad fichas familiares"
+          title="Fichas familiares"
           :value="data ? JSON.stringify(data.cantidadFichasFamiliares) : ''"
         />
       </v-col>
@@ -49,7 +50,7 @@
         <base-material-stats-card
           color="pink"
           icon="mdi-human-pregnant"
-          title="cantida de embarazadas actuales"
+          title="Embarazadas actuales"
           :value="data ? JSON.stringify(data.cantidadEmbarazadas) : ''"
         />
       </v-col>
@@ -61,7 +62,7 @@
         <base-material-stats-card
           color="red"
           icon="mdi-water"
-          title="cantidad de diabeticos"
+          title="Diabeticos"
           :value="data ? JSON.stringify(data.cantidadDiabeticos) : ''"
         />
       </v-col>
@@ -240,7 +241,7 @@
             plotOptions: {
               bar: {
                 horizontal: false,
-                columnWidth: '55%',
+                columnWidth: '20%',
                 endingShape: 'rounded',
               },
             },

@@ -7,7 +7,7 @@
       <v-row>
         <v-col cols="3">
           <base-item-master
-            title="Datos básicos"
+            title="Centro de salud"
             icon="mdi-36px mdi-home-edit"
             to="/intranet/configuracion-basica/datos-basicos"
           />

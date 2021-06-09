@@ -69,6 +69,7 @@
           <v-text-field
             v-model.number="editedItem.talla"
             outlined
+            type="number"
             dense
             label="Talla"
             suffix="Mtrs"
@@ -82,6 +83,7 @@
             v-model.number="editedItem.peso"
             outlined
             dense
+            type="number"
             label="Peso"
             suffix="Kg"
           />

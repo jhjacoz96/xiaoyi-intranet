@@ -73,6 +73,7 @@ import {
                 vacuna: [],
                 examenes_rutinarios: [],
                 sustancias_sicotropicas: [],
+                recomendaciones: '',
             },
             defaultFileObstetric: {
                 numero_historia: '',

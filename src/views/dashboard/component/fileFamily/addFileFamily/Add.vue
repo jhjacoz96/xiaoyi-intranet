@@ -4,7 +4,7 @@
       v-model="tab"
       :available-steps="steps"
       :items="tabs"
-      title="Encuesta para una nueva fichas familiares"
+      :title="this.$route.params.id !== null ? 'Control de ficha familiar' : 'Encuesta para una nueva fichas familiares'"
       subtitle="Llenado de ficha familiar"
       class="mx-auto"
       :loading="loading"

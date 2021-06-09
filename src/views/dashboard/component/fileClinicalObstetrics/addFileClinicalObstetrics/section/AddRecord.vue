@@ -65,7 +65,7 @@
           sm="4"
         >
           <v-textarea
-            v-model="editedItem.antecentedes_patologicos"
+            v-model="editedItem.antecedentes_patologicos"
             v-validate="'required'"
             :error-messages="errors.collect('basic.antecentedes_patologicos')"
             data-vv-name="antecedntes patológicos"

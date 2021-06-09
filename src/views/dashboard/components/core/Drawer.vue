@@ -37,7 +37,7 @@
         <v-list-item-content>
           <v-list-item-title
             class="text-h4"
-            v-text="'Xiaoyi'"
+            v-text="'KA-THANI'"
           />
         </v-list-item-content>
       </v-list-item>
@@ -119,29 +119,29 @@
           can: 'initial_information_access',
           children: [
             {
-              icon: 'mdi-file-cog-outline',
+              icon: '',
               title: 'Maestros',
               can: 'master_access',
               to: 'intranet/maestros-basicos',
             },
             {
-              icon: 'mdi-file-cog',
+              icon: '',
               title: 'Configuración de maestros',
               can: 'configuration_master_access',
               to: 'intranet/configuracion',
             },
             {
-              icon: 'mdi-application',
+              icon: '',
               title: 'Configuración del sítio web',
               can: 'configuration_web_site_access',
               to: 'intranet/configuracion-web',
             },
-            {
-              icon: 'mdi-application',
-              title: 'Configuración de la móvil',
-              can: 'configuration_mobile_access',
-              to: 'intranet/configuracion-movil',
-            },
+            // {
+            //   icon: '',
+            //   title: 'Configuración de la móvil',
+            //   can: 'configuration_mobile_access',
+            //   to: 'intranet/configuracion-movil',
+            // },
           ],
         },
         {
@@ -158,13 +158,13 @@
           can: 'file_clinical_access',
           children: [
             {
-              icon: 'mdi-baby',
+              icon: '',
               title: 'Neonatología',
               can: 'neonatology_access',
               to: 'intranet/ficha-clinica-neonatologia',
             },
             {
-              icon: 'mdi-human-pregnant',
+              icon: '',
               title: 'Obstetricia',
               can: 'obstetrics_access',
               to: 'intranet/ficha-clinica-obstetricia',
@@ -186,7 +186,7 @@
           children: [
             {
               icon: '',
-              title: 'Evaluar sugerencias',
+              title: 'Evaluar comentarios',
               can: 'evaluate_suggestion_access',
               to: 'intranet/evaluar-sugerencias',
             },

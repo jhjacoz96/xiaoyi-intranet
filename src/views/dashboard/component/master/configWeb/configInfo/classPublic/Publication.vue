@@ -49,6 +49,9 @@
           :items="desserts"
           :search="search"
         >
+          <template v-slot:item.created_at="{ item }">
+            {{ moment(item.created_at).format('d-M-YYYY') }}
+          </template>
           <template v-slot:item.image_mini="{ item }">
             <div
               v-if="item.image_mini"
@@ -149,6 +152,7 @@
                         outlined
                         dense
                         :items="filterOne"
+                        :disabled="editedIndex > -1"
                         item-text="name"
                         item-value="id"
                         @change="getFilterTwo($event)"
@@ -164,7 +168,7 @@
                         outlined
                         dense
                         :items="filterTwo"
-                        :disabled="filterTwo.length > 0 ? false : true"
+                        :disabled="filterTwo.length === 0 || editedIndex > -1"
                         item-text="name"
                         item-value="id"
                         @change="getFilterThree($event)"
@@ -180,7 +184,7 @@
                         :items="filterThree"
                         item-text="name"
                         item-value="id"
-                        :disabled="filterThree.length > 0 ? false : true"
+                        :disabled="filterThree.length === 0 || editedIndex > -1"
                         outlined
                         dense
                       />
@@ -553,16 +557,10 @@
       async addItem () {
         this.loaderDialog = true
         if (this.editedIndex > -1) {
-          console.log(this.editedItem)
           const formData = new FormData()
           formData.append('name', this.editedItem.name)
           formData.append('description', this.editedItem.description)
-          formData.append('filter_one_publication_id', this.editedItem.filter_one_publication_id)
-          formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
-          formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
-          formData.append('image_mini', this.editedItem.image_mini)
-          formData.append('resource', this.editedItem.resource)
-          formData.append('type_resource', this.editedItem.type_resource)
+          formData.append('image_mini', typeof this.editedItem.image_mini === 'string' ? null : this.editedItem.image_mini)
 
           const serviceResponse = await this.publicationUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
@@ -583,7 +581,6 @@
           }
         } else {
           // this.formatYoutube()
-          console.log(this.editedItem)
           const formData = new FormData()
           formData.append('name', this.editedItem.name)
           formData.append('description', this.editedItem.description)

@@ -5,10 +5,10 @@
         <v-row>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Control de pacientes diabeticos
+              Control de pacientes diabéticos
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permites asignar tratamientos y planes al paciente con diabetes
+              Permite asignar tratamientos farmacológicos y no farmacológicos a los pacientes con diabetes
             </div>
           </v-col>
         </v-row>
@@ -149,6 +149,7 @@
                       v-model.number="editedItem.peso"
                       label="Peso (*)"
                       outlined
+                      type="number"
                       dense
                       suffix="Mtrs"
                     />
@@ -161,6 +162,7 @@
                       v-model.number="editedItem.altura"
                       label="Altura (*)"
                       outlined
+                      type="number"
                       dense
                       suffix="Kg"
                     />
@@ -173,6 +175,7 @@
                       v-model="imc"
                       label="Imc"
                       outlined
+                      type="number"
                       disabled
                       dense
                     />
@@ -194,8 +197,9 @@
                   >
                     <v-text-field
                       v-model.number="editedItem.nivel_glusemia"
-                      label="Nivel de glusemia (*)"
+                      label="Nivel de glucemia (*)"
                       outlined
+                      type="number"
                       dense
                     />
                   </v-col>

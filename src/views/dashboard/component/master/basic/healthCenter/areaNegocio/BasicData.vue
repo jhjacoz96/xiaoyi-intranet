@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Datos básicos
+              Centro de salud
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite Configurar la información básica referente al centro de salud
+              Permite configurar la información básica referente al centro de salud
             </div>
           </v-col>
         </v-row>
@@ -125,7 +125,7 @@
                   v-model="editedItem.parroquia"
                   dense
                   outlined
-                  label="Parroquia"
+                  label="Ciudad"
                 />
               </v-col>
               <v-col
@@ -146,6 +146,7 @@
       </v-card-text>
       <v-card-actions class="justify-end">
         <v-btn
+          :disabled="validated"
           color="primary"
           @click="addItem"
         >
@@ -177,6 +178,20 @@
         institution: [],
         province: [],
       }
+    },
+    computed: {
+      validated () {
+        if (
+          this.editedItem.institution_id &&
+          this.editedItem.name &&
+          this.editedItem.code_uo &&
+          this.editedItem.province_id &&
+          this.editedItem.canton_id &&
+          this.editedItem.parroquia &&
+          this.editedItem.address
+        ) return false
+        return true
+      },
     },
     created () {
       this.listItem()

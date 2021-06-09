@@ -4,7 +4,7 @@
       v-model="tab"
       :available-steps="steps"
       :items="tabs"
-      :title="!this.$route.params.id ? 'Registro de ficha clinica de obstetricia' : 'Actualizar ficha clinica de obstetricia'"
+      :title="!this.$route.params.id ? 'Registro de ficha clinica de obstetricia' : 'Control de ficha clinica de obstetricia'"
       subtitle="Llenado de ficha clinica de obstetricia"
       class="mx-auto"
       :loading="loading"
@@ -120,7 +120,7 @@
       step: [],
       street: '',
       tab: 0,
-      tabs: ['Datos generales', 'Antecedentes', 'Datos obstetricos', 'Planificación de parto', 'Parto', 'Purperio'],
+      tabs: ['Datos generales', 'Antecedentes', 'Datos obstetricos', 'Planificación de parto', 'Parto', 'Puerperio'],
     }),
     computed: {
       ...mapState('fileClinicalObstetric', ['steps', 'fileObstetric', 'miembro']),

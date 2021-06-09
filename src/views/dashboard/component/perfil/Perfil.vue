@@ -6,14 +6,14 @@
         <v-col cols="8">
           <base-material-card
             class="arriba v-card-profile"
-            :avatar="editedUser.image ? imageValue : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
+            :avatar="perfil.image ? `${$store.state.urlApi}/${perfil.image.url}` : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
           >
             <v-card-text class="text-center">
               <h6 class="text-h4 mb-1 grey--text">
-                Médico familiar
+                {{ perfil.type_employee_id }}
               </h6>
               <h4 class="text-h3 font-weight-light mb-3 black--text">
-                Alec Thompson
+                {{ perfil.name }}
               </h4>
             </v-card-text>
             <v-card-text>
@@ -28,7 +28,7 @@
                 </v-col>
               </v-row>
             </v-card-text>
-            <v-speed-dial
+            <!-- <v-speed-dial
               v-model="fab"
               :direction="direction"
               :open-on-hover="hover"
@@ -77,33 +77,58 @@
                     small
                     color="indigo"
                     v-on="on"
-                    @click="editedPassword()"
+                    @click="dialogPassword = true"
                   >
                     <v-icon>mdi-lock</v-icon>
                   </v-btn>
                 </template>
                 <span>Editar contraseña</span>
               </v-tooltip>
-            </v-speed-dial>
+            </v-speed-dial> -->
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  fab
+                  dark
+                  absolute
+                  top
+                  right
+                  color="secondary"
+                  v-on="on"
+                  @click="dialogPassword = true"
+                >
+                  <v-icon>mdi-lock</v-icon>
+                </v-btn>
+              </template>
+              <span>Editar contraseña</span>
+            </v-tooltip>
             <input
               ref="file"
               type="file"
               class="d-none"
               @change="formatImage($event)"
             >
-            <v-btn
-              color="secondary"
-              rounded
-              elevation="4"
-              absolute
-              top
-              left
-              outlined
-              icon
-              @click="$refs.file.click()"
-            >
-              <v-icon>mdi-camera-plus</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="secondary"
+                  rounded
+                  v-bind="attrs"
+                  v-on="on"
+                  elevation="4"
+                  absolute
+                  dark
+                  fab
+                  top
+                  left
+                  @click="$refs.file.click()"
+                >
+                  <v-icon>mdi-camera-plus</v-icon>
+                </v-btn>
+              </template>
+              <span>Cambiar foto de perfil</span>
+            </v-tooltip>
           </base-material-card>
         </v-col>
       </v-row>
@@ -303,43 +328,72 @@
 
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="perfilPassword.oldPassword"
-                  dense
-                  outlined
-                  label="Antigua contraseña"
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="perfilPassword.newPassword"
-                  dense
-                  outlined
-                  label="Nueva contraseña"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="perfilPassword.verifyPassword"
-                  dense
-                  outlined
-                  label="Verificar contraseña"
-                />
-              </v-col>
-            </v-row>
+            <v-form
+              ref="form1"
+              v-model="valid1"
+              lazy-validation
+            >
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-text-field
+                    v-model="perfilPassword.passwordOld"
+                    dense
+                    outlined
+                    prepend-icon="mdi-ock"
+                    type="password"
+                    :rules="[
+                      v => !!v || 'La contraseña es requerida',
+                      v => (v || '').length >= 8 || 'Mínimo debe ser de 8 caracteres'
+                    ]"
+                    counter
+                    required
+                    label="Antigua contraseña"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-text-field
+                    v-model="perfilPassword.password"
+                    dense
+                    outlined
+                    label="Nueva contraseña"
+                    prepend-icon="lock"
+                    type="password"
+                    :rules="[
+                      v => !!v || 'La contraseña es requerida',
+                      v => (v || '').length >= 8 || 'Mínimo debe ser de 8 caracteres']"
+                    required
+                    counter
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-text-field
+                    v-model="perfilPassword.passwordVerify"
+                    dense
+                    outlined
+                    label="Verificar contraseña"
+                    prepend-icon="lock"
+                    type="password"
+                    :rules="[
+                      v => !!v || 'La contraseña es requerida', confirmacionPassword,
+                      v => (v || '').length >= 8 || 'Mínimo debe ser de 8 caracteres']"
+                    required
+                    counter
+                  />
+                </v-col>
+              </v-row>
+              {{ valid1 }}
+            </v-form>
           </v-container>
         </v-card-text>
 
@@ -353,9 +407,11 @@
             Cancelar
           </v-btn>
           <v-btn
+            :loading="loadingPassword"
+            :disabled="loadingPassword || !valid1"
             color="primary"
             text
-            @click="addItem()"
+            @click="updatePassword()"
           >
             Guardar
           </v-btn>
@@ -366,6 +422,15 @@
 </template>
 
 <script>
+  import {
+    employeeAvatarApi,
+    employePasswordUpdateApi,
+    webOrganizationAllApi,
+  } from '@/api/modules'
+  import {
+    mapMutations,
+    mapState,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -375,6 +440,8 @@
         right: true,
         top: true,
         left: false,
+        valid1: false,
+        loadingPassword: false,
         direction: 'bottom',
         transition: 'slide-y-reverse-transition',
         show2date: false,
@@ -424,9 +491,14 @@
           correo: 'jhjacoz96@gmail.com',
         },
         perfilPassword: {
-          oldPassword: '',
-          newPassword: '',
-          verifyPassword: '',
+          passwordOld: '',
+          password: '',
+          passwordVerify: '',
+        },
+        defaultPerfilPassword: {
+          passwordOld: '',
+          password: '',
+          passwordVerify: '',
         },
         imageValue: undefined,
         allSexo: [
@@ -449,85 +521,78 @@
             id: 2,
           },
         ],
+        organization: null,
       }
     },
     computed: {
-      getSexo () {
-        var sexo = this.allSexo.find(item => item.value === this.perfil.valueSexo)
-        return sexo.nombre
-      },
-      getDocumento () {
-        var tipo = this.tipoDocumento.find(item => item.id === this.perfil.idTipoDocumento)
-        return tipo.nombre
+      ...mapState('auth', ['user']),
+      confirmacionPassword () {
+        return (
+          this.perfilPassword.password === this.perfilPassword.passwordVerify ||
+          'La contraseña no coinciden'
+        )
       },
       centroSalud () {
         return {
           icon: 'mdi-36px mdi-hospital',
           title: 'Centro de salud',
-          subtitle: 'Centro de salud 4 de Julio',
+          subtitle: this.organization.name,
         }
       },
       institucion () {
         return {
           icon: 'mdi-36px mdi-hospital',
           title: 'Institución del sistema',
-          subtitle: 'MSP',
+          subtitle: this.organization.institution.name,
         }
       },
       cedula () {
         return {
           icon: 'mdi-36px mdi-badge-account-horizontal',
           title: 'Cédula',
-          subtitle: this.perfil.cedula,
+          subtitle: this.perfil.document,
         }
       },
       sexo () {
         return {
           icon: 'mdi-36px mdi-gender-male-female',
           title: 'Sexo',
-          subtitle: this.getSexo,
-        }
-      },
-      fechaNacimiento () {
-        return {
-          icon: 'mdi-36px mdi-phone',
-          title: 'Fecha de nacimiento',
-          subtitle: this.perfil.fechaNacimiento,
+          subtitle: this.perfil.gender_id,
         }
       },
       provincia () {
         return {
           icon: 'mdi-36px mdi-city',
           title: 'Provincia',
-          subtitle: this.perfil.provincia,
+          subtitle: this.perfil.province_id,
         }
       },
       canton () {
         return {
           icon: 'mdi-36px mdi-city',
           title: 'Cantón',
-          subtitle: this.perfil.canton,
+          subtitle: this.perfil.canton_id,
         }
       },
       direccion () {
         return {
           icon: 'mdi-36px mdi-map',
           title: 'Dirección',
-          subtitle: this.perfil.direccion,
+          subtitle: this.perfil.address,
         }
       },
       telefono () {
         return {
           icon: 'mdi-36px mdi-phone',
           title: 'Telefono',
-          subtitle: this.perfil.telefono,
+          subtitle: this.perfil.phone,
         }
       },
       correo () {
         return {
           icon: 'mdi-36px mdi-email',
           title: 'Correo electróico',
-          subtitle: this.perfil.correo,
+          subtitle: this.perfil.email,
         }
       },
       items () {
@@ -536,7 +601,6 @@
           this.institucion,
           this.cedula,
           this.sexo,
-          this.fechaNacimiento,
           this.provincia,
           this.canton,
           this.direccion,
@@ -544,10 +608,72 @@
         ]
       },
     },
+    watch: {
+      dialogPassword (val) {
+        val || this.closePassword()
+      },
+    },
+    created () {
+      this.listItem()
+    },
     methods: {
+      ...mapMutations(['alert']),
+      ...mapMutations('auth', ['assignAvatar']),
       formatImage (val) {
         this.editedUser.image = val.target.files[0]
         this.imageValue = URL.createObjectURL(this.editedUser.image)
+        this.updateAvatar()
+      },
+      async listItem () {
+        const serviceResponse = await webOrganizationAllApi()
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.organization = serviceResponse.data
+          this.perfil = Object.assign({}, this.user.employee)
+          console.log(this.perfil)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+        Object(this.perfil, this.user.employee)
+      },
+      async updateAvatar () {
+        const formData = new FormData()
+        formData.append('image', this.editedUser.image)
+        const serviceResponse = await employeeAvatarApi(formData, this.user.employee.id)
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          var avatar = serviceResponse.data.image.url
+          this.assignAvatar(avatar)
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async updatePassword () {
+        this.loadingPassword = true
+        const serviceResponse = await employePasswordUpdateApi(this.perfilPassword)
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+        this.closePassword()
       },
       editedItem () {
         Object.assign(this.editedUser, this.perfil)
@@ -564,10 +690,11 @@
         })
       },
       closePassword () {
-        this.dialogPassword = false
-      },
-      editedPassword () {
-        this.dialogPassword = true
+        this.$nextTick(() => {
+          this.dialogPassword = false
+          this.loadingPassword = false
+          this.perfilPassword = Object.assign({}, this.defaultPerfilPassword)
+        })
       },
     },
   }

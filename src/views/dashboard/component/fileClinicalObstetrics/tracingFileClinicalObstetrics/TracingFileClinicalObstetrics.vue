@@ -20,7 +20,7 @@
               Control y seguimiento de ficha clínica de obstetricia
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Perminite hacer busquedas y filtrados de las fichas clínicas de obstetricia, así como actualizar y eliminar los registros.
+              Perminite hacer busquedas y filtrados de las fichas clínicas de obstetricia.
             </div>
           </v-col>
         </v-row>
@@ -162,13 +162,40 @@
                     :key="index"
                     cols="4"
                   >
-                    <base-item-master
-                      :title="`#${file.numero_historia}`"
-                      width="110"
-                      height="80"
-                      icon="mdi-36px mdi-human-pregnant"
-                      :to="`/intranet/ficha-clinica-obstetricia/actualizar/${file.id}`"
-                    />
+                    <v-card
+                      class="mx-auto"
+                      max-width="344"
+                      outlined
+                    >
+                      <v-list-item>
+                        <v-list-item-content>
+                          <v-list-item-title class="text-h5 mb-1">
+                            Número de historia:
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            {{ file.numero_historia }}
+                          </v-list-item-subtitle>
+                          <v-list-item-title class="text-h5 mb-1">
+                            Fecha de creación
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            {{ moment(file.created_at).format('D-M-YYYY') }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+
+                      <v-card-actions>
+                        <v-spacer />
+                        <v-btn
+                          outlined
+                          text
+                          :to="`/intranet/ficha-clinica-obstetricia/actualizar/${file.id}`"
+                        >
+                          Control
+                        </v-btn>
+                        <v-spacer />
+                      </v-card-actions>
+                    </v-card>
                   </v-col>
                 </v-row>
               </v-container>

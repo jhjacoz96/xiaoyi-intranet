@@ -139,7 +139,7 @@
                   Datos generales
                 </v-tab>
                 <v-tab v-if="editedItem.embarazo">
-                  Datos de embarazo
+                  Datos obstetricos
                 </v-tab>
                 <!-- <v-tab v-if="editedItem.diabetic">
                   Datos de diabéticos
@@ -499,6 +499,40 @@
                           </v-radio>
                         </v-radio-group>
                       </v-col>
+                      {{ editedItem.pregnant }}
+                      <v-col
+                        v-if="infoPregnant"
+                        cols="12"
+                      >
+                        <v-alert
+                          text
+                          color="info"
+                        >
+                          <h3 class="text-h5">
+                            Ficha clínica de obsteticia
+                          </h3>
+                          <div>Se creará automaticamente una ficha clínica de obstetricia, para ello, diríjase a la parte superior de la ventana y seleccione <span class="font-weight-bold">Datos obstetricos</span> y procesa a llenar los campos.</div>
+                          <v-divider
+                            class="my-4 info"
+                            style="opacity: 0.22"
+                          />
+
+                          <v-row
+                            align="center"
+                            no-gutters
+                          >
+                            <v-col class="shrink">
+                              <v-btn
+                                color="info"
+                                outlined
+                                @click="infoPregnant = false"
+                              >
+                                Entendido
+                              </v-btn>
+                            </v-col>
+                          </v-row>
+                        </v-alert>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-tab-item>
@@ -748,7 +782,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <div class="text-center text-h4 font-weight-bold my-6 blue--text">
+    <!-- <div class="text-center text-h4 font-weight-bold my-6 blue--text">
       4. Responsable del llenado
     </div>
     <v-card-text>
@@ -778,7 +812,7 @@
           />
         </v-col>
       </v-row>
-    </v-card-text>
+    </v-card-text> -->
     <v-dialog
       v-model="dialog2"
       max-width="700px"
@@ -949,6 +983,7 @@
         show2Date: false,
         showDate: false,
         infoDiabetic: false,
+        infoPregnant: false,
         editedIndex: -1,
         mensajeCedula: 'Esta cédula ya se encuentra asociada a una ficha familiar existente',
         msotrarMensajeCedula: false,
@@ -1271,6 +1306,7 @@
         this.editedItem = Object.assign({}, item)
         if (this.id !== null) this.test(this.editedItem.fecha_nacimiento)
         this.dialog = true
+        console.log(this.editedItem)
       },
       addItem () {
         if (this.editedIndex > -1) {
@@ -1296,6 +1332,7 @@
       close () {
         this.dialog = false
         this.$nextTick(() => {
+          this.infoPregnant = false
           this.infoDiabetic = false
           this.editedItem = Object.assign({}, this.defaultItem)
         })
@@ -1415,9 +1452,10 @@
         }
       },
       generateCode () {
+        this.infoPregnant = true
         if (this.editedItem.prenatal !== null) {
-          if ( this.$route.params.id && this.editedItem.prenatal.id) {
-             this.editedItem.prenatal.id = null
+          if (this.$route.params.id && this.editedItem.prenatal.id) {
+            this.editedItem.prenatal.id = null
           }
           this.editedItem.prenatal.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
         }

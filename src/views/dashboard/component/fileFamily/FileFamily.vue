@@ -20,7 +20,7 @@
               Seguimiento de ficha familiar
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Perminite administrar fichas familiares de una comunidad
+              Perminite administrar las fichas familiares de la comunidad
             </div>
           </v-col>
         </v-row>
@@ -98,9 +98,12 @@
           <v-card>
             <v-container>
               <v-card-text class="font-weight-bold text-center">
-                filtrar busqueda
+                Filtrar busqueda
               </v-card-text>
               <v-card-text>
+                <v-subheader>
+                  Familias
+                </v-subheader>
                 <v-select
                   v-model="editedItemFilter.zone_id"
                   outlined
@@ -119,6 +122,19 @@
                   item-text="name"
                   item-value="id"
                   :items="levelTotal"
+                  multiple
+                />
+                <v-subheader>
+                  Miembros de las familias
+                </v-subheader>
+                <v-select
+                  v-model="editedItemFilter.pathology_id"
+                  label="Patologías"
+                  outlined
+                  dense
+                  item-text="name"
+                  item-value="id"
+                  :items="pathology"
                   multiple
                 />
               </v-card-text>
@@ -153,6 +169,9 @@
               {{ item.level_total_id.name }}
             </v-chip>
           </template>
+          <template v-slot:item.created_at="{ item }">
+            {{ moment(item.created_at).format('D-M-YYYY') }}
+          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -168,7 +187,7 @@
                   <v-icon>mdi-account-group</v-icon>
                 </v-btn>
               </template>
-              <span>Visualizar ficha familiar</span>
+              <span>Control de ficha familiar</span>
             </v-tooltip>
           </template>
         </v-data-table>
@@ -198,11 +217,13 @@
           { text: 'Numero de historia', sortable: false, value: 'numero_historia' },
           { text: 'Nivel de riesgo', sortable: false, value: 'level_riesgo' },
           { text: 'Parroquia', sortable: false, value: 'zone_id.name' },
+          { text: 'Fecha de creación', sortable: false, value: 'created_at' },
           { text: 'Acción', sortable: false, align: 'center', value: 'accion' },
         ],
         desserts: [],
         levelTotal: [],
         zone: [],
+        pathology: [],
         editedItemSearch: {
           search: '',
           filter: '',
@@ -214,10 +235,12 @@
         editedItemFilter: {
           zone_id: [],
           level_total_id: [],
+          pathology_id: [],
         },
         defaultItemFilter: {
           zone_id: [],
           level_total_id: [],
+          pathology_id: [],
         },
       }
     },
@@ -230,11 +253,13 @@
       this.listItem()
       this.listItemZone()
       this.listItemLevelTotal()
+      this.listItemPathology()
     },
     methods: {
       ...mapActions('fileFamily', ['fileFamilyPostActions', 'fileFamilyAllActions', 'fileFamilySearchActions', 'fileFamilyFilterActions']),
       ...mapActions('zone', ['zoneAllActions']),
       ...mapActions('levelTotal', ['levelTotalAllActions']),
+      ...mapActions('pathology', ['pathologyAllActions']),
       ...mapMutations(['alert']),
       async listItem () {
         this.loadingDataTable = true
@@ -253,6 +278,18 @@
         const serviceResponse = await this.zoneAllActions()
         if (serviceResponse.ok) {
           this.zone = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemPathology () {
+        const serviceResponse = await this.pathologyAllActions()
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.pathology = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -288,6 +325,7 @@
       async addItemFilter () {
         this.loadingFilter = true
         const serviceResponse = await this.fileFamilyFilterActions(this.editedItemFilter)
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           this.close()

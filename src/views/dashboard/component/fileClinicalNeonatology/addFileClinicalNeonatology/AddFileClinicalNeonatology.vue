@@ -4,7 +4,7 @@
       v-model="tab"
       :available-steps="steps"
       :items="tabs"
-      :title="!this.$route.params.id ? 'Registro de ficha clinica de neonatología' : 'Actualizar ficha clinica de neonatología'"
+      :title="!this.$route.params.id ? 'Registro de ficha clinica de neonatología' : 'Control de ficha clinica de neonatología'"
       subtitle="Llenado de ficha clinica de neonatología"
       class="mx-auto"
       :loading="loading"

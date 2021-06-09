@@ -20,7 +20,7 @@
               Control y seguimiento de ficha clínica de neonatología
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Perminite realizar busquedas y filtrados de las fichas clínicas de neonatología, así como actualizar y visualidar los registros registros específicos.
+              Perminite realizar busquedas y filtrados de las fichas clínicas de neonatología.
             </div>
           </v-col>
         </v-row>
@@ -116,6 +116,9 @@
           <template v-slot:item.edad="{ item }">
             {{ age(item.fecha_nacimiento) }}
           </template>
+          <template v-slot:item.created_at="{ item }">
+            {{ moment(item.created_at).format('D-M-YYYY') }}
+          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -131,7 +134,7 @@
                   <v-icon>mdi-account-group</v-icon>
                 </v-btn>
               </template>
-              <span>Visualizar ficha familiar</span>
+              <span>Control de ficha familiar</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -147,7 +150,7 @@
                   <v-icon>mdi-human-pregnant</v-icon>
                 </v-btn>
               </template>
-              <span>Visualizar ficha clinica de obstetrica de la madre</span>
+              <span>Control de ficha clínica de obstetrica de la madre</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -163,7 +166,7 @@
                   <v-icon>mdi-baby</v-icon>
                 </v-btn>
               </template>
-              <span>Visualizar ficha clinica de neonatología</span>
+              <span>Control de ficha clinica de neonatología</span>
             </v-tooltip>
           </template>
         </v-data-table>
@@ -196,6 +199,7 @@
           { text: 'Nombres y apellidos', sortable: false, value: 'nombre' },
           { text: 'Lugar nacimiento', sortable: false, value: 'lugar_naciento' },
           { text: 'Edad', sortable: false, value: 'edad' },
+          { text: 'Fecha de creación', sortable: false, value: 'created_at' },
           { text: 'Acción', sortable: false, value: 'accion' },
         ],
         desserts: [],

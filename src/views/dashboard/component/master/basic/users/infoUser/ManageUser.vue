@@ -17,7 +17,7 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Administrar empleado
+              Administrar empleados
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite la administración de los empleados del centro de salud

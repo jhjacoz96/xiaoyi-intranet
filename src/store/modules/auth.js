@@ -17,6 +17,9 @@ export default {
         authenticatedGetter: state => state.authenticated,
     },
     mutations: {
+        assignAvatar (state, payload) {
+            state.user.employee.image.url = payload
+        },
         getUser (state, payload) {
             if (payload === '') {
                 state.token = ''

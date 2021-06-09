@@ -291,7 +291,7 @@
           sm="4"
         >
           <p class="text-h6 font-weight-light">
-            Superación
+            Supuración
           </p>
           <v-radio-group
             v-model="editedItem.supuración"
