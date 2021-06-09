@@ -626,11 +626,9 @@
       },
       async listItem () {
         const serviceResponse = await webOrganizationAllApi()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.organization = serviceResponse.data
           this.perfil = Object.assign({}, this.user.employee)
-          console.log(this.perfil)
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -643,7 +641,6 @@
         const formData = new FormData()
         formData.append('image', this.editedUser.image)
         const serviceResponse = await employeeAvatarApi(formData, this.user.employee.id)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           var avatar = serviceResponse.data.image.url
           this.assignAvatar(avatar)
@@ -661,7 +658,6 @@
       async updatePassword () {
         this.loadingPassword = true
         const serviceResponse = await employePasswordUpdateApi(this.perfilPassword)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.alert({
             text: serviceResponse.message,

@@ -35,7 +35,6 @@ import {
            },
            async serviceAssignActivitiesActions (commit, payload) {
                const serviceResponse = await serviceAssignActivitiesApi(payload, payload.id)
-               console.log(serviceResponse)
                return serviceResponse
            },
        },

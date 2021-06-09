@@ -23,7 +23,6 @@ import {
             },
             async filterThreePublicationFilterActions (commit, payload) {
                 const serviceResponse = await filterThreePublicationFilterApi(payload)
-                console.log(serviceResponse)
                 return serviceResponse
             },
             async filterThreePublicationDeleteActions (commit, payload) {

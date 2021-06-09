@@ -243,7 +243,6 @@
       ...mapGetters('auth', ['permissionsGetter']),
       ...mapState('auth', ['permissions', 'user']),
       profile () {
-        console.log(this.user)
         return {
           avatar: true,
           title: this.user.employee.name,

@@ -52,7 +52,6 @@ Vue.component('apexchart', VueApexCharts)
 // })
 
 Vue.use(VueQuillEditor)
-
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '3a7bcec114b26feb536a',

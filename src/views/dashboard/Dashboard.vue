@@ -285,7 +285,6 @@
     methods: {
       async listItem () {
         const serviceResponse = await dashboardGetApi()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.data = serviceResponse.data
         } else {

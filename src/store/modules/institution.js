@@ -14,7 +14,6 @@ export default {
     actions: {
         async institutionPostActions (commit, payload) {
             const serviceResponse = await institutionPostApi(payload)
-            console.log(serviceResponse)
             return serviceResponse
         },
         async institutionAllActions (commit) {
@@ -31,7 +30,6 @@ export default {
         },
         async institutionUpdateActions (commit, payload) {
             const serviceResponse = await institutioUpdateApi(payload, payload.id)
-            console.log(serviceResponse)
             return serviceResponse
         },
     },

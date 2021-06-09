@@ -208,7 +208,6 @@
         if (serviceResponsee.ok) {
           if (serviceResponsee.data) {
             Object.assign(this.editedItem, serviceResponsee.data)
-            console.log(this.editedItem.province_id)
             if (this.editedItem.province_id) this.listItemCanton(this.editedItem.province_id)
           }
         } else {
@@ -256,9 +255,7 @@
         }
       },
       async addItem () {
-        console.log(this.editedItem)
         const serviceResponsee = await this.webOrganizationPostActions(this.editedItem)
-        console.log(serviceResponsee)
         if (serviceResponsee.ok) {
           Object.assign(this.editedItem, serviceResponsee.data)
           this.alert({

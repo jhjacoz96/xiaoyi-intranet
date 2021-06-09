@@ -210,12 +210,10 @@
         ) {
           this.setSteps(1)
           if (this.click === 'next') {
-            console.log('entro')
             this.setFileNeonatology(this.editedItem)
             this.$emit('click:next')
           }
           if (this.click === 'save') {
-            console.log('entro')
             this.setFileNeonatology(this.editedItem)
             this.$emit('click:save')
           }
@@ -235,7 +233,6 @@
       ...mapMutations('fileClinicalNeonatology', ['setSteps', 'setFileNeonatology', 'setMiembro', 'resetFileNeonatology']),
       async listItemGender () {
         const serviceResponse = await this.genderAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.gender = serviceResponse.data
         } else {

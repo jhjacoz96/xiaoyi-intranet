@@ -1180,7 +1180,6 @@
       },
       date () {
         var date = new Date(calFpp(this.editedItem.prenatal.fum))
-        console.log(date)
         return date
       },
     },
@@ -1212,7 +1211,6 @@
         this.id = this.$route.params.id
         if (this.id !== undefined) {
           this.miembros = this.fileFamily.miembros
-          console.log(this.miembros)
           this.mortalidad = this.fileFamily.mortalidad
         }
       },
@@ -1306,14 +1304,12 @@
         this.editedItem = Object.assign({}, item)
         if (this.id !== null) this.test(this.editedItem.fecha_nacimiento)
         this.dialog = true
-        console.log(this.editedItem)
       },
       addItem () {
         if (this.editedIndex > -1) {
           Object.assign(this.miembros[this.editedIndex], this.editedItem)
         } else {
           this.miembros.push(this.editedItem)
-          console.log(this.miembros)
         }
         this.close()
       },
@@ -1433,7 +1429,6 @@
       async verifyDocument () {
         if (this.editedItem.cedula) {
           const serviceResponse = await this.fileFamilyVerifyDocumentActions(this.editedItem.cedula)
-          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.msotrarMensajeCedula = true
           } else {

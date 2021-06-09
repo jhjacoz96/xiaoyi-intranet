@@ -14,12 +14,10 @@ import {
        actions: {
            async vaccinePostActions (commit, payload) {
                const serviceResponse = await vaccinePostApi(payload)
-               console.log(serviceResponse)
                return serviceResponse
            },
            async vaccineAllActions (commit) {
                const serviceResponse = await vaccineAllApi()
-               console.log(serviceResponse)
                return serviceResponse
            },
            async vaccineDeleteActions (commit, payload) {

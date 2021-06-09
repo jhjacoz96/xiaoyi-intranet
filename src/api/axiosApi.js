@@ -34,7 +34,6 @@ export const apiHttp = async (method, endpoint, data, options = {}, loading = tr
 }
 
 function buildErrorMessage (error) {
-    console.log(error.response)
     const errorResponse = {
       ok: 'UNAUTHORIZED',
       message: {

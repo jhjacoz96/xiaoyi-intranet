@@ -133,9 +133,6 @@
         return 'purperio'
       },
     },
-    destroyed () {
-      console.log('f')
-    },
     methods: {
       ...mapMutations(['alert']),
       ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions', 'fileClinicalObstetricUpdateActions', 'fileClinicalObstetricPostActions']),
@@ -171,11 +168,8 @@
       async addFile () {
         this.dialogConfirm = false
         this.loading = true
-        console.log(this.$route.params.id)
         if (this.$route.params.id) {
-          console.log('editar')
           const serviceResponse = await this.fileClinicalObstetricUpdateActions(this.fileObstetric)
-          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()
@@ -191,9 +185,7 @@
             })
           }
         } else {
-          console.log('guardar')
           const serviceResponse = await this.fileClinicalObstetricPostActions(this.fileObstetric)
-          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()

@@ -324,12 +324,10 @@
         ) {
           this.setSteps(2)
           if (this.click === 'next') {
-            console.log('entro')
             this.setFileNeonatology(this.editedItem)
             this.$emit('click:next')
           }
           if (this.click === 'save') {
-            console.log('entro')
             this.setFileNeonatology(this.editedItem)
             this.$emit('click:save')
           }

@@ -167,7 +167,6 @@ import {
          },
          setFileNeonatology (state, payload) {
            Object.assign(state.fileNeonatology, payload)
-           console.log(state.fileNeonatology)
            // if (state.fileNeonatology.member_id === null) state.fileNeonatology.member_id = state.miembro.id
          },
          setMiembro (state, payload) {
@@ -200,7 +199,6 @@ import {
                return serviceResponse
            },
            async fileClinicalNeonatologyUpdateActions (commit, payload) {
-             console.log(payload)
                const serviceResponse = await fileClinicalNeonatologyUpdateApi(payload, payload.id)
                return serviceResponse
            },

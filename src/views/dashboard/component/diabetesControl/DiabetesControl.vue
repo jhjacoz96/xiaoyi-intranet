@@ -615,7 +615,6 @@
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         this.editedItem = Object.assign({}, item.diabetic_patient)
-        console.log(this.editedItem)
         this.dialog = true
       },
       async addItem () {

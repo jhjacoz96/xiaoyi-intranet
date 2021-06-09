@@ -152,7 +152,6 @@
       if (this.permissions.includes('obstetrics_access')) {
         window.Echo.channel('file-clinical-obstetric')
           .listen('FileClinicalObstetricEvent', (res) => {
-            console.log(res.pregnant)
             if (this.user.employee.id !== res.pregnant.employee_id) {
               this.notifications.unshift({
                 id: res.pregnant.id,
@@ -166,7 +165,6 @@
       if (this.permissions.includes('diabetes_control_access')) {
         window.Echo.channel('diabetic-patient')
           .listen('DiabeticPatientEvent', (res) => {
-            console.log(res.diabeticPatient)
             this.notifications.unshift({
               id: res.diabeticPatient.id,
               description: 'Nuevo paciente diabético',
@@ -180,11 +178,9 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponsee = await employeeGetNotificationsApi()
-        console.log(serviceResponsee)
         if (serviceResponsee.ok) {
           if (serviceResponsee.data) {
             this.notifications = serviceResponsee.data.map(this.formatNotifications)
-            console.log(this.notifications)
           }
         } else {
           this.alert({
