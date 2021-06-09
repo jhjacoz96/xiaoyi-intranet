@@ -115,13 +115,13 @@
                   color="secondary"
                   rounded
                   v-bind="attrs"
-                  v-on="on"
                   elevation="4"
                   absolute
                   dark
                   fab
                   top
                   left
+                  v-on="on"
                   @click="$refs.file.click()"
                 >
                   <v-icon>mdi-camera-plus</v-icon>
