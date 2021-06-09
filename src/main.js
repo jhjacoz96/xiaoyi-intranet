@@ -60,9 +60,6 @@ window.Echo = new Echo({
     forceTLS: true,
 })
 
-console.log(store.state.MIX_PUSHER_APP_KEY)
-console.log(store.state.MIX_PUSHER_APP_CLUSTER)
-
 Vue.config.productionTip = false
 
 new Vue({
