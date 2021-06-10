@@ -46,7 +46,7 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
-              <span>Editar usuario</span>
+              <span>Editar empleado</span>
             </v-tooltip>
           </template>
         </v-data-table>
