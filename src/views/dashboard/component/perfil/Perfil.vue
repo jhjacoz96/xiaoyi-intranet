@@ -393,7 +393,6 @@
                   />
                 </v-col>
               </v-row>
-              {{ valid1 }}
             </v-form>
           </v-container>
         </v-card-text>
@@ -524,14 +523,14 @@
         return {
           icon: 'mdi-36px mdi-hospital',
           title: 'Centro de salud',
-          subtitle: this.organization.name || null,
+          subtitle: this.organization ? this.organization.name : null,
         }
       },
       institucion () {
         return {
           icon: 'mdi-36px mdi-hospital',
           title: 'Institución del sistema',
-          subtitle: this.organization.institution.name || null,
+          subtitle: this.organization ? this.organization.institution.name : null,
         }
       },
       cedula () {

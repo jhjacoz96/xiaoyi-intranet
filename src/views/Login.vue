@@ -136,13 +136,14 @@
         if (this.$refs.form1.validate()) {
           const serviceResponse = await this.loginAction(this.usuario)
           if (serviceResponse.title === 'OK') {
-            this.loading = false
             this.$router.push('/intranet/inicio').catch(() => {})
+            this.loading = false
           } else {
             this.alert({
               text: serviceResponse.message.text,
               color: 'warning',
             })
+            this.loading = false
           }
           this.loading = false
         } else {

@@ -151,7 +151,7 @@
                       outlined
                       type="number"
                       dense
-                      suffix="Mtrs"
+                      suffix="Kg"
                     />
                   </v-col>
                   <v-col
@@ -164,7 +164,7 @@
                       outlined
                       type="number"
                       dense
-                      suffix="Kg"
+                      suffix="Mtrs"
                     />
                   </v-col>
                   <v-col
