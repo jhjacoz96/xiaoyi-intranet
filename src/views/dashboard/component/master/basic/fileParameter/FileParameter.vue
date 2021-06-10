@@ -49,7 +49,7 @@
         </v-col>
         <v-col cols="3">
           <base-item-master
-            title="Medida"
+            title="Unidad de medida"
             icon="mdi-36px mdi-eyedropper"
             to="/intranet/configuracion-basica/medida"
           />

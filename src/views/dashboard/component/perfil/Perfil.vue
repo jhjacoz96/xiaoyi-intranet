@@ -5,8 +5,9 @@
       <v-row class="justify-center">
         <v-col cols="8">
           <base-material-card
+            v-if="perfil"
             class="arriba v-card-profile"
-            :avatar="perfil.image ? `${$store.state.urlApi}/${perfil.image.url}` : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
+            :avatar="perfil.image ? `${$store.state.urlImageApi}/${perfil.image.url}` : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
           >
             <v-card-text class="text-center">
               <h6 class="text-h4 mb-1 grey--text">
@@ -16,7 +17,7 @@
                 {{ perfil.name }}
               </h4>
             </v-card-text>
-            <v-card-text>
+            <v-card-text v-if="perfil">
               <v-row>
                 <v-col
                   v-for="(item, index) in items"
@@ -476,20 +477,7 @@
           direccion: '',
           correo: '',
         },
-        perfil: {
-          image: undefined,
-          nombre: 'Jhon Jairo',
-          apellido: 'Contreras Diaz',
-          valueSexo: 'm',
-          fechaNacimiento: '',
-          telefono: '04149568372',
-          provincia: 'zuay',
-          cedula: '26378059',
-          idTipoDocumento: 1,
-          canton: 'paz',
-          direccion: 'Av. Florencio Gimenez',
-          correo: 'jhjacoz96@gmail.com',
-        },
+        perfil: null,
         perfilPassword: {
           passwordOld: '',
           password: '',
@@ -536,14 +524,14 @@
         return {
           icon: 'mdi-36px mdi-hospital',
           title: 'Centro de salud',
-          subtitle: this.organization.name,
+          subtitle: this.organization.name || null,
         }
       },
       institucion () {
         return {
           icon: 'mdi-36px mdi-hospital',
           title: 'Institución del sistema',
-          subtitle: this.organization.institution.name,
+          subtitle: this.organization.institution.name || null,
         }
       },
       cedula () {

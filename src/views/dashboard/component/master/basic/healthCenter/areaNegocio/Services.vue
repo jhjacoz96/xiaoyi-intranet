@@ -43,7 +43,7 @@
           <template v-slot:item.image_service="{ item }">
             <v-img
               v-if="item.image"
-              :src="`${$store.state.urlApi}${item.image.url}`"
+              :src="`${$store.state.urlImageApi}${item.image.url}`"
               width="60"
             />
           </template>
@@ -193,7 +193,7 @@
         services: [],
         headers: [
           {
-            text: 'image_service',
+            text: 'Servicio',
             align: 'center',
             sortable: false,
             value: 'image_service',
@@ -311,7 +311,7 @@
           const formData = new FormData()
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
-          formData.append('image_service', this.editedItem.image_service)
+          formData.append('image_service', typeof this.editedItem.image_service === 'string' ? null : this.editedItem.image_service)
           const serviceResponse = await this.servicePostActions(formData)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)

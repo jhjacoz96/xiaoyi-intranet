@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Configuración usuarios
+              Configurar empleados
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite asignar tipo de empleado, especialidad y roles a los usuarios
+              Permite asignar tipo de empleado, especialidad y roles a los empleados
             </div>
           </v-col>
         </v-row>
@@ -57,7 +57,7 @@
       >
         <v-card>
           <v-card-title>
-            <span class="text-h5">Configurar usuario</span>
+            <span class="text-h5">Configurar empleado</span>
           </v-card-title>
 
           <v-card-text>

@@ -20,7 +20,7 @@
         contain
       >
         <v-img
-          :src="$store.state.auth.user.employee.image ? `${$store.state.urlApi}/${$store.state.auth.user.employee.image.url}` : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
+          :src="$store.state.auth.user.employee.image ? `${$store.state.urlImageApi}${$store.state.auth.user.employee.image.url}` : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
         />
       </v-list-item-avatar>
 

@@ -58,7 +58,7 @@
               class="my-4"
             >
               <v-img
-                :src="`${$store.state.urlApi}/${item.image_mini.url}`"
+                :src="`${$store.state.urlImageApi}${item.image_mini.url}`"
                 width="100"
                 height="100"
               />

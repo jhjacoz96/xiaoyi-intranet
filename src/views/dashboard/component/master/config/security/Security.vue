@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="3">
           <base-item-master
-            title="Configurar usuarios"
+            title="Configurar empleados"
             icon="mdi-36px mdi-security"
             to="/intranet/configuracion-maestros/usuarios"
           />
