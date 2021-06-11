@@ -512,27 +512,28 @@
         return 'tramientos'
       },
       availableSteps () {
+        var steps = this.steps
         if (
           this.editedItem.presion_arterial &&
           this.editedItem.pulso &&
           this.editedItem.respiracion &&
           this.editedItem.saturacion_oxigeno &&
           this.editedItem.temperatura
-        ) this.steps.push(1)
+        ) steps.push(1)
 
         if (
           this.editedItem.peso &&
           this.editedItem.altura &&
           this.editedItem.circunferencia &&
           this.editedItem.nivel_glusemia &&
-          this.steps.includes(1)
-        ) this.steps.push(2)
+          steps.includes(1)
+        ) steps.push(2)
         if (
           this.editedItem.tratamiento_farmacologico.length > 0 &&
           this.editedItem.tratamiento_no_farmacologico.length > 0 &&
           this.editedItem.dieta &&
-          this.steps.includes(2)
-        ) this.steps.push(3)
+          steps.includes(2)
+        ) steps.push(3)
         // if (
         //   this.address &&
         //   this.street &&
@@ -540,7 +541,7 @@
         //   this.state &&
         //   steps.includes(2)
         // ) steps.push(3)
-        return this.steps
+        return steps
       },
       imc () {
         if (!this.editedItem.peso || !this.editedItem.altura) return 0
