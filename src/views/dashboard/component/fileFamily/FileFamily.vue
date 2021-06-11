@@ -112,7 +112,7 @@
                   :items="zone"
                   item-text="name"
                   item-value="id"
-                  label="Zonas"
+                  label="Parroquias"
                 />
                 <v-select
                   v-model="editedItemFilter.level_total_id"
