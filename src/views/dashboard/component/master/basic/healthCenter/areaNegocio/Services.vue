@@ -294,7 +294,6 @@
           formData.append('descripcion', this.editedItem.descripcion)
           formData.append('image_service', typeof this.editedItem.image_service === 'string' ? null : this.editedItem.image_service)
           const serviceResponse = await this.serviceUpdateActions(formData)
-          console.log(serviceResponse)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.close()
