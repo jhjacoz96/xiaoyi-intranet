@@ -141,6 +141,7 @@
           />
         </v-col>
         <v-col
+          v-if="miembro.ocupacion"
           cols="6"
           sm="4"
         >
