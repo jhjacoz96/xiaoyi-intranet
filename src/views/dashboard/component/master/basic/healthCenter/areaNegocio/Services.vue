@@ -289,10 +289,12 @@
       async addItem () {
         if (this.editedIndex > -1) {
           const formData = new FormData()
+          formData.append('id', this.editedItem.id)
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
-          formData.append('image_service', this.editedItem.image_service)
+          formData.append('image_service', typeof this.editedItem.image_service === 'string' ? null : this.editedItem.image_service)
           const serviceResponse = await this.serviceUpdateActions(formData)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.close()

@@ -356,7 +356,7 @@
                 <div
                   class=" d-inline-block float-left"
                 >
-                  Actividades
+                  Actividades físicas
                 </div>
                 <v-btn
                   fab
@@ -512,28 +512,27 @@
         return 'tramientos'
       },
       availableSteps () {
-        const steps = [0]
         if (
           this.editedItem.presion_arterial &&
           this.editedItem.pulso &&
           this.editedItem.respiracion &&
           this.editedItem.saturacion_oxigeno &&
           this.editedItem.temperatura
-        ) steps.push(1)
+        ) this.steps.push(1)
 
         if (
           this.editedItem.peso &&
           this.editedItem.altura &&
           this.editedItem.circunferencia &&
           this.editedItem.nivel_glusemia &&
-          steps.includes(1)
-        ) steps.push(2)
+          this.steps.includes(1)
+        ) this.steps.push(2)
         if (
           this.editedItem.tratamiento_farmacologico.length > 0 &&
           this.editedItem.tratamiento_no_farmacologico.length > 0 &&
           this.editedItem.dieta &&
-          steps.includes(2)
-        ) steps.push(3)
+          this.steps.includes(2)
+        ) this.steps.push(3)
         // if (
         //   this.address &&
         //   this.street &&
@@ -541,7 +540,7 @@
         //   this.state &&
         //   steps.includes(2)
         // ) steps.push(3)
-        return steps
+        return this.steps
       },
       imc () {
         if (!this.editedItem.peso || !this.editedItem.altura) return 0
@@ -636,6 +635,8 @@
       close () {
         this.dialog = false
         this.$nextTick(() => {
+          this.steps = [0]
+          this.tab = 0
           this.editedItem = Object.assign({}, this.defaultItem)
         })
       },
