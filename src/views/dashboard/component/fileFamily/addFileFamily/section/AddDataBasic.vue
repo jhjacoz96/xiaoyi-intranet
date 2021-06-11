@@ -53,7 +53,7 @@
             :error-messages="errors.collect('basic.direccion_habitual')"
             data-vv-name="direccion_habitual"
             outlined
-            label="Dircción de la familia (*)"
+            label="Dirección de la familia (*)"
             dense
             validate-on-blur
           />

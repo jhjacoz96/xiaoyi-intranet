@@ -8,6 +8,7 @@
       <v-col
         cols="12"
         sm="6"
+        lg="6"
       >
         <div
           class="font-weight-bold text-h2"
@@ -22,6 +23,7 @@
       <v-col
         cols="12"
         sm="6"
+        lg="6"
       >
         <v-img
           width="250"
@@ -33,7 +35,7 @@
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="4"
       >
         <base-material-stats-card
           color="info"
@@ -45,7 +47,7 @@
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="4"
       >
         <base-material-stats-card
           color="pink"
@@ -57,7 +59,7 @@
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="4"
       >
         <base-material-stats-card
           color="red"
@@ -68,97 +70,97 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-row>
-        <v-col
-          cols="12"
-        >
-          <v-card>
-            <v-card-title>
-              Parroquias vulnerables
-            </v-card-title>
-            <v-card-text>
-              <apexchart
-                width="100%"
-                type="bar"
-                :options="riesgosBarra.options"
-                :series="riesgosBarra.series"
-              />
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-          cols="12"
-          sm="6"
-        >
-          <v-card>
-            <v-card-title>
-              Patologías mas comúnes
-            </v-card-title>
-            <v-card-text>
-              <v-select
-                v-model="patologiaType"
-                :items="['Barra', 'Torta']"
-                label="Tipo de gráfica"
-              />
-            </v-card-text>
-            <v-card-text class="justify-center">
-              <apexchart
-                v-if="patologiaType === 'Barra'"
-                width="300"
-                height="300"
-                type="bar"
-                :options="patologiasBarra.options"
-                :series="patologiasBarra.series"
-              />
-              <apexchart
-                v-else
-                width="300"
-                height="400"
-                type="pie"
-                :options="patologiasPie.options"
-                :series="patologiasPie.series"
-              />
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-        >
-          <v-card>
-            <v-card-title>
-              Embarazos por grupos de edades
-            </v-card-title>
-            <v-card-text>
-              <v-select
-                v-model="embarazadaType"
-                :items="['Barra', 'Torta']"
-                label="Tipo de gráfica"
-              />
-            </v-card-text>
-            <v-card-text class="justify-center">
-              <apexchart
-                v-if="embarazadaType === 'Barra'"
-                width="300"
-                height="300"
-                type="bar"
-                :options="embarazadasBarra.options"
-                :series="embarazadasBarra.series"
-              />
-              <apexchart
-                v-else
-                width="300"
-                height="400"
-                type="pie"
-                :options="embarazadasPie.options"
-                :series="embarazadasPie.series"
-              />
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
+      <v-col
+        cols="12"
+      >
+        <v-card>
+          <v-card-title>
+            Parroquias vulnerables
+          </v-card-title>
+          <v-card-text>
+            <apexchart
+              width="100%"
+              type="bar"
+              :options="riesgosBarra.options"
+              :series="riesgosBarra.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        lg="6"
+      >
+        <v-card>
+          <v-card-title>
+            Patologías mas comúnes
+          </v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="patologiaType"
+              :items="['Barra', 'Torta']"
+              label="Tipo de gráfica"
+            />
+          </v-card-text>
+          <v-card-text class="justify-center">
+            <apexchart
+              v-if="patologiaType === 'Barra'"
+              width="100%"
+              height="300"
+              type="bar"
+              :options="patologiasBarra.options"
+              :series="patologiasBarra.series"
+            />
+            <apexchart
+              v-else
+              width="100%"
+              height="400"
+              type="pie"
+              :options="patologiasPie.options"
+              :series="patologiasPie.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        lg="6"
+      >
+        <v-card>
+          <v-card-title>
+            Embarazos por grupos de edades
+          </v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="embarazadaType"
+              :items="['Barra', 'Torta']"
+              label="Tipo de gráfica"
+            />
+          </v-card-text>
+          <v-card-text class="justify-center">
+            <apexchart
+              v-if="embarazadaType === 'Barra'"
+              width="100%"
+              height="300"
+              type="bar"
+              :options="embarazadasBarra.options"
+              :series="embarazadasBarra.series"
+            />
+            <apexchart
+              v-else
+              width="100%"
+              height="400"
+              type="pie"
+              :options="embarazadasPie.options"
+              :series="embarazadasPie.series"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>

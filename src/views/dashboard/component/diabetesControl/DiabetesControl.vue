@@ -252,7 +252,7 @@
                   </td>
                   <td>
                     <v-select
-                      v-model="item.id"
+                      v-model="item.medicine_id"
                       label="Medicamento"
                       outlined
                       :items="medicamentos"
@@ -661,7 +661,7 @@
       },
       addMedicine () {
         const editedMedicine = {
-          id: null,
+          medicine_id: null,
           hora: null,
           menu2Hora: false,
           dosis: 0,
