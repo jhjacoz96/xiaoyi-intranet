@@ -24,7 +24,7 @@
       <template v-slot:item.imagen="{ item }">
         <v-img
           v-if="item.image"
-          :src="`${$store.state.urlApi}${item.image.url}`"
+          :src="item.image.url"
           width="60"
         />
       </template>

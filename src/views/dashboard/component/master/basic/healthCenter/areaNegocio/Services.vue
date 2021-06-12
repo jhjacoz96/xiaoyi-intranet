@@ -43,7 +43,7 @@
           <template v-slot:item.image_service="{ item }">
             <v-img
               v-if="item.image"
-              :src="`${$store.state.urlImageApi}${item.image.url}`"
+              :src="item.image.url"
               width="60"
             />
           </template>

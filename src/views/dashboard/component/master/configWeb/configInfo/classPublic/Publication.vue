@@ -50,7 +50,7 @@
           :search="search"
         >
           <template v-slot:item.created_at="{ item }">
-            {{ moment(item.created_at).format('d-M-YYYY') }}
+            {{ moment(item.created_at).format('D-M-YYYY') }}
           </template>
           <template v-slot:item.image_mini="{ item }">
             <div
@@ -58,7 +58,7 @@
               class="my-4"
             >
               <v-img
-                :src="`${$store.state.urlImageApi}${item.image_mini.url}`"
+                :src="item.image_mini.url"
                 width="100"
                 height="100"
               />
@@ -208,7 +208,9 @@
                   <v-select
                     v-model="editedItem.type_resource"
                     :disabled="editedIndex !== -1"
-                    :items="['image', 'video', 'document']"
+                    :items="typeResource"
+                    item-text="name"
+                    item-value="value"
                     outlined
                     label="Tipo de recurso"
                     dense
@@ -413,7 +415,7 @@
           },
           {
 
-            text: 'Imagen mini',
+            text: 'Imagen miniatura',
             value: 'image_mini',
           },
           {
@@ -452,6 +454,20 @@
           resource: null,
           type_resource: '',
         },
+        typeResource: [
+          {
+            name: 'Imagenes e infografías',
+            value: 'image',
+          },
+          {
+            name: 'Documentos',
+            value: 'document',
+          },
+          {
+            name: 'Videos',
+            value: 'video',
+          },
+        ],
       }
     },
     computed: {
@@ -591,6 +607,7 @@
           formData.append('resource', this.editedItem.resource)
           formData.append('type_resource', this.editedItem.type_resource)
           const serviceResponse = await this.publicationPostActions(formData)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.loaderDialog = false

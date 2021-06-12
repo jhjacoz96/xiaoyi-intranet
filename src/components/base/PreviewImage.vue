@@ -67,8 +67,7 @@
     },
     watch: {
       image (val) {
-        console.log(val)
-        if (val !== '') this.imagenPreview = `${this.$store.state.urlImageApi}${val}`
+        if (val !== '') this.imagenPreview = val
       },
     },
     methods: {

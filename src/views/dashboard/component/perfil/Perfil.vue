@@ -7,7 +7,7 @@
           <base-material-card
             v-if="perfil"
             class="arriba v-card-profile"
-            :avatar="perfil.image ? `${$store.state.urlImageApi}/${perfil.image.url}` : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
+            :avatar="perfil.image ? perfil.image.url : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
           >
             <v-card-text class="text-center">
               <h6 class="text-h4 mb-1 grey--text">

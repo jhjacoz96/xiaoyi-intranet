@@ -29,7 +29,7 @@
         two-line
       >
         <img
-          src="@/assets/logo2.png"
+          src="@/assets/logo3.png"
           width="60"
           max-width="60"
           class="mr-2"
