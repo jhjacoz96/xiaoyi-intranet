@@ -607,7 +607,6 @@
           formData.append('resource', this.editedItem.resource)
           formData.append('type_resource', this.editedItem.type_resource)
           const serviceResponse = await this.publicationPostActions(formData)
-          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.loaderDialog = false
