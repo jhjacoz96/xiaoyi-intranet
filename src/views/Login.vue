@@ -26,7 +26,7 @@
                   <v-img
                     class="ma-auto"
                     max-width="150"
-                    src="@/assets/logo2.png"
+                    src="@/assets/logo3.png"
                   >
                     <template v-slot:placeholder>
                       <v-row
