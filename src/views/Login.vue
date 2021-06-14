@@ -43,7 +43,7 @@
                   </v-img>
                 </v-card-text>
                 <v-card-text class="text-center">
-                  Inicia sesión con tus credencales
+                  Inicia sesión con tus credenciales
                 </v-card-text>
                 <v-card-text>
                   <v-form

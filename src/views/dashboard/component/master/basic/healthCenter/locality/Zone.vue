@@ -238,16 +238,18 @@
         canton: [],
         desserts: [],
         editedItem: {
+          id: null,
           name: '',
           code: '',
-          canton_id: undefined,
-          province_id: undefined,
+          canton_id: null,
+          province_id: null,
         },
         defaultItem: {
+          id: null,
           name: '',
           code: '',
-          canton_id: undefined,
-          province_id: undefined,
+          canton_id: null,
+          province_id: null,
         },
       }
     },
@@ -329,6 +331,7 @@
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         this.editedId = item.id
+        this.findCanton(this.editedId)
         Object.assign(this.editedItem, item)
         this.dialog = true
       },

@@ -27,7 +27,7 @@
             :error-messages="errors.collect('basic.numero_historia')"
             data-vv-name="número historia"
             outlined
-            label="Número de historia de la ficha clinica de neonatogía"
+            label="Número de historia de la ficha clínica de neonatogía"
             dense
             validate-on-blur
           />
@@ -46,7 +46,7 @@
             item-text="numero_historia"
             item-value="id"
             outlined
-            label="Asignar ficha clínica de obstetricia"
+            label="Asignar ficha clínica de obstetricia (*)"
             dense
             validate-on-blur
           />
@@ -64,10 +64,25 @@
           sm="4"
         >
           <v-text-field
+            v-model="editedItem.cedula"
+            v-validate="'required'"
+            :error-messages="errors.collect('basic.nombre')"
+            data-vv-name="cedula"
+            outlined
+            label="Cédula (*)"
+            dense
+            validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
             v-model="editedItem.nombre"
             v-validate="'required'"
             :error-messages="errors.collect('basic.nombre')"
-            data-vv-name="Nombres"
+            data-vv-name="nombres"
             outlined
             label="Nombres (*)"
             dense
@@ -185,6 +200,7 @@
         show2Date: false,
         editedItem: {
           numero_historia: null,
+          cedula: '',
           nombre: '',
           apellido: '',
           fecha_nacimiento: null,
@@ -203,6 +219,7 @@
         if (
           this.editedItem.numero_historia &&
           this.editedItem.nombre &&
+          this.editedItem.cedula &&
           this.editedItem.fecha_nacimiento &&
           this.editedItem.lugar_naciento &&
           this.editedItem.gender_id &&

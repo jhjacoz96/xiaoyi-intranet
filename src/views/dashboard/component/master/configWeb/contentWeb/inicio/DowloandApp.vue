@@ -47,7 +47,7 @@
             class="text-end"
           >
             <base-preview-image
-              :image="editedItem.image.url"
+              :image="typeof editedItem.image === 'object' ? editedItem.image.url : editedItem.image"
               @imagen="editedItem.image = $event"
             />
           </v-col>
@@ -113,7 +113,7 @@
             this.editedItem.title = serviceResponse.data.title
             this.editedItem.description1 = serviceResponse.data.description1
             this.editedItem.description2 = serviceResponse.data.description2
-            this.editedItem.image = serviceResponse.data.image
+            this.editedItem.image = serviceResponse.data.image.url
           }
         } else {
           this.alert({
@@ -123,6 +123,7 @@
         }
       },
       async addItem () {
+        console.log(this.editedItem)
         const formData = new FormData()
         formData.append('title', this.editedItem.title)
         formData.append('description1', this.editedItem.description1)

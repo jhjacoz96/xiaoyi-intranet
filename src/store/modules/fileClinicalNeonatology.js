@@ -17,6 +17,7 @@ import {
               id: null,
               nombre: '',
               apellido: '',
+              cedula: '',
               fecha_nacimiento: null,
               gender_id: null,
               group_age_id: null,
@@ -86,6 +87,7 @@ import {
             defaultfileNeonatology: {
               nombre: '',
               apellido: '',
+              cedula: '',
               fecha_nacimiento: null,
               gender_id: null,
               group_age_id: null,

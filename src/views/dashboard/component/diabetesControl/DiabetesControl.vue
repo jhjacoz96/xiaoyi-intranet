@@ -463,7 +463,8 @@
         headers: [
           { text: 'Nombre', sortable: true, value: 'nombre' },
           { text: 'Cédula', sortable: false, value: 'cedula' },
-          { text: 'Sexo', sortable: false, value: 'gender_id.nombre' },
+          { text: 'Cédula', sortable: false, value: 'cedula' },
+          { text: 'Género', sortable: false, value: 'gender_id.nombre' },
           { text: 'Edad', sortable: false, value: 'edad' },
           { text: 'Acción', sortable: false, value: 'accion' },
         ],
@@ -545,7 +546,7 @@
       },
       imc () {
         if (!this.editedItem.peso || !this.editedItem.altura) return 0
-        var imc = (this.editedItem.peso) / Math.round(Math.pow(this.editedItem.altura, 2), -2)
+        var imc = (this.editedItem.peso) / Math.pow(this.editedItem.altura, 2)
         return imc
       },
     },

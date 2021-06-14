@@ -66,7 +66,7 @@
           />
         </v-col>
         <v-col
-           v-if="miembro.cultural_group_id !== null"
+          v-if="miembro.cultural_group_id !== null"
           cols="6"
           sm="4"
         >
@@ -103,7 +103,7 @@
           />
         </v-col>
         <v-col
-           v-if="miembro.zone_id !== null"
+          v-if="miembro.zone_id !== null"
           cols="6"
           sm="4"
         >
@@ -128,7 +128,7 @@
           />
         </v-col>
         <v-col
-           v-if="miembro.scholarship_id !== null"
+          v-if="miembro.scholarship_id !== null"
           cols="6"
           sm="4"
         >

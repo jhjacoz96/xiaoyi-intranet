@@ -3,7 +3,7 @@ import {
        zoneAllApi,
        zoneDeleteApi,
        zoneGetApi,
-       institutioUpdateApi,
+       zoneUpdateApi,
        provinceAllApi,
        cantonFindApi,
     } from '@/api/modules'
@@ -31,7 +31,7 @@ import {
                return serviceResponse
            },
            async zoneUpdateActions (commit, payload) {
-               const serviceResponse = await institutioUpdateApi(payload, payload.id)
+               const serviceResponse = await zoneUpdateApi(payload, payload.id)
                return serviceResponse
            },
            async provinceAllActions (commit, payload) {
