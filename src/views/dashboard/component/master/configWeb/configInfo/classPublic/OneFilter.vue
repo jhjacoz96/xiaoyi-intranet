@@ -20,7 +20,7 @@
               Primer filtro de busqueda
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite agregar filtros de busqueda para las publicaciones
+              Permite indincar a quien hace referencia la publicación.
             </div>
           </v-col>
         </v-row>

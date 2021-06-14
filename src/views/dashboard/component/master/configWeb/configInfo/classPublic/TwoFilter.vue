@@ -20,7 +20,7 @@
               Segundo filtro de busqueda
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite agregar filtros de busqueda para las publicaciones
+              Permite agregar filtros sobre la información general de la referencia indicada.
             </div>
           </v-col>
         </v-row>
