@@ -123,7 +123,6 @@
         }
       },
       async addItem () {
-        console.log(this.editedItem)
         const formData = new FormData()
         formData.append('title', this.editedItem.title)
         formData.append('description1', this.editedItem.description1)
