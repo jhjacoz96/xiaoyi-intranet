@@ -381,7 +381,7 @@
       imc () {
         if (!this.editedItem.peso | !this.editedItem.talla) return 0
         var imc = (this.editedItem.peso) / Math.round(Math.pow(this.editedItem.talla, 2), -2)
-        return imc
+        return imc.toFixed(2)
       },
     },
     created () {
