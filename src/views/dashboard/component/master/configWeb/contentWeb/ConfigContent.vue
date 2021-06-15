@@ -32,13 +32,13 @@
               color="primary"
             >
               <v-tab>
-                Carrusel
+                Bienvenida
               </v-tab>
               <v-tab>
                 Servicios
               </v-tab>
               <v-tab>
-                Descargar aplicación movil
+                Descargar aplicación móvil
               </v-tab>
             </v-tabs>
 

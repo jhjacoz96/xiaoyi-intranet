@@ -4,7 +4,7 @@
     flat
   >
     <v-card-text class="text-h5">
-      Ingrese la información referente al carrusel
+      Ingrese la información referente a la sección de bienvenida
     </v-card-text>
     <v-card-text>
       <v-form

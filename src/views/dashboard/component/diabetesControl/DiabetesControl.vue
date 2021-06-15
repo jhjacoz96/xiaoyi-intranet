@@ -49,7 +49,7 @@
                   v-on="on"
                   @click="listGlucose(item.diabetic_patient.registro_glucosa)"
                 >
-                  <v-icon>mdi-eye</v-icon>
+                  <v-icon>mdi-water</v-icon>
                 </v-btn>
               </template>
               <span>Control del glucemia</span>
@@ -64,9 +64,9 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="dialogPeso = true"
+                  @click="listPeso(item.diabetic_patient)"
                 >
-                  <v-icon>mdi-eye</v-icon>
+                  <v-icon>mdi-human</v-icon>
                 </v-btn>
               </template>
               <span>Control del peso</span>
@@ -83,7 +83,7 @@
                   v-on="on"
                   @click="listTreatment(item.diabetic_patient)"
                 >
-                  <v-icon>mdi-eye</v-icon>
+                  <v-icon>mdi-pill</v-icon>
                 </v-btn>
               </template>
               <span>Control de tratamientos</span>
@@ -583,14 +583,14 @@
                       :key="index"
                     >
                       <v-list-item-icon>
-                        <v-icon v-text="'mdi-water'" />
+                        <v-icon v-text="'mdi-human'" />
                       </v-list-item-icon>
                       <v-list-item-content>
                         <v-list-item-title>
                           <span class="font-weight-regular">Peso:</span> {{ item.peso }} Kg
                         </v-list-item-title>
                         <v-list-item-title :class="`${calRiskWigth(item.peso).color}--text`">
-                          <span class="font-weight-bold">Estado actual:</span> {{ calRiskWigth(item.peso).message }}
+                          <span class="font-weight-bold">Condición corporal:</span> {{ calRiskWigth(item.peso).message }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
                           Fecha: {{ moment(item.created_at).locale('es').format('D-M-YYYY') }}
@@ -691,7 +691,7 @@
                         :key="index"
                       >
                         <v-list-item-icon>
-                          <v-icon v-text="'mdi-human'" />
+                          <v-icon v-text="'mdi-weight-lifter'" />
                         </v-list-item-icon>
                         <v-list-item-content>
                           <v-list-item-title>
@@ -832,7 +832,7 @@
       imc () {
         if (!this.editedItem.peso || !this.editedItem.altura) return 0
         var imc = (this.editedItem.peso) / Math.pow(this.editedItem.altura, 2)
-        return imc
+        return imc.toFixed(2)
       },
     },
     watch: {
@@ -984,10 +984,22 @@
         this.dialogGlucose = true
         this.controlGlucose = val
       },
+      listPeso (val) {
+        this.dialogPeso = true
+        this.editedItem = Object.assign({}, val)
+        this.controlPeso = val.registro_peso
+      },
       listTreatment (val) {
         this.dialogTreatment = true
         this.controlTreatment = val.registro_tratamiento
         this.controlActivity = val.registro_actividad
+      },
+      closePeso () {
+        this.dialogPeso = false
+        this.$nextTick(() => {
+          this.controlPeso = []
+          this.editedItem = Object.assign({}, this.defaultItem)
+        })
       },
       closeGlucose () {
         this.dialogGlucose = false
@@ -1021,20 +1033,28 @@
       },
       calRiskWigth (val) {
         var risk1 = {
-          message: 'Sin riesgo',
-          color: 'success',
-        }
-        var risk2 = {
-          message: 'Riego leve',
-          color: 'warning',
-        }
-        var risk3 = {
-          message: 'Riesgo alto',
+          message: 'Desnutrición',
           color: 'red',
         }
-        if (val < 70 || val > 125) return risk3
-        else if (val >= 70 && val <= 100) return risk2
-        else return risk1
+        var risk2 = {
+          message: 'Peso normal',
+          color: 'success',
+        }
+        var risk3 = {
+          message: 'Sobrepeso',
+          color: 'warning',
+        }
+        var risk4 = {
+          message: 'Obecidad',
+          color: 'red',
+        }
+        var imcConvert = 0
+        if (!val || !this.editedItem.altura) imcConvert = 0
+        else imcConvert = (val) / Math.pow(this.editedItem.altura, 2)
+        if (imcConvert < 18.50) return risk1
+        else if (imcConvert >= 18.50 && imcConvert <= 25) return risk2
+        else if (imcConvert > 25 && imcConvert < 30) return risk3
+        else return risk4
       },
     },
   }
