@@ -895,7 +895,6 @@
       listTreatment (val) {
         this.dialogTreatment = true
         this.controlTreatment = val
-        console.log(this.controlTreatment)
       },
       closeGlucose () {
         this.dialogGlucose = false
