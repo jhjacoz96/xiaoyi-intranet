@@ -777,7 +777,16 @@
           :items-per-page="5"
         >
           <template v-slot:item.relationship_id="{ item }">
-            {{ item.relationship_id }}
+            {{ getRelationship(item.relationship_id) }}
+          </template>
+          <template v-slot:item.accion="{ item }">
+            <v-btn
+              x-small
+              fab
+              @click="deleteItemMortality(item)"
+            >
+              <v-icon>mdi-account-remove</v-icon>
+            </v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -813,6 +822,34 @@
         </v-col>
       </v-row>
     </v-card-text> -->
+    <v-dialog
+      v-model="dialogDeleteMortlity"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          ¿Está seguro de realizar esta acción?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="black darken-1"
+            text
+            @click="closeDeleteMortality()"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            color="pinck"
+            text
+            @click="deleteItemMortalityConfirm()"
+          >
+            Eliminar
+          </v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog
       v-model="dialog2"
       max-width="700px"
@@ -971,11 +1008,13 @@
     data () {
       return {
         id: undefined,
+        editedIndexMortality: -1,
         tab: null,
         valid: false,
         dialog: false,
         dialog2: false,
         dialogDelete: false,
+        dialogDeleteMortlity: false,
         show5Date: false,
         show6Date: false,
         show4Date: false,
@@ -1120,6 +1159,12 @@
             text: 'Causa',
             align: 'start',
             value: 'causa',
+            sortable: false,
+          },
+          {
+            text: 'Acción',
+            align: 'start',
+            value: 'accion',
             sortable: false,
           },
         ],
@@ -1339,6 +1384,21 @@
           this.editedItemMortality = Object.assign({}, this.defaultItemMortality)
         })
       },
+      deleteItemMortality (item) {
+        this.editedIndexMortality = this.mortalidad.indexOf(item)
+        this.dialogDeleteMortlity = true
+      },
+      deleteItemMortalityConfirm () {
+        this.mortalidad.splice(this.editedIndexMortality, 1)
+        this.closeDeleteMortality()
+      },
+      closeDeleteMortality () {
+        this.dialogDeleteMortlity = false
+        this.$nextTick(() => {
+          this.editedItemMortality = Object.assign({}, this.defaultItemMortality)
+          this.editedIndexMortality = -1
+        })
+      },
       closeDelete () {
         this.dialogDelete = false
         this.$nextTick(() => {
@@ -1421,10 +1481,14 @@
         return calAge(val)
       },
       getRelationship (val) {
-        const v = this.relationship.find(item => {
-          return item.id === val
-        })
-        return v
+        if (this.relationship.length > 0) {
+          const v = this.relationship.find(item => {
+            return item.id === val
+          })
+          return v.name
+        } else {
+          return ''
+        }
       },
       async verifyDocument () {
         if (this.editedItem.cedula) {

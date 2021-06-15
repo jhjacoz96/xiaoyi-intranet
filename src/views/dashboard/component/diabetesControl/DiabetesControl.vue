@@ -40,6 +40,57 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
+                  outlined
+                  fab
+                  x-small
+                  color="info"
+                  v-bind="attrs"
+                  class="ml-2"
+                  v-on="on"
+                  @click="listGlucose(item.diabetic_patient.registro_glucosa)"
+                >
+                  <v-icon>mdi-eye</v-icon>
+                </v-btn>
+              </template>
+              <span>Control del glucemia</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  outlined
+                  fab
+                  x-small
+                  color="info"
+                  v-bind="attrs"
+                  class="ml-2"
+                  v-on="on"
+                  @click="dialogPeso = true"
+                >
+                  <v-icon>mdi-eye</v-icon>
+                </v-btn>
+              </template>
+              <span>Control del peso</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  outlined
+                  fab
+                  x-small
+                  color="info"
+                  v-bind="attrs"
+                  class="ml-2"
+                  v-on="on"
+                  @click="listTreatment(item.diabetic_patient.registro_tratamiento)"
+                >
+                  <v-icon>mdi-eye</v-icon>
+                </v-btn>
+              </template>
+              <span>Control de tratamientos</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
                   fab
                   x-small
                   color="warning"
@@ -197,7 +248,7 @@
                   >
                     <v-text-field
                       v-model.number="editedItem.nivel_glusemia"
-                      label="Nivel de glucemia (*)"
+                      label="Nivel de glucosa (*)"
                       outlined
                       type="number"
                       dense
@@ -443,6 +494,142 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="dialogGlucose"
+      max-width="400"
+    >
+      <v-card>
+        <v-card-text>
+          <v-list
+            :tile="false"
+          >
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title
+                  class="text-center"
+                  v-text="`Control de glucemia`"
+                />
+                <v-list>
+                  <v-list-item-content>
+                    <v-list-item-subtitle
+                      v-if="controlGlucose.length === 0"
+                      class="text-center"
+                      v-text="'Sin registros'"
+                    />
+                    <v-list-item
+                      v-for="(item, index) in controlGlucose"
+                      :key="index"
+                    >
+                      <v-list-item-icon>
+                        <v-icon v-text="'mdi-water'" />
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          <span class="font-weight-regular">Nivel glucosa:</span> {{ item.nivel_glusemia }} mg/dl
+                        </v-list-item-title>
+                        <v-list-item-title :class="`${calRiskGlucose(item.nivel_glusemia).color}--text`">
+                          <span class="font-weight-bold">Riesgo:</span> {{ calRiskGlucose(item.nivel_glusemia).message }}
+                        </v-list-item-title>
+                        <v-list-item-title>
+                          <span class="font-weight-regular">Período:</span> {{ item.comida || '' }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          Fecha: {{ moment(item.created_at).locale('es').format('D-M-YYYY') }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-item-content>
+                </v-list>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            text
+            color="info"
+            @click="closeGlucose"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+       v-model="dialogTreatment"
+      max-width="400"
+    >
+      <v-card>
+        <v-card-text class="text-center">
+          Control de tratamientos
+        </v-card-text>
+        <v-tabs
+          v-model="tabTreatment"
+          centered
+        >
+          <v-tab>
+            Farmacológicos
+          </v-tab>
+          <v-tab>
+            No falmacológicos
+          </v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="tabTreatment">
+          <v-tab-item>
+            <v-list
+              :tile="false"
+            >
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list>
+                    <v-list-item-content>
+                      <v-list-item-subtitle
+                        v-if="controlTreatment.length === 0"
+                        class="text-center"
+                        v-text="'Sin registros'"
+                      />
+                      <v-list-item
+                        v-for="(item, index) in controlTreatment"
+                        :key="index"
+                      >
+                        <v-list-item-icon>
+                          <v-icon v-text="'mdi-pill'" />
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            <span class="font-weight-regular">Medicamento:</span> {{ item.medicine.name }} mg/dl
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Fecha: {{ moment(item.created_at).locale('es').format('D-M-YYYY') }}
+                          </v-list-item-subtitle>
+                          <v-list-item-subtitle>
+                            Hora: {{ item.hora }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list-item-content>
+                  </v-list>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-tab-item>
+          <v-tab-item>
+            ddd
+          </v-tab-item>
+        </v-tabs-items>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            text
+            color="info"
+            @click="closeTreatment"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -455,14 +642,20 @@
   export default {
     data () {
       return {
+        dialogGlucose: false,
+        dialogPeso: false,
+        dialogTreatment: false,
+        controlGlucose: [],
+        controlPeso: [],
+        controlTreatment: [],
         dialog: false,
         search: '',
         step: [],
         tab: 0,
+        tabTreatment: 0,
         tabs: ['Signos vitales', 'Antropometría', 'Tratamientos'],
         headers: [
           { text: 'Nombre', sortable: true, value: 'nombre' },
-          { text: 'Cédula', sortable: false, value: 'cedula' },
           { text: 'Cédula', sortable: false, value: 'cedula' },
           { text: 'Género', sortable: false, value: 'gender_id.nombre' },
           { text: 'Edad', sortable: false, value: 'edad' },
@@ -553,6 +746,9 @@
     watch: {
       dialog (val) {
         val || this.close()
+      },
+      dialogGlucose (val) {
+        val || this.closeGlucose()
       },
     },
     created () {
@@ -691,6 +887,44 @@
       deleteMedicine (item) {
         var index = this.editedItem.tratamiento_farmacologico.indexOf(item)
         this.editedItem.tratamiento_farmacologico.splice(index, 1)
+      },
+      listGlucose (val) {
+        this.dialogGlucose = true
+        this.controlGlucose = val
+      },
+      listTreatment (val) {
+        this.dialogTreatment = true
+        this.controlTreatment = val
+        console.log(this.controlTreatment)
+      },
+      closeGlucose () {
+        this.dialogGlucose = false
+        this.$nextTick(() => {
+          this.controlGlucose = []
+        })
+      },
+      closeTreatment () {
+        this.dialogTreatment = false
+        this.$nextTick(() => {
+          this.controlTreatment = []
+        })
+      },
+      calRiskGlucose (val) {
+        var risk1 = {
+          message: 'Sin riesgo',
+          color: 'success',
+        }
+        var risk2 = {
+          message: 'Riego leve',
+          color: 'warning',
+        }
+        var risk3 = {
+          message: 'Riesgo alto',
+          color: 'red',
+        }
+        if (val < 70 || val > 125) return risk3
+        else if (val >= 70 && val <= 100) return risk2
+        else return risk1
       },
     },
   }
