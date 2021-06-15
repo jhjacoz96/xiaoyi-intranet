@@ -1028,7 +1028,7 @@
           color: 'red',
         }
         if (val < 70 || val > 125) return risk3
-        else if (val >= 70 && val <= 100) return risk2
+        else if (val >= 100 && val <= 125) return risk2
         else return risk1
       },
       calRiskWigth (val) {
