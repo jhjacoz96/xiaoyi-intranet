@@ -557,7 +557,7 @@
       </v-card>
     </v-dialog>
     <v-dialog
-       v-model="dialogTreatment"
+      v-model="dialogTreatment"
       max-width="400"
     >
       <v-card>
