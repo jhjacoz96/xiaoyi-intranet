@@ -163,10 +163,17 @@
         }
       },
       pushContaminacion () {
-        this.contaminacion.push(this.editedItem)
+        var c = {
+          tipo_contaminación: '',
+          causas: '',
+        }
+        this.contaminacion.push(c)
       },
       pushSitios () {
-        this.sitios_tratamiento.push(this.editedItem1)
+        var s = {
+          lugar: '',
+        }
+        this.sitios_tratamiento.push(s)
       },
       deleteContaminacion (val) {
         var index = this.contaminacion.indexOf(val)

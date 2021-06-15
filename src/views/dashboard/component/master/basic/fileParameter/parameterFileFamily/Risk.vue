@@ -276,6 +276,7 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
+          console.log(this.editedItem)
           const serviceResponse = await this.riskUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
