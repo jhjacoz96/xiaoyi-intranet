@@ -29,6 +29,20 @@
         <v-card-actions class="justify-center">
           <v-form>
             <v-row>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    color="primary"
+                    class="mb-5"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    mdi-help
+                  </v-icon>
+                </template>
+                <span>Búsqueda por número de historia, nombre, cédula, parroquia</span>
+              </v-tooltip>
               <v-col
                 cols="6"
               >

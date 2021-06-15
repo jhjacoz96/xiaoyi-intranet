@@ -29,6 +29,20 @@
         <v-card-actions class="justify-center">
           <v-form>
             <v-row>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    color="primary"
+                    class="mb-5"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    mdi-help
+                  </v-icon>
+                </template>
+                <span>Búsqueda por número de historia, cédula, nombre, lugar de nacimiento</span>
+              </v-tooltip>
               <v-col
                 cols="6"
               >
@@ -124,6 +138,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   x-small
+                  outlined
                   fab
                   color="info"
                   v-bind="attrs"
@@ -141,6 +156,7 @@
                 <v-btn
                   x-small
                   fab
+                  outlined
                   color="info"
                   v-bind="attrs"
                   class="ml-2"
@@ -197,6 +213,7 @@
         headers: [
           { text: 'Número de historia', sortable: false, value: 'numero_historia' },
           { text: 'Nombres y apellidos', sortable: false, value: 'nombre' },
+          { text: 'Cédula', sortable: false, value: 'cedula' },
           { text: 'Lugar nacimiento', sortable: false, value: 'lugar_naciento' },
           { text: 'Edad', sortable: false, value: 'edad' },
           { text: 'Fecha de creación', sortable: false, value: 'created_at' },

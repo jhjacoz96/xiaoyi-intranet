@@ -81,7 +81,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="listTreatment(item.diabetic_patient.registro_tratamiento)"
+                  @click="listTreatment(item.diabetic_patient)"
                 >
                   <v-icon>mdi-eye</v-icon>
                 </v-btn>
@@ -557,6 +557,65 @@
       </v-card>
     </v-dialog>
     <v-dialog
+      v-model="dialogPeso"
+      max-width="400"
+    >
+      <v-card>
+        <v-card-text>
+          <v-list
+            :tile="false"
+          >
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title
+                  class="text-center"
+                  v-text="`Control de peso`"
+                />
+                <v-list>
+                  <v-list-item-content>
+                    <v-list-item-subtitle
+                      v-if="controlPeso.length === 0"
+                      class="text-center"
+                      v-text="'Sin registros'"
+                    />
+                    <v-list-item
+                      v-for="(item, index) in controlPeso"
+                      :key="index"
+                    >
+                      <v-list-item-icon>
+                        <v-icon v-text="'mdi-water'" />
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          <span class="font-weight-regular">Peso:</span> {{ item.peso }} Kg
+                        </v-list-item-title>
+                        <v-list-item-title :class="`${calRiskWigth(item.peso).color}--text`">
+                          <span class="font-weight-bold">Estado actual:</span> {{ calRiskWigth(item.peso).message }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          Fecha: {{ moment(item.created_at).locale('es').format('D-M-YYYY') }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-item-content>
+                </v-list>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            text
+            color="info"
+            @click="closeGlucose"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
       v-model="dialogTreatment"
       max-width="400"
     >
@@ -598,7 +657,7 @@
                         </v-list-item-icon>
                         <v-list-item-content>
                           <v-list-item-title>
-                            <span class="font-weight-regular">Medicamento:</span> {{ item.medicine.name }} mg/dl
+                            <span class="font-weight-regular">Medicamento:</span> {{ item.medicine.name }}
                           </v-list-item-title>
                           <v-list-item-subtitle>
                             Fecha: {{ moment(item.created_at).locale('es').format('D-M-YYYY') }}
@@ -615,7 +674,39 @@
             </v-list>
           </v-tab-item>
           <v-tab-item>
-            ddd
+            <v-list
+              :tile="false"
+            >
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list>
+                    <v-list-item-content>
+                      <v-list-item-subtitle
+                        v-if="controlActivity.length === 0"
+                        class="text-center"
+                        v-text="'Sin registros'"
+                      />
+                      <v-list-item
+                        v-for="(item, index) in controlActivity"
+                        :key="index"
+                      >
+                        <v-list-item-icon>
+                          <v-icon v-text="'mdi-human'" />
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            <span class="font-weight-regular">Actividad:</span> {{ item.actividad }}
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Fecha: {{ moment(item.created_at).locale('es').format('D-M-YYYY') }}
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list-item-content>
+                  </v-list>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </v-tab-item>
         </v-tabs-items>
         <v-card-actions>
@@ -648,6 +739,7 @@
         controlGlucose: [],
         controlPeso: [],
         controlTreatment: [],
+        controlActivity: [],
         dialog: false,
         search: '',
         step: [],
@@ -894,7 +986,8 @@
       },
       listTreatment (val) {
         this.dialogTreatment = true
-        this.controlTreatment = val
+        this.controlTreatment = val.registro_tratamiento
+        this.controlActivity = val.registro_actividad
       },
       closeGlucose () {
         this.dialogGlucose = false
@@ -906,9 +999,27 @@
         this.dialogTreatment = false
         this.$nextTick(() => {
           this.controlTreatment = []
+          this.controlActivity = []
         })
       },
       calRiskGlucose (val) {
+        var risk1 = {
+          message: 'Sin riesgo',
+          color: 'success',
+        }
+        var risk2 = {
+          message: 'Riego leve',
+          color: 'warning',
+        }
+        var risk3 = {
+          message: 'Riesgo alto',
+          color: 'red',
+        }
+        if (val < 70 || val > 125) return risk3
+        else if (val >= 70 && val <= 100) return risk2
+        else return risk1
+      },
+      calRiskWigth (val) {
         var risk1 = {
           message: 'Sin riesgo',
           color: 'success',
