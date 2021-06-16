@@ -53,11 +53,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -75,11 +75,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -97,11 +97,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -119,11 +119,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -141,11 +141,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>

@@ -25,11 +25,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -47,11 +47,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -81,18 +81,18 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
               @click.prevent="editedItem.satisfaccion_lactancia = null"
             />
           </v-radio-group>
         </v-col>
 
         <v-col
-          v-if="editedItem.educacion_lactancia === 1"
+          v-if="editedItem.educacion_lactancia === true"
           cols="6"
           sm="4"
         >
@@ -306,16 +306,22 @@
               <td />
               <td />
               <td />
-              <td
-                colspan="10"
-                class="warning white--text text-center"
-              >
-                {{ editedItem.score_mama_inmediato }}
-              </td>
             </tr>
           </tbody>
         </template>
       </v-simple-table>
+      <v-card-text>
+        <div class="text-center">
+          {{ colorInmediato.mensaje }}
+        </div>
+        <v-progress-linear
+          :value="editedItem.score_mama_inmediato"
+          height="25"
+          :color="colorInmediato.color"
+        >
+          <strong>{{ `Valor total: ${editedItem.score_mama_inmediato}` }}</strong>
+        </v-progress-linear>
+      </v-card-text>
       <div class="text-center text-h4 mt-10 font-weight-bold mb-6 blue--text">
         Mediato
       </div>
@@ -544,17 +550,23 @@
                 <td />
                 <td />
                 <td />
-                <td
-                  colspan="10"
-                  class="warning white--text text-center"
-                >
-                  {{ editedItem.score_mama_mediato }}
-                </td>
               </tr>
             </tbody>
           </template>
         </v-simple-table>
       </v-container>
+      <v-card-text>
+        <div class="text-center">
+          {{ colorMediato.mensaje }}
+        </div>
+        <v-progress-linear
+          :value="editedItem.score_mama_mediato"
+          height="25"
+          :color="colorMediato.color"
+        >
+          <strong>{{ `Valor total: ${editedItem.score_mama_mediato}` }}</strong>
+        </v-progress-linear>
+      </v-card-text>
       <div class="text-center text-h4 font-weight-bold mt-10 mb-6 blue--text">
         Tardio
       </div>
@@ -654,9 +666,12 @@
             cols="12"
           >
             <v-select
-              v-model="editedItem.señal_alarma"
+              v-model="editedItem.senal_alarma"
               label="señales de alarmas en las que se educó a la paciente"
               outlined
+              item-text="nombre"
+              item-value="id"
+              multiple
               :items="senalesAlarma"
               dense
             />
@@ -688,6 +703,9 @@
     mapActions,
     mapMutations,
   } from 'vuex'
+  import {
+    senalAlarmAllApi,
+  } from '@/api/modules'
   export default {
     props: {
       click: {
@@ -710,25 +728,71 @@
           educacion_depresion: false,
           recomendaciones: '',
           proporcionar_telefono: true,
-          señal_alarma: '',
+          senal_alarma: [],
         },
         score_mama_mediato: [],
         score_mama_inmediato: [],
-        senalesAlarma: [
-          'Signos de infección',
-          'Cuidado de la herida por Cesárea ',
-          'Cuidado de la Episiorrafia',
-          'Cantidad normal de salida de loquios',
-          'Cuidado de los pezones',
-          'Señales de HTA',
-          'Signos y síntomas de infección de las vías urinarias',
-          'Signos y síntomas de infección de las vías urinarias',
-          'Alimentos que debe evitar en su dieta',
-        ],
+        senalesAlarma: [],
       }
     },
     computed: {
       ...mapState('fileClinicalObstetric', ['steps', 'fileObstetric']),
+      colorInmediato () {
+        var level = {
+          color: '',
+          mensaje: '',
+        }
+        if (this.editedItem.score_mama_inmediato === 0) {
+          level.color = 'success'
+          level.mensaje = 'Sin riesgo'
+        } else if (this.editedItem.score_mama_inmediato === 1) {
+          level.color = 'yellow'
+          level.mensaje = 'Riesgo bajo'
+        } else if (
+          this.editedItem.score_mama_inmediato > 1 &&
+          this.editedItem.score_mama_inmediato <= 4
+        ) {
+          level.color = 'warning'
+          level.mensaje = 'Riesgo medio'
+        } else if (
+          this.editedItem.score_mama_inmediato > 4
+        ) {
+          level.color = 'red'
+          level.mensaje = 'Riesgo alto'
+        } else {
+          level.color = 'success'
+          level.mensaje = 'Sin riesgo'
+        }
+        return level
+      },
+      colorMediato () {
+        var level = {
+          color: '',
+          mensaje: '',
+        }
+        if (this.editedItem.score_mama_mediato === 0) {
+          level.color = 'success'
+          level.mensaje = 'Sin riesgo'
+        } else if (this.editedItem.score_mama_mediato === 1) {
+          level.color = 'yellow'
+          level.mensaje = 'Riesgo bajo'
+        } else if (
+          this.editedItem.score_mama_mediato > 1 &&
+          this.editedItem.score_mama_mediato <= 4
+        ) {
+          level.color = 'warning'
+          level.mensaje = 'Riesgo medio'
+        } else if (
+          this.editedItem.score_mama_mediato > 4
+        ) {
+          level.color = 'red'
+          level.mensaje = 'Riesgo alto'
+        } else {
+          level.color = 'success'
+          level.mensaje = 'Sin riesgo'
+        }
+        return level
+      },
       availableSteps () {
         if (
           this.steps.includes(5)
@@ -766,6 +830,7 @@
     },
     created () {
       this.editedItem = Object.assign({}, this.fileObstetric)
+      this.listItem()
     },
     methods: {
       ...mapMutations(['alert']),
@@ -777,6 +842,17 @@
         const searchText = queryText.toLowerCase()
         return textOne.indexOf(searchText) > -1 ||
           textTwo.indexOf(searchText) > -1
+      },
+      async listItem () {
+        const serviceResponse = await senalAlarmAllApi()
+        if (serviceResponse.ok) {
+          this.senalesAlarma = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
     },
   }

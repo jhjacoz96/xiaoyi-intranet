@@ -35,11 +35,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -57,17 +57,17 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
               @click.prevent="editedItem.grado_desgarro = ''"
             />
           </v-radio-group>
         </v-col>
         <v-col
-          v-if="editedItem.desgarro === 1"
+          v-if="editedItem.desgarro === true"
           cols="12"
           sm="4"
         >
@@ -141,11 +141,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -163,11 +163,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -185,11 +185,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -207,17 +207,17 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
               @click.prevent="editedItem.grado_epitomia = ''"
             />
           </v-radio-group>
         </v-col>
         <v-col
-          v-if="editedItem.epitomia === 1"
+          v-if="editedItem.epitomia === true"
           cols="6"
           sm="4"
         >

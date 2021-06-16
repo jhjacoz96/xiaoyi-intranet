@@ -160,11 +160,11 @@
           >
             <v-radio
               label="Si"
-              :value="1"
+              :value="true"
             />
             <v-radio
               label="No"
-              :value="0"
+              :value="false"
             />
           </v-radio-group>
         </v-col>
@@ -173,7 +173,7 @@
           sm="4"
         >
           <v-select
-            v-if="editedItem.embarazo_planificado === 1"
+            v-if="editedItem.embarazo_planificado === true"
             v-model="editedItem.causa_embarazo"
             label="Causa de embarazo"
             :items="['Inseminación', 'Vientre alqulado', 'Otros']"
@@ -320,7 +320,7 @@
           peso: 0,
           vacuna: [],
           examenes_rutinarios: [],
-          embarazo_planificado: false,
+          embarazo_planificado: 0,
           causa_embarazo: '',
           ayuda_violacion: '',
           ayuda_anticoceptivo: '',
