@@ -1419,7 +1419,7 @@
         this.groupAge.forEach(item => {
           var groupAge = []
           groupAge = JSON.parse(item.rank)
-          if (val[0] >= groupAge[0] && val[0] < groupAge[1]) {
+          if (val[0] >= groupAge[0] && val[0] <= groupAge[1]) {
             this.editedItem.groupAge = Object.assign({}, item)
           }
         })
