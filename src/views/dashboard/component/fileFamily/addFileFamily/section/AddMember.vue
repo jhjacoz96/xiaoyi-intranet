@@ -442,9 +442,9 @@
                           color="info"
                         >
                           <h3 class="text-h5">
-                            Controla tu diabetes con Xiaoyi
+                            Controla tu diabetes con KA-THANI
                           </h3>
-                          <div>Los pacientes diabéticos podrán controlar su patología con el uso de nuestra aplicación movil. Toda la información necesaria será enviada al correo electrónico del paciente.</div>
+                          <div>Los pacientes diabéticos podrán controlar su patología con el uso de nuestra aplicación móvil. Toda la información necesaria será enviada al correo electrónico del paciente.</div>
 
                           <v-divider
                             class="my-4 info"
@@ -481,16 +481,16 @@
                             <div>¿Se encuentra usted embarazada?</div>
                           </template>
                           <v-radio
-                            :value="0"
-                            :disabled="editedItem.embarazo === 1 ? true : false"
+                            :value="false"
+                            :disabled="editedItem.embarazo"
                           >
                             <template v-slot:label>
                               <div>No</div>
                             </template>
                           </v-radio>
                           <v-radio
-                            :value="1"
-                            :disabled="editedItem.embarazo === 1 ? true : false"
+                            :value="true"
+                            :disabled="editedItem.embarazo"
                             @click.prevent="generateCode()"
                           >
                             <template v-slot:label>
@@ -511,7 +511,7 @@
                           <h3 class="text-h5">
                             Ficha clínica de obsteticia
                           </h3>
-                          <div>Se creará automaticamente una ficha clínica de obstetricia, para ello, diríjase a la parte superior de la ventana y seleccione <span class="font-weight-bold">Datos obstetricos</span> y procesa a llenar los campos.</div>
+                          <div>Se creará automaticamente una ficha clínica de obstetricia, para ello, diríjase a la parte superior de la ventana y seleccione <span class="font-weight-bold">Datos obstetricos</span> y procesa a indicar la información solicitada.</div>
                           <v-divider
                             class="my-4 info"
                             style="opacity: 0.22"
@@ -536,7 +536,7 @@
                     </v-row>
                   </v-container>
                 </v-tab-item>
-                <v-tab-item v-if="editedItem.embarazo === 1">
+                <v-tab-item v-if="editedItem.embarazo === true">
                   <v-container class="mt-6">
                     <v-row>
                       <v-col

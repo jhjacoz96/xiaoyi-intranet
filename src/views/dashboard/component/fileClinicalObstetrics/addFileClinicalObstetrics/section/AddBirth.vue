@@ -198,7 +198,7 @@
           sm="4"
         >
           <p class="text-h6 font-weight-light">
-            Epitomía/Desgarro
+            Episiotomía/Desgarro
           </p>
           <v-radio-group
             v-model="editedItem.epitomia"
@@ -223,7 +223,7 @@
         >
           <v-select
             v-model="editedItem.grado_epitomia"
-            label="Episiotomía/Desgarro"
+            label="Grado"
             :items="epitomia"
             item-text="name"
             outlined

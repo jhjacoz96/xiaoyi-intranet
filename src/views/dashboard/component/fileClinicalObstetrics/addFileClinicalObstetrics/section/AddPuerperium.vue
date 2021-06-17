@@ -38,7 +38,7 @@
           sm="4"
         >
           <p class="text-h6 font-weight-light">
-            Imvolución uterina
+            Involución uterina
           </p>
           <v-radio-group
             v-model="editedItem.involucion_uterina"
@@ -568,7 +568,7 @@
         </v-progress-linear>
       </v-card-text>
       <div class="text-center text-h4 font-weight-bold mt-10 mb-6 blue--text">
-        Tardio
+        Tardío
       </div>
       <v-container>
         <v-row>
