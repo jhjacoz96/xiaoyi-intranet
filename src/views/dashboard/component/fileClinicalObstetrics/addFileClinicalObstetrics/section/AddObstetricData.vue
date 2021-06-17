@@ -176,7 +176,7 @@
             v-if="editedItem.embarazo_planificado === true"
             v-model="editedItem.causa_embarazo"
             label="Causa de embarazo"
-            :items="['Inseminación', 'Vientre alqulado', 'Otros']"
+            :items="['Inseminación', 'Vientre alquilado', 'Otros']"
             dense
             outlined
           />
@@ -205,7 +205,7 @@
             v-if="editedItem.causa_embarazo === 'Fallo de método anticonceptivo'"
             v-model="editedItem.ayuda_anticoceptivo"
             label="Educación sexual"
-            placeholder="En caso de  falla de método anticoceptivo"
+            placeholder="En caso de falla de método anticonceptivo"
             dense
             outlined
           />

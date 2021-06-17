@@ -223,7 +223,7 @@
         >
           <v-select
             v-model="editedItem.grado_epitomia"
-            label="Epitomía/Desgarro"
+            label="Episiotomía/Desgarro"
             :items="epitomia"
             item-text="name"
             outlined
