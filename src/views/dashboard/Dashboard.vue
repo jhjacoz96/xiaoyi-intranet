@@ -17,7 +17,7 @@
           {{ saludar }}, <span class="primary--text">{{ user.employee.name }}</span>
         </div>
         <div class="font-weight-medium grey--text mt-3">
-          Bienvenido al panel de control de Xiaoyi
+          Bienvenido al panel de control de KA-THANI.
         </div>
       </v-col>
       <v-col
