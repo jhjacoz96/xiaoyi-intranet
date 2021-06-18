@@ -306,6 +306,7 @@
         value: '',
         valid: false,
         valid1: false,
+        l: 400,
         headers: [
           {
             text: 'Riesgo',
@@ -345,14 +346,25 @@
     computed: {
       ...mapState('fileFamily', ['steps', 'fileFamily']),
       availableSteps () {
-        if (
-          this.evolucion.filter(item => {
-            return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
-          }).length === this.evolucion.length &&
-          this.evolucion.filter(item => {
-            return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
-          }).length !== 0 &&
-          this.steps.includes(3)
+        if (this.evolucion.length > 0 && this.l !== 400) {
+          if (
+            this.evolucion.filter(item => {
+              return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
+            }).length === this.evolucion.length &&
+            this.evolucion.filter(item => {
+              return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
+            }).length !== 0 &&
+            this.steps.includes(3)
+          ) {
+            if (this.click) {
+              this.setEvaluation(this.evolucion)
+              this.$emit('next')
+            }
+            this.setSteps(4)
+          }
+        } else if (
+          this.steps.includes(3) &&
+          this.l !== 400
         ) {
           if (this.click) {
             this.setEvaluation(this.evolucion)
@@ -421,6 +433,30 @@
           })
           return levelRisk.value !== 0
         })
+        this.l = this.fileFamily.riesgos.map(item => {
+          if (this.id !== undefined) {
+            return {
+              ...item,
+              compromiso_familiar: item.compromiso_familiar,
+              compromiso_equipo: item.compromiso_familiar,
+              cumplio: item.cumplio,
+              causas: item.causas,
+            }
+          } else {
+            return {
+              ...item,
+              compromiso_familiar: '',
+              compromiso_equipo: '',
+              cumplio: '',
+              causas: '',
+            }
+          }
+        }).filter(item => {
+          var levelRisk = this.levelRisk.find(v => {
+            return item.level_risk_id === v.id
+          })
+          return levelRisk.value !== 0
+        }).length
       },
       closeActivity () {
         this.dialogActivity = false

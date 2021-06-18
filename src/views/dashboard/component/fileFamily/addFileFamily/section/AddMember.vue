@@ -482,7 +482,7 @@
                           </template>
                           <v-radio
                             :value="false"
-                            :disabled="editedItem.embarazo"
+                            :disabled="editedItem.embarazo ? true : false"
                           >
                             <template v-slot:label>
                               <div>No</div>
@@ -490,7 +490,7 @@
                           </v-radio>
                           <v-radio
                             :value="true"
-                            :disabled="editedItem.embarazo"
+                            :disabled="editedItem.embarazo ? true : false"
                             @click.prevent="generateCode()"
                           >
                             <template v-slot:label>
@@ -511,7 +511,7 @@
                           <h3 class="text-h5">
                             Ficha clínica de obsteticia
                           </h3>
-                          <div>Se creará automaticamente una ficha clínica de obstetricia, para ello, diríjase a la parte superior de la ventana y seleccione <span class="font-weight-bold">Datos obstetricos</span> y procesa a indicar la información solicitada.</div>
+                          <div>Se creará automaticamente una ficha clínica de obstetricia, para ello, diríjase a la parte superior de la ventana y seleccione <span class="font-weight-bold">Datos obstetricos</span> y proceda a indicar la información solicitada.</div>
                           <v-divider
                             class="my-4 info"
                             style="opacity: 0.22"
