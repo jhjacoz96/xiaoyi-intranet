@@ -5,7 +5,7 @@
       left
       offset-y
       origin="top right"
-      :nudge-width="300"
+      :nudge-width="400"
       transition="scale-transition"
     >
       <template v-slot:activator="{ attrs, on }">
@@ -69,6 +69,9 @@
                         <v-list-item-title>
                           {{ item.description }}
                         </v-list-item-title>
+                        <v-list-item-subtitle>
+                          Identificación: {{ item.code }}
+                        </v-list-item-subtitle>
                         <v-list-item-subtitle>
                           {{ moment(item.time).locale('es').fromNow() }}
                         </v-list-item-subtitle>
@@ -142,6 +145,7 @@
           .listen('CommentAdultOldEvent', (res) => {
             this.notifications.unshift({
               id: res.comment.id,
+              code: res.comment.id,
               description: 'Nuevo comentario del portal web',
               url: '/intranet/evaluar-sugerencias',
               time: new Date(),
@@ -155,6 +159,7 @@
             if (this.user.employee.id !== res.pregnant.employee_id) {
               this.notifications.unshift({
                 id: res.pregnant.id,
+                code: res.pregnant.numero_historia,
                 description: 'Ficha clinica de obstetría finalizada',
                 url: `/intranet/ficha-clinica-obstetricia/actualizar/${res.pregnant.id}`,
                 time: new Date(),
@@ -167,7 +172,20 @@
           .listen('DiabeticPatientEvent', (res) => {
             this.notifications.unshift({
               id: res.diabeticPatient.id,
+              code: res.diabeticPatient.member.cedula,
               description: 'Nuevo paciente diabético',
+              url: '/intranet/control-diabetes',
+              time: new Date(),
+            })
+          })
+      }
+      if (this.permissions.includes('diabetes_control_access')) {
+        window.Echo.channel('glucose-diabetic')
+          .listen('PostGlucoseEvent', (res) => {
+            this.notifications.unshift({
+              id: res.registerGlucose.diabetic_patient.id,
+              code: res.registerGlucose.diabetic_patient.member.cedula,
+              description: 'Paciente con nivel de glucosa crítico',
               url: '/intranet/control-diabetes',
               time: new Date(),
             })
@@ -205,21 +223,32 @@
       formatNotifications (val) {
         if (val.data.type_notification === 'Comentario en el sitio web') {
           return {
-            id: val.data.id,
+            id: val.id,
+            code: val.data.type_comment,
             description: 'Nuevo comentario del portal web',
             url: '/intranet/evaluar-sugerencias',
             time: val.created_at,
           }
         } else if (val.data.type_notification === 'Ficha clinica de obstetricia') {
           return {
-            id: val.data.id,
+            id: val.id,
+            code: val.data.type_comment,
             description: 'Ficha clinica de obstetría finalizada',
             url: `/intranet/ficha-clinica-obstetricia/actualizar/${val.data.id}`,
             time: val.created_at,
           }
+        } else if (val.data.type_notification !== 'Registro glucosa"') {
+          return {
+            id: val.id,
+            code: val.data.type_comment,
+            description: 'Paciente con nivel de glucosa crítico',
+            url: '/intranet/control-diabetes',
+            time: val.created_at,
+          }
         } else {
           return {
-            id: val.data.id,
+            id: val.id,
+            code: val.data.type_comment,
             description: 'Nuevo paciente diabético',
             url: '/intranet/control-diabetes',
             time: val.created_at,
