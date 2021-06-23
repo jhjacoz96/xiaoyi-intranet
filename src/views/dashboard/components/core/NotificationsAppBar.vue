@@ -43,6 +43,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title
+              class="text-center"
               v-text="`Notificaciones`"
             />
             <v-list>
@@ -83,6 +84,16 @@
             </v-list>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item
+          v-if="notifications.length > 0"
+          class="text-center"
+        >
+          <v-list-item-title>
+            <a @click.prevent="readAllNotifications()">
+              Marcar todas como leídas
+            </a>
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </div>
@@ -92,6 +103,7 @@
   import {
     employeeGetNotificationsApi,
     employeeReadNotificationsApi,
+    employeeReadAllNotificationsApi,
   } from '@/api/modules'
   import {
     mapState,
@@ -144,7 +156,7 @@
         window.Echo.channel('comment-adult-old')
           .listen('CommentAdultOldEvent', (res) => {
             this.notifications.unshift({
-              id: res.comment.id,
+              id: null,
               code: res.comment.id,
               description: 'Nuevo comentario del portal web',
               url: '/intranet/evaluar-sugerencias',
@@ -158,7 +170,7 @@
           .listen('FileClinicalObstetricEvent', (res) => {
             if (this.user.employee.id !== res.pregnant.employee_id) {
               this.notifications.unshift({
-                id: res.pregnant.id,
+                id: null,
                 code: res.pregnant.numero_historia,
                 description: 'Ficha clinica de obstetría finalizada',
                 url: `/intranet/ficha-clinica-obstetricia/actualizar/${res.pregnant.id}`,
@@ -171,7 +183,7 @@
         window.Echo.channel('diabetic-patient')
           .listen('DiabeticPatientEvent', (res) => {
             this.notifications.unshift({
-              id: res.diabeticPatient.id,
+              id: null,
               code: res.diabeticPatient.member.cedula,
               description: 'Nuevo paciente diabético',
               url: '/intranet/control-diabetes',
@@ -183,7 +195,7 @@
         window.Echo.channel('glucose-diabetic')
           .listen('PostGlucoseEvent', (res) => {
             this.notifications.unshift({
-              id: res.registerGlucose.diabetic_patient.id,
+              id: null,
               code: res.registerGlucose.diabetic_patient.member.cedula,
               description: 'Paciente con nivel de glucosa crítico',
               url: '/intranet/control-diabetes',
@@ -208,11 +220,28 @@
         }
       },
       async readNotifications (val) {
-        const serviceResponsee = await employeeReadNotificationsApi(val.id)
+        if (val.id) {
+          const serviceResponsee = await employeeReadNotificationsApi(val.id)
+          if (serviceResponsee.ok) {
+            var index = this.notifications.indexOf(val)
+            this.notifications.splice(index, 1)
+            this.$router.push(val.url)
+          } else {
+            this.alert({
+              text: serviceResponsee.message.text,
+              color: 'warning',
+            })
+          }
+        }
+      },
+      async readAllNotifications () {
+        const serviceResponsee = await employeeReadAllNotificationsApi()
         if (serviceResponsee.ok) {
-          var index = this.notifications.indexOf(val)
-          this.notifications.splice(index, 1)
-          this.$router.push(val.url)
+          this.alert({
+            text: serviceResponsee.message,
+            color: 'success',
+          })
+          this.notifications = []
         } else {
           this.alert({
             text: serviceResponsee.message.text,
@@ -223,7 +252,7 @@
       formatNotifications (val) {
         if (val.data.type_notification === 'Comentario en el sitio web') {
           return {
-            id: val.id,
+            id: val.data.id,
             code: val.data.type_comment,
             description: 'Nuevo comentario del portal web',
             url: '/intranet/evaluar-sugerencias',
@@ -231,7 +260,7 @@
           }
         } else if (val.data.type_notification === 'Ficha clinica de obstetricia') {
           return {
-            id: val.id,
+            id: val.data.id,
             code: val.data.type_comment,
             description: 'Ficha clinica de obstetría finalizada',
             url: `/intranet/ficha-clinica-obstetricia/actualizar/${val.data.id}`,
@@ -239,7 +268,7 @@
           }
         } else if (val.data.type_notification !== 'Registro glucosa"') {
           return {
-            id: val.id,
+            id: val.data.id,
             code: val.data.type_comment,
             description: 'Paciente con nivel de glucosa crítico',
             url: '/intranet/control-diabetes',
@@ -247,7 +276,7 @@
           }
         } else {
           return {
-            id: val.id,
+            id: val.data.id,
             code: val.data.type_comment,
             description: 'Nuevo paciente diabético',
             url: '/intranet/control-diabetes',

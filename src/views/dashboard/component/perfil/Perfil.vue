@@ -628,6 +628,7 @@
         const formData = new FormData()
         formData.append('image', this.editedUser.image)
         const serviceResponse = await employeeAvatarApi(formData, this.user.employee.id)
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           var avatar = serviceResponse.data.image.url
           this.assignAvatar(avatar)

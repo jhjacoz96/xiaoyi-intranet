@@ -40,10 +40,10 @@
           :items="desserts"
           :search="search"
         >
-          <template v-slot:item.image_service="{ item }">
+          <template v-slot:item.image="{ item }">
             <v-img
               v-if="item.image"
-              :src="item.image.url"
+              :src="item.image"
               width="60"
             />
           </template>
@@ -117,8 +117,8 @@
                   cols="12"
                 >
                   <base-preview-image
-                    :image="typeof editedItem.image_service === 'object' ? editedItem.image_service.url : editedItem.image_service"
-                    @imagen="editedItem.image_service = $event"
+                    :image="typeof editedItem.image === 'object' ? editedItem.image.url : editedItem.image"
+                    @imagen="editedItem.image = $event"
                   />
                 </v-col>
               </v-row>
@@ -181,13 +181,16 @@
     mapActions,
     mapMutations,
   } from 'vuex'
+  import {
+    serviceUpdateApi,
+  } from '@/api/modules'
   export default {
     data () {
       return {
         search: '',
         dialog: false,
         dialogDelete: false,
-        image_service: null,
+        image: null,
         editedId: undefined,
         editedIndex: -1,
         services: [],
@@ -196,7 +199,7 @@
             text: 'Servicio',
             align: 'center',
             sortable: false,
-            value: 'image_service',
+            value: 'image',
           },
           {
             text: 'Nombre',
@@ -218,13 +221,13 @@
           id: undefined,
           nombre: '',
           descripcion: '',
-          image_service: undefined,
+          image: undefined,
         },
         defaultItem: {
           id: undefined,
           nombre: '',
           descripcion: '',
-          image_service: undefined,
+          image: undefined,
         },
       }
     },
@@ -289,13 +292,13 @@
       async addItem () {
         if (this.editedIndex > -1) {
           const formData = new FormData()
-          formData.append('id', this.editedItem.id)
+          formData.append('_method', 'PUT')
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
-          formData.append('image_service', typeof this.editedItem.image_service === 'string' ? null : this.editedItem.image_service)
-          const serviceResponse = await this.serviceUpdateActions(formData)
+          formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+          const serviceResponse = await serviceUpdateApi(formData, this.editedItem.id)
           if (serviceResponse.ok) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            Object.assign(this.desserts[this.editedIndex], serviceResponse.data)
             this.close()
             this.alert({
               text: serviceResponse.message,
@@ -312,7 +315,7 @@
           const formData = new FormData()
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
-          formData.append('image_service', typeof this.editedItem.image_service === 'string' ? null : this.editedItem.image_service)
+          formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
           const serviceResponse = await this.servicePostActions(formData)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)

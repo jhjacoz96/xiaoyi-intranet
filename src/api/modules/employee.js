@@ -11,5 +11,6 @@ export const employePasswordUpdateApi = (body) => apiHttp('POST', `${employeePat
 export const employeeGetApi = (id) => apiHttp('GET', `${employeePath}/${id}`)
 export const employeeGetNotificationsApi = () => apiHttp('GET', `${employeePath}/notifications`)
 export const employeeReadNotificationsApi = (id) => apiHttp('GET', `${employeePath}/read-notifications/${id}`)
+export const employeeReadAllNotificationsApi = () => apiHttp('GET', `${employeePath}/read-all-notifications`)
 export const employeeAllApi = () => apiHttp('GET', `${employeePath}`)
 export const employeeDeleteApi = (id) => apiHttp('DELETE', `${employeePath}/${id}`)

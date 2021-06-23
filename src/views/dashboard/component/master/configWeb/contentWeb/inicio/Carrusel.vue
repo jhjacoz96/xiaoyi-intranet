@@ -230,6 +230,7 @@
         formData.append('description', this.editedItem.description)
         formData.append('url', this.editedItem.url)
         const serviceResponse = await this.carruselPostActions(formData)
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts.push(serviceResponse.data)
           this.close()
