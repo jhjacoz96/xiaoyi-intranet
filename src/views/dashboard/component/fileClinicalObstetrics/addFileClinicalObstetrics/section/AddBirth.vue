@@ -362,6 +362,7 @@
           epitomia: false,
           grado_epitomia: '',
           tratamiento: [],
+          gestation_week_id: null,
         },
         presentacion: [],
         frecuencia: [],
@@ -425,6 +426,7 @@
           var semana = JSON.parse(item.rank)
           if (semana[0] <= v && v <= semana[1]) {
             this.editedItem.descripcion_gestacion = item.name
+            this.editedItem.gestation_week_id = item.id
           }
         })
       },

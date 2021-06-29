@@ -14,7 +14,6 @@ export const apiHttp = async (method, endpoint, data, options = {}, loading = tr
  if (!options.hasOwnProperty('headers')) options.headers = defaultHeaders
 
  let serviceResponse = {}
-
  method = method.toLowerCase()
  const servicePromise = axios({
    method,

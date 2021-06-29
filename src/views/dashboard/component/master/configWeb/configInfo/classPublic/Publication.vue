@@ -152,7 +152,6 @@
                         outlined
                         dense
                         :items="filterOne"
-                        :disabled="editedIndex > -1"
                         item-text="name"
                         item-value="id"
                         @change="getFilterTwo($event)"
@@ -168,7 +167,7 @@
                         outlined
                         dense
                         :items="filterTwo"
-                        :disabled="filterTwo.length === 0 || editedIndex > -1"
+                        :disabled="filterTwo.length === 0"
                         item-text="name"
                         item-value="id"
                         @change="getFilterThree($event)"
@@ -184,7 +183,7 @@
                         :items="filterThree"
                         item-text="name"
                         item-value="id"
-                        :disabled="filterThree.length === 0 || editedIndex > -1"
+                        :disabled="filterThree.length === 0"
                         outlined
                         dense
                       />
@@ -576,6 +575,9 @@
           const formData = new FormData()
           formData.append('name', this.editedItem.name)
           formData.append('description', this.editedItem.description)
+          formData.append('filter_one_publication_id', this.editedItem.filter_one_publication_id)
+          formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
+          formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
           formData.append('image_mini', typeof this.editedItem.image_mini === 'string' ? null : this.editedItem.image_mini)
 
           const serviceResponse = await this.publicationUpdateActions(this.editedItem)

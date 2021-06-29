@@ -82,6 +82,9 @@
     mapActions,
     mapMutations,
   } from 'vuex'
+  import {
+    serviceWebShowApi,
+  } from '@/api/modules'
   export default {
     data () {
       return {
@@ -167,7 +170,8 @@
       },
       async editedConfirm () {
         this.editedItem.view_web = !this.editedItem.view_web
-        const serviceResponse = await this.serviceUpdateActions(this.editedItem)
+        this.editedItem.image = 'null'
+        const serviceResponse = await serviceWebShowApi(this.editedItem, this.editedItem.id)
         if (serviceResponse.ok) {
           Object.assign(this.desserts[this.editedIndex], serviceResponse.data)
           this.close()

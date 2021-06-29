@@ -49,6 +49,9 @@
               <span>Asignar actividades</span>
             </v-tooltip>
           </template>
+          <template v-slot:item.activities="{ item }">
+            {{ item.activities.length }}
+          </template>
         </v-data-table>
       </v-card-text>
       <v-dialog
@@ -132,7 +135,7 @@
             value: 'nombre',
           },
           {
-            text: 'Actividades',
+            text: 'Cantidad de actividades',
             value: 'activities',
           },
           {

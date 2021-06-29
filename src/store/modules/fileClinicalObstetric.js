@@ -74,6 +74,7 @@ import {
                 examenes_rutinarios: [],
                 sustancias_sicotropicas: [],
                 recomendaciones: '',
+                gestation_week_id: null,
             },
             defaultFileObstetric: {
                 numero_historia: '',
@@ -134,6 +135,7 @@ import {
                 vacuna: [],
                 examenes_rutinarios: [],
                 sustancias_sicotropicas: [],
+                gestation_week_id: null,
             },
        },
        getters: {},

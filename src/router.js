@@ -358,6 +358,21 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/report/Report'),
         },
         {
+          name: 'Reporte estructurado de las fichas familiares',
+          path: 'reportes/estructurados/ficha-familiar',
+          component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportFileFamily'),
+        },
+        {
+          name: 'Reporte estructurado de las fichas clinicas de obstetricia',
+          path: 'reportes/estructurados/ficha-clinica-obstetricia',
+          component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportFileClinicalObstetric'),
+        },
+        {
+          name: 'Reporte estructurado de los miembros',
+          path: 'reportes/estructurados/miembros',
+          component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportMember'),
+        },
+        {
           name: 'Administración del sistema',
           path: 'adminsitracion-sistema',
           component: () => import('@/views/dashboard/component/systemAdministration/SystemAdministration'),

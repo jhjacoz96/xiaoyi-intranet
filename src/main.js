@@ -15,6 +15,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
+import axios from 'axios'
 import './plugins/base'
 import './plugins/chartist'
 import './plugins/vee-validate'
@@ -63,6 +64,7 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  axios,
   store,
   vuetify,
   i18n,
