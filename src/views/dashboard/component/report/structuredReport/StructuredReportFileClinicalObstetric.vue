@@ -207,7 +207,7 @@
             <span v-if="item.embarazo_planificado === null">
               -
             </span>
-            <span v-else>    
+            <span v-else>
               <v-chip
                 v-if="item.embarazo_planificado === 1"
                 color="success"
@@ -447,7 +447,7 @@
           this.loadingGenerate = false
         })
       },
-       age (val) {
+      age (val) {
         return calAge(val)
       },
     },
