@@ -25,6 +25,8 @@
             label="Peso (*)"
             dense
             validate-on-blur
+            type="number"
+            suffix="g"
           />
         </v-col>
         <v-col
@@ -40,6 +42,8 @@
             label="Perímetro abdominal (*)"
             dense
             validate-on-blur
+            type="number"
+            suffix="cm"
           />
         </v-col>
         <v-col
@@ -55,6 +59,8 @@
             label="Perímetro cefálico (*)"
             dense
             validate-on-blur
+            type="number"
+            suffix="cm"
           />
         </v-col>
         <v-col
@@ -70,6 +76,8 @@
             label="Perímetro torácico (*)"
             dense
             validate-on-blur
+            type="number"
+            suffix="cm"
           />
         </v-col>
         <v-col
@@ -85,6 +93,8 @@
             label="Longitud cefalo caudal (*)"
             dense
             validate-on-blur
+            type="number"
+            suffix="cm"
           />
         </v-col>
         <v-col
@@ -100,6 +110,8 @@
             label="Temperatura (*)"
             dense
             validate-on-blur
+            type="number"
+            suffix="c"
           />
         </v-col>
         <v-col
