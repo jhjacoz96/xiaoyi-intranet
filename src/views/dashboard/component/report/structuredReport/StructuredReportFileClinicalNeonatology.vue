@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Reporte estructurado de las fichas clinicas de obstetricias
+              Reporte estructurado de las fichas clínicas de neonatología
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite filtrar las fichas clinicas de obstetricias y posteriormente generar reportes estructurados en formato PDF.
+              Permite filtrar las fichas clínicas de neonatología y posteriormente generar reportes estructurados en formato PDF.
             </div>
           </v-col>
         </v-row>
@@ -57,49 +57,48 @@
                   item-value="name"
                   label="Edad gestacional"
                 />
-                <v-select
-                  v-model="filter.groupAge"
-                  label="Grupo de edad"
-                  outlined
-                  dense
-                  item-text="name"
-                  item-value="id"
-                  :items="groupAge"
-                  multiple
-                />
+                <v-subheader>
+                  Rango de peso (g)
+                </v-subheader>
 
-                <v-select
-                  v-model="filter.tipo_parto"
-                  label="Tipo de parto"
-                  outlined
-                  dense
-                  :items="['Vaginal', 'Cesaria']"
-                  multiple
-                />
-                <p class="text-h6 font-weight-light">
-                  ¿Embarazo planificado?
-                </p>
-                <v-radio-group
-                  v-model="filter.embarazo_planificado"
-                  row
+                <v-range-slider
+                  v-model="filter.peso"
+                  :max="5000"
+                  :min="700"
+                  hide-details
+                  class="align-center mb-3"
                 >
-                  <v-radio
-                    label="Si"
-                    :value="true"
-                  />
-                  <v-radio
-                    label="No"
-                    :value="false"
-                  />
-                </v-radio-group>
+                  <template v-slot:prepend>
+                    <v-text-field
+                      :value="filter.peso[0]"
+                      class="mt-0 pt-0"
+                      hide-details
+                      single-line
+                      type="number"
+                      style="width: 60px"
+                      @change="$set(filter.peso, 0, $event)"
+                    />
+                  </template>
+                  <template v-slot:append>
+                    <v-text-field
+                      :value="filter.peso[1]"
+                      class="mt-0 pt-0"
+                      hide-details
+                      single-line
+                      type="number"
+                      style="width: 60px"
+                      @change="$set(filter.peso, 1, $event)"
+                    />
+                  </template>
+                </v-range-slider>
                 <v-select
-                  v-model="filter.causa_embarazo"
-                  :disabled="filter.embarazo_planificado === null"
-                  label="Causa de embarazo"
+                  v-model="filter.gender"
+                  label="Genero"
                   outlined
                   dense
-                  :items="filter.embarazo_planificado ? causa_embarazo_planificado : causa_embarazo_no_planificado"
-                  multiple
+                  item-text="nombre"
+                  item-value="id"
+                  :items="gender"
                 />
                 <v-menu
                   v-model="showDate"
@@ -112,7 +111,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.startDate"
-                      label="Fecha de inicial"
+                      label="Fecha de naciento inicial"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -136,7 +135,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.endDate"
-                      label="Fecha de inicial"
+                      label="Fecha de nacimiento final"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -185,58 +184,14 @@
               </v-icon>
             </v-btn>
           </template>
-          <template v-slot:item.tipo_parto="{ item }">
-            <span v-if="item.tipo_parto">{{ item.tipo_parto }}</span>
-            <span v-else>-</span>
+          <template v-slot:item.nombre="{ item }">
+            {{ item.nombre }} {{ item.apellido }}
           </template>
-          <template v-slot:item.descripcion_gestacion="{ item }">
-            <span v-if="item.descripcion_gestacion">{{ item.descripcion_gestacion }}</span>
-            <span v-else>-</span>
-          </template>
-          <template v-slot:item.causa_embarazo="{ item }">
-            <span v-if="item.causa_embarazo">{{ item.causa_embarazo }}</span>
-            <span v-else>-</span>
+          <template v-slot:item.peso="{ item }">
+            {{ item.peso }} g
           </template>
           <template v-slot:item.fecha_nacimiento="{ item }">
-            {{ age(item.fecha_nacimiento) }}
-          </template>
-          <template v-slot:item.created_at="{ item }">
-            {{ moment(item.created_at).format('D-M-YYYY') }}
-          </template>
-          <template v-slot:item.embarazo_planificado="{ item }">
-            <span v-if="item.embarazo_planificado === null">
-              -
-            </span>
-            <span v-else>
-              <v-chip
-                v-if="item.embarazo_planificado === true"
-                color="success"
-              >
-                Si
-              </v-chip>
-              <v-chip
-                v-else
-                color="pink"
-                dark
-              >
-                No
-              </v-chip>
-            </span>
-          </template>
-          <template v-slot:item.embarazo="{ item }">
-            <v-chip
-              v-if="item.embarazo"
-              color="success"
-            >
-              Si
-            </v-chip>
-            <v-chip
-              v-else
-              color="pink"
-              dark
-            >
-              No
-            </v-chip>
+            {{ moment(item.fecha_nacimiento).format('D-M-YYYY') }}
           </template>
         </v-data-table>
       </v-card-text>
@@ -252,9 +207,8 @@
   } from 'vuex'
   import {
     gestationWeekAllApi,
-    reportFileClinicalObstricAllApi,
+    reportFileClinicalNeonatologyAllApi,
   } from '@/api/modules'
-  import { calAge } from '@/utils/calAge'
   export default {
     data () {
       return {
@@ -268,47 +222,32 @@
         loadingFilter: false,
         loadingDataTable: false,
         loadingGenerate: false,
+        gender: [],
         gestacion: [],
-        groupAge: [],
-        tipo_parto: ['Vaginal', 'Cesaria'],
-        causa_embarazo_planificado: ['Inseminación', 'Vientre alquilado', 'Otros'],
-        causa_embarazo_no_planificado: ['Fallo de método anticonceptivo', 'Violación', 'Otros'],
         headers: [
           {
             text: 'Número de historia',
             value: 'numero_historia',
           },
           {
-            text: 'Edad gestacional',
-            value: 'descripcion_gestacion',
+            text: 'Nombre',
+            value: 'nombre',
           },
           {
-            text: 'Grupo de edad',
-            value: 'grupo_edad.name',
+            text: 'Genero',
+            value: 'gender_id.nombre',
           },
           {
-            text: 'Edad',
+            text: 'Fecha de nacimiento',
             value: 'fecha_nacimiento',
           },
           {
-            text: 'Tipo de parto',
-            value: 'tipo_parto',
+            text: 'Peso',
+            value: 'peso',
           },
           {
-            text: '¿Embarazo planificado?',
-            value: 'embarazo_planificado',
-          },
-          {
-            text: 'Causa de embarazo',
-            value: 'causa_embarazo',
-          },
-          {
-            text: '¿Embarazo Activo?',
-            value: 'embarazo',
-          },
-          {
-            text: 'Fecha de incio',
-            value: 'created_at',
+            text: 'Edad gestacional',
+            value: 'gestation_week_id',
           },
         ],
         desserts: [],
@@ -320,31 +259,22 @@
         },
         filterDownload: {
           gestacion: [],
-          groupAge: [],
-          tipo_parto: [],
-          causa_embarazo: [],
-          embarazo_planificado: null,
-          embarazo: null,
+          peso: [700, 5000],
+          gender: null,
           startDate: null,
           endDate: null,
         },
         filter: {
           gestacion: [],
-          groupAge: [],
-          tipo_parto: [],
-          causa_embarazo: [],
-          embarazo_planificado: null,
-          embarazo: null,
+          peso: [700, 5000],
+          gender: null,
           startDate: null,
           endDate: null,
         },
         defaultFilter: {
           gestacion: [],
-          groupAge: [],
-          tipo_parto: [],
-          causa_embarazo: [],
-          embarazo_planificado: null,
-          embarazo: null,
+          peso: [700, 5000],
+          gender: null,
           startDate: null,
           endDate: null,
         },
@@ -357,15 +287,15 @@
     },
     created () {
       this.listItem()
-      this.listItemGroupAge()
-      this.listItemGestationWeek()
+      this.listItemGender()
+      this.listItemGestation()
     },
     methods: {
       ...mapMutations(['alert']),
-      ...mapActions('groupAge', ['groupAgeAllActions']),
+      ...mapActions('gender', ['genderAllActions']),
       async listItem () {
         this.loadingDataTable = true
-        const serviceResponse = await reportFileClinicalObstricAllApi(this.filter)
+        const serviceResponse = await reportFileClinicalNeonatologyAllApi(this.filter)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           this.loadingDataTable = false
@@ -377,10 +307,10 @@
           this.loadingDataTable = false
         }
       },
-      async listItemGroupAge () {
-        const serviceResponse = await this.groupAgeAllActions()
+      async listItemGender () {
+        const serviceResponse = await this.genderAllActions()
         if (serviceResponse.ok) {
-          this.groupAge = serviceResponse.data
+          this.gender = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -388,7 +318,7 @@
           })
         }
       },
-      async listItemGestationWeek () {
+      async listItemGestation () {
         const serviceResponse = await gestationWeekAllApi()
         if (serviceResponse.ok) {
           this.gestacion = serviceResponse.data
@@ -401,7 +331,7 @@
       },
       async addItemFilter () {
         this.loadingFilter = true
-        const serviceResponse = await reportFileClinicalObstricAllApi(this.filter)
+        const serviceResponse = await reportFileClinicalNeonatologyAllApi(this.filter)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           Object.assign(this.filterDownload, this.filter)
@@ -430,7 +360,7 @@
           Authorization: 'Bearer ' + `${token}`,
         }
         axios({
-          url: this.$store.state.urlApi + '/api/report/file-clinical-obstetric/generate',
+          url: this.$store.state.urlApi + '/api/report/file-clinical-neonatology/generate',
           method: 'POST',
           data: this.filterDownload,
           headers: defaultHeaders,
@@ -439,16 +369,13 @@
           const url = window.URL.createObjectURL(new Blob([response.data]))
           const link = document.createElement('a')
           link.href = url
-          link.setAttribute('download', 'Informe_ficha_clinica_obstetrica.pdf')
+          link.setAttribute('download', 'Informe_ficha_clinica_neonatologia.pdf')
           document.body.appendChild(link)
           link.click()
           this.loadingGenerate = false
         }).catch(e => {
           this.loadingGenerate = false
         })
-      },
-      age (val) {
-        return calAge(val)
       },
     },
   }

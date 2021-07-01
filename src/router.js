@@ -368,6 +368,11 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportFileClinicalObstetric'),
         },
         {
+          name: 'Reporte estructurado de las fichas clinicas de neonatologia',
+          path: 'reportes/estructurados/ficha-clinica-neonatologia',
+          component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportFileClinicalNeonatology'),
+        },
+        {
           name: 'Reporte estructurado de los miembros',
           path: 'reportes/estructurados/miembros',
           component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportMember'),

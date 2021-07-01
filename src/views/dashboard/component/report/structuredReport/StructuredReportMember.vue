@@ -184,11 +184,11 @@
             {{ item.nombre }} {{ item.apellido }}
           </template>
           <template v-slot:item.patologias="{ item }">
-            <span v-if="item.patologias.length > 0">{{ item.patologias.join() }}</span>
+            <span v-if="item.patologias.length > 0">{{ item.patologias.join(", ") }}</span>
             <span v-else>-</span>
           </template>
           <template v-slot:item.discapacidades="{ item }">
-            <span v-if="item.discapacidades.length > 0">{{ item.discapacidades.join() }}</span>
+            <span v-if="item.discapacidades.length > 0">{{ item.discapacidades.join(", ") }}</span>
             <span v-else>-</span>
           </template>
           <template v-slot:item.fecha_nacimiento="{ item }">
