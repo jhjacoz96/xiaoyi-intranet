@@ -183,7 +183,7 @@
             {{ item.nombre }} {{ item.apellido }}
           </template>
           <template v-slot:item.created_at="{ item }">
-           {{ moment(item.created_at).format('D-M-YYYY') }}
+            {{ moment(item.created_at).format('D-M-YYYY') }}
           </template>
           <template v-slot:item.patologias="{ item }">
             <span v-if="item.patologias.length > 0">{{ item.patologias.join(", ") }}</span>
