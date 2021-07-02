@@ -17,7 +17,7 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Reporte estructurado de las fichas familiares
+              Reporte de fichas familiares
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite filtrar las fichas familiares y posteriormente generar reportes estructurados en formato PDF.
@@ -91,7 +91,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.startDate"
-                      label="Fecha de inicial"
+                      label="Fecha inicial"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -115,7 +115,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.endDate"
-                      label="Fecha de inicial"
+                      label="Fecha final"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -239,7 +239,7 @@
             value: 'level_total_id',
           },
           {
-            text: 'Fecha de registro',
+            text: 'Fecha de apertura de historia',
             value: 'created_at',
           },
         ],

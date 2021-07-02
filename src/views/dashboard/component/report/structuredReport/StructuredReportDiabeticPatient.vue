@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Reporte de fichas clinicas de obstetricia
+              Reporte de pacientes diabeticos
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite filtrar las fichas clinicas de obstetricias y posteriormente generar reportes estructurados en formato PDF.
+              Permite filtrar los pacientes diabeticos y posteriormente generar reportes estructurados en formato PDF.
             </div>
           </v-col>
         </v-row>
@@ -48,58 +48,52 @@
               </v-card-text>
               <v-card-text>
                 <v-select
-                  v-model="filter.gestacion"
+                  v-model="filter.groupAge"
                   outlined
                   multiple
                   dense
-                  :items="gestacion"
+                  :items="groupAge"
                   item-text="name"
-                  item-value="name"
-                  label="Edad gestacional"
+                  item-value="id"
+                  label="Grupo de edad"
                 />
                 <v-select
-                  v-model="filter.groupAge"
-                  label="Grupo de edad"
+                  v-model="filter.pathology"
+                  label="Patologías (Comorbidates)"
                   outlined
                   dense
                   item-text="name"
                   item-value="id"
-                  :items="groupAge"
+                  :items="pathology"
                   multiple
                 />
-
                 <v-select
-                  v-model="filter.tipo_parto"
-                  label="Tipo de parto"
+                  v-model="filter.treatment"
+                  label="Tratamientos no farmacológicos"
                   outlined
                   dense
-                  :items="['Vaginal', 'Cesaria']"
+                  item-text="name"
+                  item-value="id"
+                  :items="treatment"
                   multiple
                 />
-                <p class="text-h6 font-weight-light">
-                  ¿Embarazo planificado?
-                </p>
-                <v-radio-group
-                  v-model="filter.embarazo_planificado"
-                  row
-                >
-                  <v-radio
-                    label="Si"
-                    :value="true"
-                  />
-                  <v-radio
-                    label="No"
-                    :value="false"
-                  />
-                </v-radio-group>
                 <v-select
-                  v-model="filter.causa_embarazo"
-                  :disabled="filter.embarazo_planificado === null"
-                  label="Causa de embarazo"
+                  v-model="filter.gender"
+                  label="Genero"
                   outlined
                   dense
-                  :items="filter.embarazo_planificado ? causa_embarazo_planificado : causa_embarazo_no_planificado"
-                  multiple
+                  item-text="nombre"
+                  item-value="id"
+                  :items="gender"
+                />
+                <v-select
+                  v-model="filter.alertTreatment"
+                  label="Incumplimiento de tratamiento no farmacologíco"
+                  outlined
+                  dense
+                  item-text="name"
+                  item-value="value"
+                  :items="alertTreatment"
                 />
                 <v-menu
                   v-model="showDate"
@@ -112,7 +106,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.startDate"
-                      label="Fecha de inicial"
+                      label="Fecha inicial"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -136,7 +130,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.endDate"
-                      label="Fecha de inicial"
+                      label="Fecha final"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -185,58 +179,26 @@
               </v-icon>
             </v-btn>
           </template>
-          <template v-slot:item.tipo_parto="{ item }">
-            <span v-if="item.tipo_parto">{{ item.tipo_parto }}</span>
+          <template v-slot:item.nombre="{ item }">
+            {{ item.nombre }} {{ item.apellido }}
+          </template>
+          <template v-slot:item.created_at="{ item }">
+           {{ moment(item.created_at).format('D-M-YYYY') }}
+          </template>
+          <template v-slot:item.patologias="{ item }">
+            <span v-if="item.patologias.length > 0">{{ item.patologias.join(", ") }}</span>
             <span v-else>-</span>
           </template>
-          <template v-slot:item.descripcion_gestacion="{ item }">
-            <span v-if="item.descripcion_gestacion">{{ item.descripcion_gestacion }}</span>
-            <span v-else>-</span>
-          </template>
-          <template v-slot:item.causa_embarazo="{ item }">
-            <span v-if="item.causa_embarazo">{{ item.causa_embarazo }}</span>
+          <template v-slot:item.tratamiento_farmacologico="{ item }">
+            <span v-if="item.tratamiento_farmacologico.length > 0">{{ item.tratamiento_farmacologico.join(", ") }}</span>
             <span v-else>-</span>
           </template>
           <template v-slot:item.fecha_nacimiento="{ item }">
             {{ age(item.fecha_nacimiento) }}
           </template>
-          <template v-slot:item.created_at="{ item }">
-            {{ moment(item.created_at).format('D-M-YYYY') }}
-          </template>
-          <template v-slot:item.embarazo_planificado="{ item }">
-            <span v-if="item.embarazo_planificado === null">
-              -
-            </span>
-            <span v-else>
-              <v-chip
-                v-if="item.embarazo_planificado === true"
-                color="success"
-              >
-                Si
-              </v-chip>
-              <v-chip
-                v-else
-                color="pink"
-                dark
-              >
-                No
-              </v-chip>
-            </span>
-          </template>
-          <template v-slot:item.embarazo="{ item }">
-            <v-chip
-              v-if="item.embarazo"
-              color="success"
-            >
-              Si
-            </v-chip>
-            <v-chip
-              v-else
-              color="pink"
-              dark
-            >
-              No
-            </v-chip>
+          <template v-slot:item.cedula="{ item }">
+            <span v-if="item.type_document_id">
+              {{ item.type_document_id.nombre.charAt(0) }}</span>-<span v-if="item.cedula">{{ item.cedula }}</span>
           </template>
         </v-data-table>
       </v-card-text>
@@ -251,8 +213,8 @@
     mapMutations,
   } from 'vuex'
   import {
-    gestationWeekAllApi,
-    reportFileClinicalObstricAllApi,
+    reportDiabeticPatientAllApi,
+  //  reportMemberDownloadApi,
   } from '@/api/modules'
   import { calAge } from '@/utils/calAge'
   export default {
@@ -268,43 +230,52 @@
         loadingFilter: false,
         loadingDataTable: false,
         loadingGenerate: false,
-        gestacion: [],
+        treatment: [],
+        pathology: [],
         groupAge: [],
-        tipo_parto: ['Vaginal', 'Cesaria'],
-        causa_embarazo_planificado: ['Inseminación', 'Vientre alquilado', 'Otros'],
-        causa_embarazo_no_planificado: ['Fallo de método anticonceptivo', 'Violación', 'Otros'],
-        headers: [
+        gender: [],
+        alertTreatment: [
           {
-            text: 'Número de historia',
-            value: 'numero_historia',
+            value: 1,
+            name: '1 dia de retrazo',
           },
           {
-            text: 'Edad gestacional',
-            value: 'descripcion_gestacion',
+            value: 2,
+            name: '2 dias de retrazo',
+          },
+          {
+            value: 3,
+            name: 'Más de 3 dias de retrazo',
+          },
+        ],
+        headers: [
+          {
+            text: 'Nombre',
+            value: 'nombre',
+          },
+          {
+            text: 'Cédula',
+            value: 'cedula',
+          },
+          {
+            text: 'Genero',
+            value: 'gender_id.nombre',
           },
           {
             text: 'Grupo de edad',
-            value: 'grupo_edad.name',
+            value: 'groupAge.name',
           },
           {
             text: 'Edad',
             value: 'fecha_nacimiento',
           },
           {
-            text: 'Tipo de parto',
-            value: 'tipo_parto',
+            text: 'Tratamiento farmacologíco',
+            value: 'tratamiento_farmacologico',
           },
           {
-            text: '¿Embarazo planificado?',
-            value: 'embarazo_planificado',
-          },
-          {
-            text: 'Causa de embarazo',
-            value: 'causa_embarazo',
-          },
-          {
-            text: '¿Embarazo Activo?',
-            value: 'embarazo',
+            text: 'Patologías (Comorbidades)',
+            value: 'patologias',
           },
           {
             text: 'Fecha de apertura de historia',
@@ -319,36 +290,35 @@
           name: '',
         },
         filterDownload: {
-          gestacion: [],
           groupAge: [],
-          tipo_parto: [],
-          causa_embarazo: [],
-          embarazo_planificado: null,
-          embarazo: null,
+          pathology: [],
+          treatment: [],
+          gender: [],
+          alertTreatment: null,
           startDate: null,
           endDate: null,
         },
         filter: {
-          gestacion: [],
           groupAge: [],
-          tipo_parto: [],
-          causa_embarazo: [],
-          embarazo_planificado: null,
-          embarazo: null,
+          pathology: [],
+          treatment: [],
+          gender: [],
+          alertTreatment: null,
           startDate: null,
           endDate: null,
         },
         defaultFilter: {
-          gestacion: [],
           groupAge: [],
-          tipo_parto: [],
-          causa_embarazo: [],
-          embarazo_planificado: null,
-          embarazo: null,
+          pathology: [],
+          treatment: [],
+          gender: [],
+          alertTreatment: null,
           startDate: null,
           endDate: null,
         },
       }
+    },
+    computed: {
     },
     watch: {
       dialog (val) {
@@ -357,15 +327,20 @@
     },
     created () {
       this.listItem()
+      this.listItemMedicine()
+      this.listItemPathology()
       this.listItemGroupAge()
-      this.listItemGestationWeek()
+      this.listItemGender()
     },
     methods: {
       ...mapMutations(['alert']),
+      ...mapActions('medicine', ['medicineAllActions']),
+      ...mapActions('pathology', ['pathologyAllActions']),
       ...mapActions('groupAge', ['groupAgeAllActions']),
+      ...mapActions('gender', ['genderAllActions']),
       async listItem () {
         this.loadingDataTable = true
-        const serviceResponse = await reportFileClinicalObstricAllApi(this.filter)
+        const serviceResponse = await reportDiabeticPatientAllApi(this.filter)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           this.loadingDataTable = false
@@ -375,6 +350,39 @@
             color: 'warning',
           })
           this.loadingDataTable = false
+        }
+      },
+      async listItemMedicine () {
+        const serviceResponse = await this.medicineAllActions()
+        if (serviceResponse.ok) {
+          this.treatment = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemPathology () {
+        const serviceResponse = await this.pathologyAllActions()
+        if (serviceResponse.ok) {
+          this.pathology = serviceResponse.data.filter(item => item.id !== 1)
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemGender () {
+        const serviceResponse = await this.genderAllActions()
+        if (serviceResponse.ok) {
+          this.gender = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
         }
       },
       async listItemGroupAge () {
@@ -388,20 +396,9 @@
           })
         }
       },
-      async listItemGestationWeek () {
-        const serviceResponse = await gestationWeekAllApi()
-        if (serviceResponse.ok) {
-          this.gestacion = serviceResponse.data
-        } else {
-          this.alert({
-            text: serviceResponse.message.text,
-            color: 'warning',
-          })
-        }
-      },
       async addItemFilter () {
         this.loadingFilter = true
-        const serviceResponse = await reportFileClinicalObstricAllApi(this.filter)
+        const serviceResponse = await reportDiabeticPatientAllApi(this.filter)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           Object.assign(this.filterDownload, this.filter)
@@ -421,8 +418,16 @@
           this.filter = Object.assign({}, this.defaultFilter)
         })
       },
-      dowloandFile () {
+      async dowloandFile () {
         this.loadingGenerate = true
+        /* const serviceResponse = await reportMemberDownloadApi(this.filterDownload)
+        const url = window.URL.createObjectURL(new Blob([serviceResponse.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'Informe_miembros.pdf')
+        document.body.appendChild(link)
+        link.click()
+        this.loadingGenerate = false */
         const { token } = localStorage
         const defaultHeaders = {
           'Content-Type': 'application/json',
@@ -430,7 +435,7 @@
           Authorization: 'Bearer ' + `${token}`,
         }
         axios({
-          url: this.$store.state.urlApi + '/api/report/file-clinical-obstetric/generate',
+          url: this.$store.state.urlApi + '/api/report/diabetic-patient/generate',
           method: 'POST',
           data: this.filterDownload,
           headers: defaultHeaders,
@@ -439,7 +444,7 @@
           const url = window.URL.createObjectURL(new Blob([response.data]))
           const link = document.createElement('a')
           link.href = url
-          link.setAttribute('download', 'Informe_ficha_clinica_obstetrica.pdf')
+          link.setAttribute('download', 'Informe_paciente_diabetico.pdf')
           document.body.appendChild(link)
           link.click()
           this.loadingGenerate = false

@@ -14,3 +14,5 @@ export const reportFileClinicalNeonatologyAllApi = (body) => apiHttp('POST', `${
 export const reportFilefamilyDownloadApi = (body) => apiHttp('POST', `${reportPath}/file-family/generate`, body, options)
 export const reportMemberDownloadApi = (body) => apiHttp('POST', `${reportPath}/member/generate`, body, options)
 export const pdfApi = () => apiHttp('GET', `${reportPath}/pdf`, options)
+export const reportDiabeticPatientAllApi = (body) => apiHttp('POST', `${reportPath}/diabetic-patient`, body)
+export const reportDiabeticPatientDownloadApi = (body) => apiHttp('POST', `${reportPath}/diabetic-patient/generate`, body, options)

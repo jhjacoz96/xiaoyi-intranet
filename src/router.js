@@ -378,6 +378,11 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportMember'),
         },
         {
+          name: 'Reporte estructurado de los pacientes diabeticos',
+          path: 'reportes/estructurados/paciente-diabetico',
+          component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportDiabeticPatient'),
+        },
+        {
           name: 'Administración del sistema',
           path: 'adminsitracion-sistema',
           component: () => import('@/views/dashboard/component/systemAdministration/SystemAdministration'),

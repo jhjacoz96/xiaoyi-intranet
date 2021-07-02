@@ -17,7 +17,7 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Reporte estructurado de las fichas clínicas de neonatología
+              Reporte de fichas clínicas de neonatología
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite filtrar las fichas clínicas de neonatología y posteriormente generar reportes estructurados en formato PDF.
@@ -111,7 +111,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.startDate"
-                      label="Fecha de naciento inicial"
+                      label="Fecha de nacimiento inicial"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense

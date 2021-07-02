@@ -24,7 +24,7 @@
       <v-col cols="3">
         <base-item-master
           title="Ficha clinica neonatología"
-          to="reportes/estructurados/ficha-clinica-neonatologia"
+          to="reportes/estructurados/ficha-clinica-neonatologiaP"
           icon="mdi-36px mdi-file"
         />
       </v-col>
@@ -39,6 +39,7 @@
         <base-item-master
           title="Pacientes diabéticos"
           icon="mdi-36px mdi-file"
+          to="reportes/estructurados/paciente-diabetico"
         />
       </v-col>
     </v-row>
