@@ -6,15 +6,15 @@
     :to="item.to"
     :active-class="`primary ${!isDark ? 'black' : 'white'}--text`"
   >
-    <v-list-item-icon v-if="item.icon">
+    <v-list-item-icon
+      v-if="text"
+      class="v-list-item__icon--text"
+      v-text="' '"
+    />
+
+    <v-list-item-icon v-else-if="item.icon">
       <v-icon v-text="item.icon" />
     </v-list-item-icon>
-
-    <v-list-item-icon
-      v-else-if="text"
-      class="v-list-item__icon--text"
-      v-text="computedText"
-    />
 
     <v-list-item-content v-if="item.title || item.subtitle">
       <v-list-item-title v-text="item.title" />

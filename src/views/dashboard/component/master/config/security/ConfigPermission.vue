@@ -57,7 +57,7 @@
       >
         <v-card>
           <v-card-title>
-            <span class="text-h5">COnfigurar roles</span>
+            <span class="text-h5">Configurar rol</span>
           </v-card-title>
 
           <v-card-text>
@@ -75,20 +75,27 @@
                   />
                 </v-col>
               </v-row>
-              <!-- <v-row>
+              <v-subheader>
+                Asignar permisos
+              </v-subheader>
+              <v-row
+                justify="space-around"
+                class="mx-auto"
+              >
                 <v-col
-                  v-for="(item, index) in permission"
+                  v-for="(item, index) in permissions"
                   :key="index"
-                  cols="6"
+                  cols="12"
+                  sm="6"
                 >
                   <v-checkbox
-                    v-model="editedItem.permission"
-                    :label="item"
-                    :value="item"
+                    v-model="editedItem.permissions"
+                    :label="item.description"
+                    :value="item.name"
                   />
                 </v-col>
-              </v-row> -->
-              <v-row>
+              </v-row>
+              <!-- <v-row>
                 <v-col
                   cols="12"
                 >
@@ -104,7 +111,7 @@
                     outlined
                   />
                 </v-col>
-              </v-row>
+              </v-row> -->
             </v-container>
           </v-card-text>
 

@@ -135,6 +135,8 @@
               Cancelar
             </v-btn>
             <v-btn
+              :loading="loaderDialog"
+              :disabled="loaderDialog"
               color="primary"
               text
               @click="addItem()"
@@ -162,6 +164,8 @@
               Cancelar
             </v-btn>
             <v-btn
+              :loading="loaderDialogDelete"
+              :disabled="loaderDialogDelete"
               color="pinck"
               text
               @click="deleteItemConfirm"
@@ -194,6 +198,8 @@
         editedId: undefined,
         editedIndex: -1,
         services: [],
+        loaderDialog: false,
+        loaderDialogDelete: false,
         headers: [
           {
             text: 'Servicio',
@@ -252,6 +258,7 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.serviceAllActions()
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -267,6 +274,7 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm () {
+        this.loaderDialogDelete = true
         const serviceResponse = await this.serviceDeleteActions(this.editedId)
         if (serviceResponse.ok) {
           this.desserts.splice(this.editedIndex, 1)
@@ -295,7 +303,8 @@
           formData.append('_method', 'PUT')
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
-          formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+          formData.append('imagen', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+          this.loaderDialog = true
           const serviceResponse = await serviceUpdateApi(formData, this.editedItem.id)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], serviceResponse.data)
@@ -315,7 +324,8 @@
           const formData = new FormData()
           formData.append('nombre', this.editedItem.nombre)
           formData.append('descripcion', this.editedItem.descripcion)
-          formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+          formData.append('imagen', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+          this.loaderDialog = true
           const serviceResponse = await this.servicePostActions(formData)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
@@ -337,6 +347,7 @@
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
+          this.loaderDialog = false
           this.editedIndex = -1
           this.editedId = undefined
         })
@@ -345,6 +356,7 @@
         this.dialogDelete = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
+          this.loaderDialogDelete = false
           this.editedIndex = -1
           this.editedId = undefined
         })

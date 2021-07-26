@@ -182,6 +182,7 @@
       if (this.permissions.includes('diabetes_control_access')) {
         window.Echo.channel('diabetic-patient')
           .listen('DiabeticPatientEvent', (res) => {
+            console.log(res)
             this.notifications.unshift({
               id: null,
               code: res.diabeticPatient.member.cedula,
@@ -266,7 +267,7 @@
             url: `/intranet/ficha-clinica-obstetricia/actualizar/${val.data.id}`,
             time: val.created_at,
           }
-        } else if (val.data.type_notification !== 'Registro glucosa"') {
+        } else if (val.data.type_notification === 'Registro glucosa"') {
           return {
             id: val.data.id,
             code: val.data.type_comment,

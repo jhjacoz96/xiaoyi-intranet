@@ -12,78 +12,79 @@
       </v-subheader>
       <v-row
         class="mx-auto"
-        justify="space-around"
         style="max-width: 900px;"
       >
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
-          <v-textarea
-            v-model="editedItem.antecentedes_prenatales"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.antecentedes_prenatales')"
-            data-vv-name="antecedntes prenatales"
+          <v-select
+            v-model="editedItem.patologias"
+            :disabled="!history"
             outlined
-            label="Antecedentes prenatales"
+            :items="patologias"
+            multiple
+            item-text="name"
+            item-value="id"
+            label="Patologías"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
-          <v-textarea
-            v-model="editedItem.antecentedes_paternos"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.antecentedes_paternos')"
-            data-vv-name="antecedntes paternos"
+          <v-select
+            v-model="editedItem.patologias_prenatales"
+            :disabled="!history"
             outlined
-            label="Antecedentes paternos"
+            :items="patologias_prenatales"
+            multiple
+            item-text="nombre"
+            item-value="id"
+            label="Patologías prenatales"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
-          <v-textarea
-            v-model="editedItem.antecentedes_maternos"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.antecentedes_maternos')"
-            data-vv-name="antecedntes maternos"
+          <v-select
+            v-model="editedItem.patologias_maternas"
+            :disabled="!history"
             outlined
-            label="Antecedentes maternos"
+            :items="patologias_maternas"
+            multiple
+            item-text="name"
+            item-value="id"
+            label="Patologías maternos"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
-          <v-textarea
-            v-model="editedItem.antecedentes_patologicos"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.antecentedes_patologicos')"
-            data-vv-name="antecedntes patológicos"
+          <v-select
+            v-model="editedItem.patologias_paternas"
+            :disabled="!history"
             outlined
-            label="Antecedentes patológicos"
+            :items="patologias_paternas"
+            multiple
+            item-text="name"
+            item-value="id"
+            label="Patologías paternas"
             dense
-            validate-on-blur
           />
         </v-col>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
           <v-select
             v-model="editedItem.sustancias_sicotropicas"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.psychotropic')"
-            data-vv-name="sustancias psicotrópicas"
+            :disabled="!history"
             outlined
             :items="sustancias_sicotroficas"
             multiple
@@ -95,18 +96,15 @@
           />
         </v-col>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
-          <v-text-field
+          <v-textarea
             v-model="editedItem.medicamentos"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.medicine')"
-            data-vv-name="medicine "
+            :disabled="!history"
             outlined
-            label="Medicamentos que ingiere"
+            label="Indicaciones de medicamentos que ingiere"
             dense
-            validate-on-blur
           />
         </v-col>
       </v-row>
@@ -121,60 +119,52 @@
           cols="6"
           sm="4"
         >
-          <v-subheader class="pl-0">
-            Número de gestas
-          </v-subheader>
-          <v-slider
+          <v-text-field
             v-model="editedItem.gestas"
-            :thumb-size="24"
-            max="50"
-            min="0"
-            :thumb-label="true"
+            :disabled="!history"
+            outlined
+            label="Número de gestass"
+            type="number"
+            dense
           />
         </v-col>
         <v-col
           cols="6"
           sm="4"
         >
-          <v-subheader class="pl-0">
-            Número de abortos
-          </v-subheader>
-          <v-slider
+          <v-text-field
             v-model="editedItem.abortos"
-            :thumb-size="24"
-            max="50"
-            min="0"
-            :thumb-label="true"
+            :disabled="!history"
+            outlined
+            label="Número de abortos"
+            type="number"
+            dense
           />
         </v-col>
         <v-col
           cols="6"
           sm="4"
         >
-          <v-subheader class="pl-0">
-            Número de cesarias
-          </v-subheader>
-          <v-slider
+          <v-text-field
             v-model="editedItem.cesarias"
-            :thumb-size="24"
-            max="50"
-            min="0"
-            :thumb-label="true"
+            :disabled="!history"
+            outlined
+            label="Número de cesarias"
+            type="number"
+            dense
           />
         </v-col>
         <v-col
           cols="6"
           sm="4"
         >
-          <v-subheader class="pl-0">
-            Número de partos
-          </v-subheader>
-          <v-slider
+          <v-text-field
             v-model="editedItem.partos"
-            :thumb-size="24"
-            max="50"
-            min="0"
-            :thumb-label="true"
+            :disabled="!history"
+            outlined
+            label="Número de partos"
+            type="number"
+            dense
           />
         </v-col>
       </v-row>
@@ -195,12 +185,17 @@
   } from 'vuex'
   import {
     psyshotrophicAllApi,
+    pathologyPregnantAllApi,
   } from '@/api/modules'
   export default {
     props: {
       click: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
     data () {
@@ -211,6 +206,10 @@
           antecentedes_paternos: '',
           antecentedes_maternos: '',
           antecentedes_patologicos: '',
+          patologias_maternas: [],
+          patologias_paternas: [],
+          patologias_prenatales: [],
+          patologias: [],
           sustancias_sicotropicas: [],
           medicamentos: '',
           gestas: 0,
@@ -219,6 +218,10 @@
           partos: 0,
         },
         sustancias_sicotroficas: [],
+        patologias_maternas: [],
+        patologias_paternas: [],
+        patologias_prenatales: [],
+        patologias: [],
       }
     },
     computed: {
@@ -245,15 +248,42 @@
     created () {
       this.editedItem = Object.assign({}, this.fileObstetric)
       this.itemPsicotropic()
+      this.itemPathology()
+      this.itemPathologyPregnant()
     },
     methods: {
       ...mapMutations(['alert']),
       ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions']),
       ...mapMutations('fileClinicalObstetric', ['setSteps', 'setFileObstetric']),
+      ...mapActions('pathology', ['pathologyAllActions']),
       async itemPsicotropic () {
         const serviceResponse = await psyshotrophicAllApi()
         if (serviceResponse.ok) {
           this.sustancias_sicotroficas = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async itemPathologyPregnant () {
+        const serviceResponse = await pathologyPregnantAllApi()
+        if (serviceResponse.ok) {
+          this.patologias_prenatales = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async itemPathology () {
+        const serviceResponse = await this.pathologyAllActions()
+        if (serviceResponse.ok) {
+          this.patologias_maternas = serviceResponse.data
+          this.patologias_paternas = serviceResponse.data
+          this.patologias = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,

@@ -13,16 +13,6 @@
       >
         <v-col
           cols="12"
-        >
-          <v-textarea
-            v-model="editedItem.observacion_parto"
-            label="Observaciones del parto"
-            outlined
-            dense
-          />
-        </v-col>
-        <v-col
-          cols="12"
           sm="4"
         >
           <p class="text-h6 font-weight-light">
@@ -30,6 +20,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.hemorragia"
+            :disabled="!history"
             mandatory
             row
           >
@@ -52,6 +43,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.desgarro"
+            :disabled="!history"
             mandatory
             row
           >
@@ -73,6 +65,7 @@
         >
           <v-select
             v-model="editedItem.grado_desgarro"
+            :disabled="!history"
             label="Nivel de desgarro"
             :items="desgarro"
             outlined
@@ -85,7 +78,8 @@
         >
           <v-select
             v-model="editedItem.tipo_parto"
-            label="Tipo de parto"
+            :disabled="!history"
+            label="Tipo de parto (*)"
             :items="['Vaginal', 'Cesarea']"
             outlined
             dense
@@ -95,17 +89,18 @@
           cols="6"
           sm="4"
         >
-          <v-subheader class="pl-0">
-            Semana en que nace
-          </v-subheader>
           <v-slider
             v-model="editedItem.semana_gestacion"
+            :disabled="!history"
             :thumb-size="24"
             max="50"
             min="28"
             :thumb-label="true"
             @change="calSestacion($event)"
           />
+          <v-subheader class="pl-0">
+            Semana en que nace (*)
+          </v-subheader>
         </v-col>
         <v-col
           cols="6"
@@ -136,6 +131,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.episiorria"
+            :disabled="!history"
             mandatory
             row
           >
@@ -158,6 +154,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.hemorroides"
+            :disabled="!history"
             mandatory
             row
           >
@@ -180,6 +177,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.dolor"
+            :disabled="!history"
             mandatory
             row
           >
@@ -202,6 +200,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.epitomia"
+            :disabled="!history"
             mandatory
             row
           >
@@ -223,6 +222,7 @@
         >
           <v-select
             v-model="editedItem.grado_epitomia"
+            :disabled="!history"
             label="Grado"
             :items="epitomia"
             item-text="name"
@@ -231,12 +231,24 @@
             item-value="value"
           />
         </v-col>
+        <v-col
+          cols="12"
+        >
+          <v-textarea
+            v-model="editedItem.observacion_parto"
+            :disabled="!history"
+            label="Observaciones del parto (*)"
+            outlined
+            dense
+          />
+        </v-col>
       </v-row>
       <div class="mt-4 my-3">
         <div class="d-inline-block">
           <span class="text-h5">Farmacos administrados</span>
         </div>
         <v-btn
+          :disabled="!history"
           fab
           color="secondary"
           class="float-right"
@@ -253,6 +265,7 @@
           <td>
             <v-select
               v-model="item.presentation_id"
+              :disabled="!history"
               label="Presentación"
               item-text="name"
               item-value="id"
@@ -264,6 +277,7 @@
           <td>
             <v-select
               v-model="item.medicine_id"
+              :disabled="!history"
               label="Medicamento"
               class="ml-2"
               outlined
@@ -276,6 +290,7 @@
           <td>
             <v-text-field
               v-model.number="item.dosis"
+              :disabled="!history"
               class="ml-2"
               label="Dosis"
               outlined
@@ -285,6 +300,7 @@
           <td>
             <v-select
               v-model="item.measure_id"
+              :disabled="!history"
               class="ml-2"
               label="Unidad de medida"
               :items="medida"
@@ -297,6 +313,7 @@
           <td>
             <v-select
               v-model="item.frequency_id"
+              :disabled="!history"
               label="Frecuencia"
               item-text="name"
               item-value="id"
@@ -308,6 +325,7 @@
           </td>
           <td>
             <v-btn
+              :disabled="!history"
               icon
               dark
               color="pink"
@@ -333,12 +351,18 @@
     mapActions,
     mapMutations,
   } from 'vuex'
-  import { gestationWeekAllApi } from '@/api/modules'
+  import {
+    gestationWeekAllApi,
+  } from '@/api/modules'
   export default {
     props: {
       click: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
     data () {
@@ -427,6 +451,7 @@
           if (semana[0] <= v && v <= semana[1]) {
             this.editedItem.descripcion_gestacion = item.name
             this.editedItem.gestation_week_id = item.id
+            this.editedItem.semana_gestacion = v
           }
         })
       },

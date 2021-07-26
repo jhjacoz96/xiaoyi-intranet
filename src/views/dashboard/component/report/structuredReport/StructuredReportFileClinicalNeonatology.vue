@@ -15,38 +15,31 @@
               <v-icon>mdi-arrow-left-bold</v-icon>
             </v-btn>
           </v-col>
-          <v-col md="auto">
+          <v-col md="8">
             <div class="text-h3 font-weight-medium">
-              Reporte de fichas clínicas de neonatología
+              Reporte estructurado de fichas clínicas de neonatología
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite filtrar las fichas clínicas de neonatología y posteriormente generar reportes estructurados en formato PDF.
             </div>
           </v-col>
         </v-row>
-        <v-btn
-          absolute
-          fab
-          right
-          :disabled="loadingGenerate"
-          :loading="loadingGenerate"
-          color="secondary"
-          @click="dowloandFile"
-        >
-          <v-icon>mdi-file-pdf</v-icon>
-        </v-btn>
       </template>
       <v-card-text>
-        <v-dialog
-          v-model="dialog"
-          width="400"
-        >
-          <v-card>
-            <v-container>
-              <v-card-text class="font-weight-bold text-center">
-                Filtrar busqueda
-              </v-card-text>
-              <v-card-text>
+        <v-container>
+          <v-card-text class="font-weight-bold text-center">
+            Criterios de busqueda
+          </v-card-text>
+          <v-card-text>
+            <v-row
+              justify="center"
+              class="mx-auto"
+              style="max-width: 500px;"
+            >
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.gestacion"
                   outlined
@@ -57,10 +50,26 @@
                   item-value="name"
                   label="Edad gestacional"
                 />
-                <v-subheader>
-                  Rango de peso (g)
-                </v-subheader>
-
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.gender"
+                  label="Genero"
+                  outlined
+                  dense
+                  item-text="nombre"
+                  item-value="id"
+                  :items="gender"
+                  multiple
+                />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-range-slider
                   v-model="filter.peso"
                   :max="5000"
@@ -91,15 +100,14 @@
                     />
                   </template>
                 </v-range-slider>
-                <v-select
-                  v-model="filter.gender"
-                  label="Genero"
-                  outlined
-                  dense
-                  item-text="nombre"
-                  item-value="id"
-                  :items="gender"
-                />
+                <div class="text-subtitle-1 font-weight-light">
+                  Rango de peso (g)
+                </div>
+              </v-col>
+              <v-col
+                sm="6"
+                cols="12"
+              >
                 <v-menu
                   v-model="showDate"
                   :close-on-content-click="false"
@@ -124,6 +132,11 @@
                     @input="show1Date = false"
                   />
                 </v-menu>
+              </v-col>
+              <v-col
+                sm="6"
+                cols="12"
+              >
                 <v-menu
                   v-model="show2Date"
                   :close-on-content-click="false"
@@ -148,22 +161,163 @@
                     @input="show3Date = false"
                   />
                 </v-menu>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  :disabled="loadingFilter"
-                  :loading="loadingFilter"
-                  @click="addItemFilter()"
-                >
-                  Filtrar
-                </v-btn>
-                <v-spacer />
-              </v-card-actions>
-            </v-container>
-          </v-card>
-        </v-dialog>
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.bcg"
+                  outlined
+                  :items="bcg"
+                  label="Vacuna bcg"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.hb"
+                  outlined
+                  :items="hb"
+                  label="Vacuna hb"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.rotavirus"
+                  outlined
+                  :items="rotavirus"
+                  label="Vacuna rotavirus"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.fipv"
+                  outlined
+                  :items="fipv"
+                  label="Vacuna fipv"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.bopv"
+                  outlined
+                  :items="bopv"
+                  label="Vacuna bopv"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.pentavaliente"
+                  outlined
+                  :items="pentavaliente"
+                  label="Vacuna pentavaliente"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.neumococo"
+                  outlined
+                  :items="neumococo"
+                  label="Vacuna neumococo"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col
+                v-if="show"
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.influenza_estacionaria"
+                  outlined
+                  :items="influenza_estacionaria"
+                  label="Vacuna influenza estacionaria"
+                  dense
+                  multiple
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-card-actions class="pa-0 ma-0">
+                  <v-subheader>
+                    {{ show ? 'Reducir' : 'Expandir' }} criterios
+                  </v-subheader>
+
+                  <v-spacer />
+
+                  <v-btn
+                    text
+                    @click="show = !show"
+                  >
+                    <v-icon>
+                      {{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+                    </v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              :disabled="loadingFilter"
+              :loading="loadingFilter"
+              @click="addItemFilter()"
+            >
+              <v-icon>mdi-filter</v-icon>
+              Filtrar
+            </v-btn>
+            <v-btn
+              :disabled="loadingGenerate"
+              :loading="loadingGenerate"
+              color="secondary"
+              outlined
+              @click="dowloandFile"
+            >
+              <v-icon>mdi-file-pdf</v-icon>
+              Descargar
+            </v-btn>
+            <v-spacer />
+          </v-card-actions>
+        </v-container>
         <v-data-table
           :headers="headers"
           :items="desserts"
@@ -171,24 +325,14 @@
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
-          <template v-slot:top>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              outlined
-              class="ml-5"
-              @click="dialog = true"
-            >
-              <v-icon>
-                mdi-filter
-              </v-icon>
-            </v-btn>
-          </template>
           <template v-slot:item.nombre="{ item }">
             {{ item.nombre }} {{ item.apellido }}
           </template>
           <template v-slot:item.peso="{ item }">
-            {{ item.peso }} g
+            {{ item.peso || '-' }}
+          </template>
+          <template v-slot:item.gestation_week_id="{ item }">
+            {{ item.gestation_week_id || '-' }}
           </template>
           <template v-slot:item.fecha_nacimiento="{ item }">
             {{ moment(item.fecha_nacimiento).format('D-M-YYYY') }}
@@ -212,6 +356,7 @@
   export default {
     data () {
       return {
+        show: false,
         showDate: null,
         show1Date: null,
         show2Date: null,
@@ -230,24 +375,32 @@
             value: 'numero_historia',
           },
           {
+            text: 'Cédula',
+            value: 'cedula',
+          },
+          {
             text: 'Nombre',
             value: 'nombre',
+          },
+          {
+            text: 'Lugar de nacimiento',
+            value: 'lugar_naciento',
           },
           {
             text: 'Genero',
             value: 'gender_id.nombre',
           },
           {
-            text: 'Fecha de nacimiento',
-            value: 'fecha_nacimiento',
-          },
-          {
-            text: 'Peso',
+            text: 'Peso (g)',
             value: 'peso',
           },
           {
             text: 'Edad gestacional',
             value: 'gestation_week_id',
+          },
+          {
+            text: 'Fecha de nacimiento',
+            value: 'fecha_nacimiento',
           },
         ],
         desserts: [],
@@ -260,24 +413,79 @@
         filterDownload: {
           gestacion: [],
           peso: [700, 5000],
-          gender: null,
+          gender: [],
           startDate: null,
           endDate: null,
+          bcg: [],
+          hb: [],
+          rotavirus: [],
+          fipv: [],
+          bopv: [],
+          pentavaliente: [],
+          neumococo: [],
+          influenza_estacionaria: [],
         },
         filter: {
           gestacion: [],
           peso: [700, 5000],
-          gender: null,
+          gender: [],
           startDate: null,
           endDate: null,
+          bcg: [],
+          hb: [],
+          rotavirus: [],
+          fipv: [],
+          bopv: [],
+          pentavaliente: [],
+          neumococo: [],
+          influenza_estacionaria: [],
         },
         defaultFilter: {
           gestacion: [],
-          peso: [700, 5000],
-          gender: null,
+          peso: undefined,
+          gender: [],
           startDate: null,
           endDate: null,
+          bcg: [],
+          hb: [],
+          rotavirus: [],
+          fipv: [],
+          bopv: [],
+          pentavaliente: [],
+          neumococo: [],
+          influenza_estacionaria: [],
         },
+        bcg: [
+          'Dosis unica (24 H)',
+        ],
+        hb: [
+          'Dosis unica (24 H)',
+        ],
+        rotavirus: [
+          '1era dosis (2m)',
+          '2da dosis (4m)',
+        ],
+        fipv: [
+          '1era dosis (2m)',
+          '2da dosis (4m)',
+        ],
+        bopv: [
+          '1era dosis (6m)',
+        ],
+        pentavaliente: [
+          '1era dosis (2m)',
+          '2da dosis (4m)',
+          '3ra dosis (6m)',
+        ],
+        neumococo: [
+          '1era dosis (2m)',
+          '2da dosis (4m)',
+          '3ra dosis (6m)',
+        ],
+        influenza_estacionaria: [
+          '1era dosis (6m)',
+          '2da dosis (al mes de 1era dosis)',
+        ],
       }
     },
     watch: {
@@ -335,21 +543,13 @@
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           Object.assign(this.filterDownload, this.filter)
-          this.close()
         } else {
-          this.close()
           this.alert({
             text: serviceResponse.message.text,
             color: 'warning',
           })
         }
-      },
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.loadingFilter = false
-          this.filter = Object.assign({}, this.defaultFilter)
-        })
+        this.loadingFilter = false
       },
       dowloandFile () {
         this.loadingGenerate = true

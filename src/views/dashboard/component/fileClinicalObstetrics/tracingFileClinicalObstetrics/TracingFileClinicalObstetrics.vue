@@ -17,7 +17,7 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Control y seguimiento de ficha clínica de obstetricia
+              {{ history ? `Control y seguimiento de ficha clínica de obstetricia` : `Historial de ficha clínica de obstetricia` }}
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Perminite hacer busquedas y filtrados de las fichas clínicas de obstetricia.
@@ -96,32 +96,107 @@
               </v-card-text>
               <v-card-text>
                 <v-select
-                  v-model="editedItemFilter.group_age_id"
+                  v-model="editedItemFilter.gestacion"
                   outlined
                   multiple
                   dense
-                  :items="groupAge"
+                  :items="gestacion"
+                  item-text="name"
+                  item-value="name"
+                  label="Edad gestacional"
+                />
+                <v-select
+                  v-model="editedItemFilter.groupAge"
+                  label="Grupo de edad"
+                  outlined
+                  dense
                   item-text="name"
                   item-value="id"
-                  label="Grupo de edad"
+                  :items="groupAge"
+                  multiple
+                />
+
+                <v-select
+                  v-model="editedItemFilter.tipo_parto"
+                  label="Tipo de parto"
+                  outlined
+                  dense
+                  :items="['Vaginal', 'Cesaria']"
+                  multiple
                 />
                 <p class="text-h6 font-weight-light">
-                  En estado de embarado
+                  ¿Embarazo planificado?
                 </p>
                 <v-radio-group
-                  v-model="editedItemFilter.embarazo"
+                  v-model="editedItemFilter.embarazo_planificado"
                   row
-                  mandatory
                 >
                   <v-radio
-                    label="Solo embarazadas actuales"
-                    :value="1"
+                    label="Si"
+                    :value="true"
                   />
                   <v-radio
-                    label="Todas"
-                    :value="0"
+                    label="No"
+                    :value="false"
                   />
                 </v-radio-group>
+                <v-select
+                  v-model="editedItemFilter.causa_embarazo"
+                  :disabled="editedItemFilter.embarazo_planificado === null"
+                  label="Causa de embarazo"
+                  outlined
+                  dense
+                  :items="editedItemFilter.embarazo_planificado ? causa_embarazo_planificado : causa_embarazo_no_planificado"
+                  multiple
+                />
+                <v-menu
+                  v-model="showDate"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="100px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="editedItemFilter.startDate"
+                      label="Fecha de inicial"
+                      prepend-icon="mdi-calendar"
+                      outlined
+                      dense
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker
+                    v-model="editedItemFilter.startDate"
+                    @input="show1Date = false"
+                  />
+                </v-menu>
+                <v-menu
+                  v-model="show2Date"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="100px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="editedItemFilter.endDate"
+                      label="Fecha de inicial"
+                      prepend-icon="mdi-calendar"
+                      outlined
+                      dense
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker
+                    v-model="editedItemFilter.endDate"
+                    @input="show3Date = false"
+                  />
+                </v-menu>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
@@ -144,104 +219,89 @@
           :search="search"
           :items-per-page="5"
           class="elevation-1"
-          :single-expand="singleExpand"
-          :expanded.sync="expanded"
-          item-key="id"
-          show-expand
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
-          <template v-slot:item.embarazo="{ item }">
-            <v-chip
-              v-if="item.embarazo"
-              color="success"
-              class="white--text"
-            >
-              Si
-            </v-chip>
-            <v-chip
-              v-else
-              color="pink"
-              class="white--text"
-            >
-              No
-            </v-chip>
-          </template>
-          <template v-slot:expanded-item="{ headers, item }">
-            <td :colspan="headers.length">
-              <v-container>
-                <v-row class="justify-center">
-                  <v-col
-                    v-for="(file, index) in item.prenatal_todos"
-                    :key="index"
-                    cols="4"
-                  >
-                    <v-card
-                      class="mx-auto"
-                      max-width="344"
-                      outlined
-                    >
-                      <v-list-item>
-                        <v-list-item-content>
-                          <v-list-item-title class="text-h5 mb-1">
-                            Número de historia:
-                          </v-list-item-title>
-                          <v-list-item-subtitle>
-                            {{ file.numero_historia }}
-                          </v-list-item-subtitle>
-                          <v-list-item-title class="text-h5 mb-1">
-                            Fecha de creación
-                          </v-list-item-title>
-                          <v-list-item-subtitle>
-                            {{ moment(file.created_at).format('D-M-YYYY') }}
-                          </v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-card-actions>
-                        <v-spacer />
-                        <v-btn
-                          outlined
-                          text
-                          :to="`/intranet/ficha-clinica-obstetricia/actualizar/${file.id}`"
-                        >
-                          Control
-                        </v-btn>
-                        <v-spacer />
-                      </v-card-actions>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </td>
+          <template v-slot:item.nombre="{ item }">
+            {{ item.nombre }} {{ item.apellido }}
           </template>
           <template v-slot:item.edad="{ item }">
             {{ age(item.fecha_nacimiento) }}
           </template>
-          <!-- <template v-slot:item.accion="{ item }">
+          <template v-slot:item.tipo_parto="{ item }">
+            <span v-if="item.tipo_parto">{{ item.tipo_parto }}</span>
+            <span v-else>-</span>
+          </template>
+          <template v-slot:item.descripcion_gestacion="{ item }">
+            <span v-if="item.descripcion_gestacion">{{ item.descripcion_gestacion }}</span>
+            <span v-else>-</span>
+          </template>
+          <template v-slot:item.causa_embarazo="{ item }">
+            <span v-if="item.causa_embarazo">{{ item.causa_embarazo }}</span>
+            <span v-else>-</span>
+          </template>
+          <template v-slot:item.fecha_nacimiento="{ item }">
+            {{ age(item.fecha_nacimiento) }}
+          </template>
+          <template v-slot:item.embarazo_planificado="{ item }">
+            <span v-if="item.embarazo_planificado === null">
+              -
+            </span>
+            <span v-else>
+              <v-chip
+                v-if="item.embarazo_planificado === true"
+                color="success"
+              >
+                Si
+              </v-chip>
+              <v-chip
+                v-else
+                color="pink"
+                dark
+              >
+                No
+              </v-chip>
+            </span>
+          </template>
+          <template v-slot:item.created_at="{ item }">
+            {{ moment(item.created_at).format('D-M-YYYY') }}
+          </template>
+          <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  fab
                   x-small
-                  color="warning"
+                  outlined
+                  fab
+                  color="info"
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="$router.push(`/intranet/ficha-clinica-obstetricia/${item.id}`)"
+                  @click="$router.push(`/intranet/ficha-familiar/${item.file_family_id}`)"
                 >
-                  <v-icon>mdi-pencil</v-icon>
+                  <v-icon>mdi-account-group</v-icon>
                 </v-btn>
               </template>
-              <span>Editar</span>x
+              <span>Control de ficha familiar</span>
             </v-tooltip>
-          </template> -->
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  x-small
+                  fab
+                  color="info"
+                  v-bind="attrs"
+                  class="ml-2"
+                  :to="`/intranet/ficha-clinica-obstetricia/${history ? 'actualizar' : 'visualizar'}/${item.id}`"
+                  v-on="on"
+                >
+                  <v-icon>mdi-human-pregnant</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ history ? `Control de` : `Visualizar` }} ficha clínica de obstetrica</span>
+            </v-tooltip>
+          </template>
         </v-data-table>
-        <!-- <v-dialog
-          v-model="dialog"
-          max-width="500px"
-        >
-        </v-dialog> -->
       </v-container>
     </base-material-card>
   </v-container>
@@ -253,46 +313,106 @@
     mapMutations,
   } from 'vuex'
   import { calAge } from '@/utils/calAge'
+  import {
+    gestationWeekAllApi,
+  } from '@/api/modules'
   export default {
+    props: {
+      history: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data () {
       return {
         dialog: false,
         search: '',
-        expanded: [],
-        singleExpand: false,
+        showDate: null,
+        show1Date: null,
+        show2Date: null,
+        show3Date: null,
         loadingSearch: false,
         loadingFilter: false,
         loadingDataTable: false,
         headers: [
-          { text: 'Nombres y apellidos', sortable: false, value: 'nombre' },
-          { text: 'Cédula', sortable: false, value: 'cedula' },
-          { text: 'Edad', sortable: false, value: 'edad' },
-          { text: 'En estado de embarazo', align: 'center', sortable: false, value: 'embarazo' },
-          { text: 'Parroquia', sortable: false, value: 'zone_id.name' },
+          {
+            text: 'Número de historia',
+            value: 'numero_historia',
+          },
+          {
+            text: 'Nombre',
+            value: 'nombre',
+          },
+          {
+            text: 'Edad gestacional',
+            value: 'descripcion_gestacion',
+          },
+          {
+            text: 'Edad',
+            value: 'fecha_nacimiento',
+          },
+          {
+            text: 'Tipo de parto',
+            value: 'tipo_parto',
+          },
+          {
+            text: '¿Embarazo planificado?',
+            value: 'embarazo_planificado',
+          },
+          {
+            text: 'Causa de embarazo',
+            value: 'causa_embarazo',
+          },
+          {
+            text: 'Fecha de apertura de historia',
+            value: 'created_at',
+          },
+          {
+            text: 'Acción',
+            sortable: false,
+            value: 'accion',
+          },
         ],
         desserts: [],
+        gestacion: [],
         groupAge: [],
+        tipo_parto: ['Vaginal', 'Cesaria'],
+        causa_embarazo_planificado: ['Inseminación', 'Vientre alquilado', 'Otros'],
+        causa_embarazo_no_planificado: ['Fallo de método anticonceptivo', 'Violación', 'Otros'],
         editedItemSearch: {
           search: '',
-          filter: '',
+          embarazo: null,
         },
         defaultItemSearch: {
           search: '',
-          filter: '',
+          embarazo: null,
         },
         editedItemFilter: {
-          embarazo: undefined,
-          group_age_id: [],
+          gestacion: [],
+          groupAge: [],
+          tipo_parto: [],
+          causa_embarazo: [],
+          embarazo_planificado: null,
+          embarazo: null,
+          startDate: null,
+          endDate: null,
         },
         defaultItemFilter: {
-          embarazo: undefined,
-          group_age_id: [],
+          gestacion: [],
+          groupAge: [],
+          tipo_parto: [],
+          causa_embarazo: [],
+          embarazo_planificado: null,
+          embarazo: null,
+          startDate: null,
+          endDate: null,
         },
       }
     },
     created () {
       this.listItem()
       this.listItemGroupAge()
+      this.listItemGestationWeek()
     },
     methods: {
       ...mapMutations(['alert']),
@@ -300,7 +420,8 @@
       ...mapActions('groupAge', ['groupAgeAllActions']),
       async listItem () {
         this.loadingDataTable = true
-        const serviceResponse = await this.fileClinicalObstetricAllActions()
+        this.editedItemFilter.embarazo = this.history
+        const serviceResponse = await this.fileClinicalObstetricFilterActions(this.editedItemFilter)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -322,11 +443,24 @@
           })
         }
       },
+      async listItemGestationWeek () {
+        const serviceResponse = await gestationWeekAllApi()
+        if (serviceResponse.ok) {
+          this.gestacion = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
       age (val) {
         return calAge(val)
       },
       async addItemSearch () {
         this.loadingSearch = true
+        this.editedItemSearch.embarazo = this.history
+        console.log(this.editedItemSearch)
         const serviceResponse = await this.fileClinicalObstetricSearchActions(this.editedItemSearch)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
@@ -341,6 +475,7 @@
       },
       async addItemFilter () {
         this.loadingFilter = true
+        this.editedItemSearch.embarazo = this.history
         const serviceResponse = await this.fileClinicalObstetricFilterActions(this.editedItemFilter)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data

@@ -56,7 +56,7 @@
       </v-card-text>
       <v-dialog
         v-model="dialog"
-        max-width="500px"
+        max-width="700px"
       >
         <v-card>
           <v-card-title>
@@ -77,18 +77,38 @@
                     outlined
                   />
                 </v-col>
+                <v-subheader>
+                  Asignar actividades
+                </v-subheader>
                 <v-col
                   cols="12"
                 >
-                  <v-select
-                    v-model="editedItem.activities"
-                    label="Asignar actividades"
-                    outlined
-                    :items="activities"
-                    item-value="id"
-                    item-text="name"
-                    multiple
-                  />
+                  <v-row
+                    justify="space-around"
+                    class="mx-auto"
+                  >
+                    <v-col
+                      v-for="(item, index) in activities"
+                      :key="index"
+                      cols="12"
+                      sm="6"
+                    >
+                      <v-checkbox
+                        v-model="editedItem.activities"
+                        :label="item.nombre"
+                        :value="item.id"
+                      />
+                      <!-- <v-select
+                        v-model="editedItem.activities"
+                        label="Asignar actividades"
+                        outlined
+                        :items="activities"
+                        item-value="id"
+                        item-text="nombre"
+                        multiple
+                      /> -->
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-container>

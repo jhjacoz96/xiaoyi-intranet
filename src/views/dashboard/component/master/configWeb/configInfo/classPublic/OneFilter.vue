@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Primer filtro de busqueda
+              ¿A quién va dirigido?
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite indincar a quien hace referencia la publicación.
+              Permite filtrar a quienes van a ir dirigidas las publicaciones
             </div>
           </v-col>
         </v-row>

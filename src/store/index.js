@@ -26,6 +26,10 @@ import culturalGroup from './modules/culturalGroup'
 import pathology from './modules/pathology'
 import disability from './modules/disability'
 import groupAge from './modules/groupAge'
+import causeMortality from './modules/causeMortality'
+import contamination from './modules/contamination'
+import causeContamination from './modules/causeContamination'
+import activityEvolution from './modules/activityEvolution'
 import riskClassification from './modules/riskClassification'
 import risk from './modules/risk'
 import levelRisk from './modules/levelRisk'
@@ -70,6 +74,10 @@ export default new Vuex.Store({
     pathology,
     disability,
     groupAge,
+    causeMortality,
+    causeContamination,
+    contamination,
+    activityEvolution,
     riskClassification,
     risk,
     levelRisk,

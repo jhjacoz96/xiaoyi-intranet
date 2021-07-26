@@ -27,5 +27,8 @@
     data: () => ({
       expandOnHover: false,
     }),
+    created () {
+      this.$vuetify.theme.dark = false
+    },
   }
 </script>

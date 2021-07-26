@@ -130,8 +130,8 @@
           <template v-slot:item.edad="{ item }">
             {{ age(item.fecha_nacimiento) }}
           </template>
-          <template v-slot:item.created_at="{ item }">
-            {{ moment(item.created_at).format('D-M-YYYY') }}
+          <template v-slot:item.fecha_nacimiento="{ item }">
+            {{ moment(item.fecha_nacimiento).format('D-M-YYYY') }}
           </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
@@ -161,7 +161,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="$router.push(`/intranet/ficha-clinica-obstetricia/actualizar/${item.pregnant_id}`)"
+                  @click="$router.push(`/intranet/ficha-clinica-obstetricia/historial/${item.pregnant_id}`)"
                 >
                   <v-icon>mdi-human-pregnant</v-icon>
                 </v-btn>
@@ -216,7 +216,7 @@
           { text: 'Cédula', sortable: false, value: 'cedula' },
           { text: 'Lugar nacimiento', sortable: false, value: 'lugar_naciento' },
           { text: 'Edad', sortable: false, value: 'edad' },
-          { text: 'Fecha de creación', sortable: false, value: 'created_at' },
+          { text: 'Fecha de nacimiento', sortable: false, value: 'fecha_nacimiento' },
           { text: 'Acción', sortable: false, value: 'accion' },
         ],
         desserts: [],

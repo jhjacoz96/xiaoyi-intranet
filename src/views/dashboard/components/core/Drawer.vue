@@ -29,7 +29,7 @@
         two-line
       >
         <img
-          src="@/assets/logo3.png"
+          :src="organization.image"
           width="60"
           max-width="60"
           class="mr-2"
@@ -37,7 +37,7 @@
         <v-list-item-content>
           <v-list-item-title
             class="text-h4"
-            v-text="'KA-THANI'"
+            v-text="organization.name"
           />
         </v-list-item-content>
       </v-list-item>
@@ -91,6 +91,7 @@
     mapState,
     mapMutations,
     mapGetters,
+    mapActions,
   } from 'vuex'
 
   export default {
@@ -242,6 +243,7 @@
       ...mapState(['barColor', 'barImage']),
       ...mapGetters('auth', ['permissionsGetter']),
       ...mapState('auth', ['permissions', 'user']),
+      ...mapState('configWeb', ['organization']),
       profile () {
         return {
           avatar: true,
@@ -268,8 +270,21 @@
         return this.items.filter(this.filterItem).map(this.mapItem)
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
       ...mapMutations('auth', ['can']),
+      ...mapActions('configWeb', ['webOrganizationAllActions']),
+      async listItem () {
+        const serviceResponsee = await this.webOrganizationAllActions()
+        if (!serviceResponsee.ok) {
+          this.alert({
+            text: serviceResponsee.message.text,
+            color: 'warning',
+          })
+        }
+      },
       filterItem (item) {
         var access = this.permissionsGetter.includes(item.can)
         return access
@@ -278,7 +293,6 @@
         return {
           ...item,
           children: item.children ? item.children.filter(this.filterItem).map(this.mapItem) : undefined,
-          title: this.$t(item.title),
         }
       },
     },

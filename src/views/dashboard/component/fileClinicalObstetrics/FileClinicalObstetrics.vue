@@ -23,6 +23,13 @@
             />
           </v-col>
           <v-col cols="3">
+            <base-item-master
+              title="Historial"
+              icon="mdi-36px mdi-36px mdi-clipboard-pulse"
+              to="ficha-clinica-obstetricia/historial"
+            />
+          </v-col>
+          <v-col cols="3">
             <v-template @click="openCheck()">
               <base-item-master
                 title="Nuevo registro"

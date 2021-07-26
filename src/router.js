@@ -14,6 +14,16 @@ const router = new Router({
       component: () => import('@/views/Login'),
     },
     {
+      name: 'Verificar correo',
+      path: '/verificar-correo',
+      component: () => import('@/views/forgot'),
+    },
+    {
+      name: 'Recuperar contraseña',
+      path: '/recuperar-contrasena',
+      component: () => import('@/views/reset'),
+    },
+    {
       path: '/intranet',
       meta: { requiresAuth: true },
       component: () => import('@/views/dashboard/Index'),
@@ -211,6 +221,26 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/AgeGroup'),
         },
         {
+          name: 'Causa de mortalidad',
+          path: 'configuracion-basica/causa-mortalidad',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/CauseMortality'),
+        },
+        {
+          name: 'Causa de contaminación',
+          path: 'configuracion-basica/causa-contaminacion',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/CauseContamination'),
+        },
+        {
+          name: 'Contaminatión',
+          path: 'configuracion-basica/contaminacion',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/Contamination'),
+        },
+        {
+          name: 'Actividades de evolución',
+          path: 'configuracion-basica/actividad-evolucion',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/ActivityEvolution'),
+        },
+        {
           name: 'Clasificación de riesgos',
           path: 'configuracion-basica/clasificacion-riesgos',
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileFamily/RiskClassification'),
@@ -314,27 +344,43 @@ const router = new Router({
         {
           name: 'Registro de ficha clinica de neonatología',
           path: 'ficha-clinica-neonatologia/agregar',
+          props: { history: true },
           component: () => import('@/views/dashboard/component/fileClinicalNeonatology/addFileClinicalNeonatology/AddFileClinicalNeonatology'),
         },
         {
           name: 'Actualizar de ficha clinica de neonatología',
           path: 'ficha-clinica-neonatologia/actualizar/:id',
+          props: { history: true },
           component: () => import('@/views/dashboard/component/fileClinicalNeonatology/addFileClinicalNeonatology/AddFileClinicalNeonatology'),
         },
         {
           name: 'Control y seguimiento de ficha clinica de obstetricia',
           path: 'ficha-clinica-obstetricia/seguimiento',
+          props: { history: true },
+          component: () => import('@/views/dashboard/component/fileClinicalObstetrics/tracingFileClinicalObstetrics/TracingFileClinicalObstetrics'),
+        },
+        {
+          name: 'Historial de ficha clinica de obstetricia',
+          path: 'ficha-clinica-obstetricia/historial',
+          props: { history: false },
           component: () => import('@/views/dashboard/component/fileClinicalObstetrics/tracingFileClinicalObstetrics/TracingFileClinicalObstetrics'),
         },
         {
           name: 'Agregar de ficha clinica de obstetricia',
           path: 'ficha-clinica-obstetricia/agregar',
+          props: { history: true },
           component: () => import('@/views/dashboard/component/fileClinicalObstetrics/addFileClinicalObstetrics/AddFileClinicalObstetrics'),
         },
         {
-          name: 'Actualizar de ficha clinica de obstetricia',
+          name: 'Actualizar ficha clinica de obstetricia',
           path: 'ficha-clinica-obstetricia/actualizar/:id',
-          props: true,
+          props: { history: true },
+          component: () => import('@/views/dashboard/component/fileClinicalObstetrics/addFileClinicalObstetrics/AddFileClinicalObstetrics'),
+        },
+        {
+          name: 'Visualizar ficha clinica de obstetricia',
+          path: 'ficha-clinica-obstetricia/visualizar/:id',
+          props: { history: false },
           component: () => import('@/views/dashboard/component/fileClinicalObstetrics/addFileClinicalObstetrics/AddFileClinicalObstetrics'),
         },
         {
@@ -381,6 +427,31 @@ const router = new Router({
           name: 'Reporte estructurado de los pacientes diabeticos',
           path: 'reportes/estructurados/paciente-diabetico',
           component: () => import('@/views/dashboard/component/report/structuredReport/StructuredReportDiabeticPatient'),
+        },
+        {
+          name: 'Reporte estadíctico de las fichas familiares',
+          path: 'reportes/estadisticos/ficha-familiar',
+          component: () => import('@/views/dashboard/component/report/statisticalReport/fileFamily/StatisticalReportFileFamily'),
+        },
+        {
+          name: 'Reporte estadíctico de los miembros',
+          path: 'reportes/estadisticos/miembros',
+          component: () => import('@/views/dashboard/component/report/statisticalReport/member/StatisticalReportMember'),
+        },
+        {
+          name: 'Reporte estadíctico de las fichas clinicas de obstetricia',
+          path: 'reportes/estadisticos/ficha-clinica-obstetricia',
+          component: () => import('@/views/dashboard/component/report/statisticalReport/fileClinicalObstetric/StatisticalReportFileClinicalObstetric'),
+        },
+        {
+          name: 'Reporte estadíctico de las fichas clinicas de neonatologia',
+          path: 'reportes/estadisticos/ficha-clinica-neonatologia',
+          component: () => import('@/views/dashboard/component/report/statisticalReport/fileClinicalNeonatology/StatisticalReportFileClinicalNeonatology'),
+        },
+        {
+          name: 'Reporte estadíctico de los pacientes diabéticos',
+          path: 'reportes/estadisticos/paciente-diabetico',
+          component: () => import('@/views/dashboard/component/report/statisticalReport/diabeticPatient/StatisticalReportDiabeticPatient'),
         },
         {
           name: 'Administración del sistema',

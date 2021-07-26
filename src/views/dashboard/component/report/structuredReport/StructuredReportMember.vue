@@ -15,7 +15,7 @@
               <v-icon>mdi-arrow-left-bold</v-icon>
             </v-btn>
           </v-col>
-          <v-col md="auto">
+          <v-col md="8">
             <div class="text-h3 font-weight-medium">
               Reporte de miembros
             </div>
@@ -24,29 +24,22 @@
             </div>
           </v-col>
         </v-row>
-        <v-btn
-          absolute
-          fab
-          right
-          :disabled="loadingGenerate"
-          :loading="loadingGenerate"
-          color="secondary"
-          @click="dowloandFile"
-        >
-          <v-icon>mdi-file-pdf</v-icon>
-        </v-btn>
       </template>
       <v-card-text>
-        <v-dialog
-          v-model="dialog"
-          width="400"
-        >
-          <v-card>
-            <v-container>
-              <v-card-text class="font-weight-bold text-center">
-                Filtrar busqueda
-              </v-card-text>
-              <v-card-text>
+        <v-container>
+          <v-card-text class="font-weight-bold text-center">
+            Criterios busqueda
+          </v-card-text>
+          <v-card-text>
+            <v-row
+              justify="center"
+              class="mx-auto"
+              style="max-width: 500px;"
+            >
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.disability"
                   outlined
@@ -57,6 +50,11 @@
                   item-value="id"
                   label="Discapacidades"
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.pathology"
                   label="Patologías"
@@ -67,6 +65,11 @@
                   :items="pathology"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.groupAge"
                   label="Grupos de edades"
@@ -77,6 +80,11 @@
                   :items="groupAge"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.gender"
                   label="Genero"
@@ -87,6 +95,11 @@
                   :items="gender"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.vaccine"
                   label="Vacunación"
@@ -96,6 +109,11 @@
                   item-value="id"
                   :items="vacunacion"
                 />
+              </v-col>
+              <v-col
+                sm="6"
+                cols="12"
+              >
                 <v-menu
                   v-model="showDate"
                   :close-on-content-click="false"
@@ -107,7 +125,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.startDate"
-                      label="Fecha inicial"
+                      label="Fecha de nacimiento inicial"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -120,6 +138,11 @@
                     @input="show1Date = false"
                   />
                 </v-menu>
+              </v-col>
+              <v-col
+                sm="6"
+                cols="12"
+              >
                 <v-menu
                   v-model="show2Date"
                   :close-on-content-click="false"
@@ -131,7 +154,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       v-model="filter.endDate"
-                      label="Fecha final"
+                      label="Fecha de nacimiento inicial"
                       prepend-icon="mdi-calendar"
                       outlined
                       dense
@@ -144,22 +167,33 @@
                     @input="show3Date = false"
                   />
                 </v-menu>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  :disabled="loadingFilter"
-                  :loading="loadingFilter"
-                  @click="addItemFilter()"
-                >
-                  Filtrar
-                </v-btn>
-                <v-spacer />
-              </v-card-actions>
-            </v-container>
-          </v-card>
-        </v-dialog>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              :disabled="loadingFilter"
+              :loading="loadingFilter"
+              @click="addItemFilter()"
+            >
+              <v-icon>mdi-filter</v-icon>
+              Filtrar
+            </v-btn>
+            <v-btn
+              :disabled="loadingGenerate"
+              :loading="loadingGenerate"
+              color="secondary"
+              outlined
+              @click="dowloandFile"
+            >
+              <v-icon>mdi-file-pdf</v-icon>
+              Descargar
+            </v-btn>
+            <v-spacer />
+          </v-card-actions>
+        </v-container>
         <v-data-table
           :headers="headers"
           :items="desserts"
@@ -167,19 +201,6 @@
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
-          <template v-slot:top>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              outlined
-              class="ml-5"
-              @click="dialog = true"
-            >
-              <v-icon>
-                mdi-filter
-              </v-icon>
-            </v-btn>
-          </template>
           <template v-slot:item.nombre="{ item }">
             {{ item.nombre }} {{ item.apellido }}
           </template>
@@ -320,8 +341,7 @@
           disability: [],
           pathology: [],
           groupAge: [],
-          pregnant: undefined,
-          gender: null,
+          gender: [],
           vaccine: undefined,
           startDate: null,
           endDate: null,
@@ -330,8 +350,7 @@
           disability: [],
           pathology: [],
           groupAge: [],
-          pregnant: undefined,
-          gender: null,
+          gender: [],
           vaccine: undefined,
           startDate: null,
           endDate: null,
@@ -422,21 +441,13 @@
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           Object.assign(this.filterDownload, this.filter)
-          this.close()
         } else {
-          this.close()
           this.alert({
             text: serviceResponse.message.text,
             color: 'warning',
           })
         }
-      },
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.loadingFilter = false
-          this.filter = Object.assign({}, this.defaultFilter)
-        })
+        this.loadingFilter = false
       },
       async dowloandFile () {
         this.loadingGenerate = true

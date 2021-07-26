@@ -15,41 +15,31 @@
               <v-icon>mdi-arrow-left-bold</v-icon>
             </v-btn>
           </v-col>
-          <v-col md="auto">
+          <v-col md="8">
             <div class="text-h3 font-weight-medium">
-              Reporte de fichas familiares
+              Reporte estructurado de fichas familiares
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite filtrar las fichas familiares y posteriormente generar reportes estructurados en formato PDF.
             </div>
           </v-col>
         </v-row>
-        <v-btn
-          absolute
-          fab
-          right
-          :disabled="loadingGenerate"
-          :loading="loadingGenerate"
-          color="secondary"
-          @click="dowloandFile"
-        >
-          <v-icon>mdi-file-pdf</v-icon>
-        </v-btn>
       </template>
       <v-card-text>
-        <v-dialog
-          v-model="dialog"
-          width="400"
-        >
-          <v-card>
-            <v-container>
-              <v-card-text class="font-weight-bold text-center">
-                Filtrar busqueda
-              </v-card-text>
-              <v-card-text>
-                <v-subheader>
-                  Familias
-                </v-subheader>
+        <v-container>
+          <v-card-text class="font-weight-bold text-center">
+            Criterios busqueda
+          </v-card-text>
+          <v-card-text>
+            <v-row
+              justify="center"
+              class="mx-auto"
+              style="max-width: 500px;"
+            >
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.zone"
                   outlined
@@ -60,6 +50,11 @@
                   item-value="id"
                   label="Parroquias"
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.levelTotalRisk"
                   label="Niveles de riesgo"
@@ -70,6 +65,11 @@
                   :items="levelTotal"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.culturalGroup"
                   label="Grupos culturales"
@@ -80,6 +80,26 @@
                   :items="culturalGroup"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.contamination"
+                  label="Contaminaciones"
+                  outlined
+                  dense
+                  item-text="nombre"
+                  item-value="id"
+                  :items="contamination"
+                  multiple
+                />
+              </v-col>
+              <v-col
+                sm="6"
+                cols="12"
+              >
                 <v-menu
                   v-model="showDate"
                   :close-on-content-click="false"
@@ -104,6 +124,11 @@
                     @input="show1Date = false"
                   />
                 </v-menu>
+              </v-col>
+              <v-col
+                sm="6"
+                cols="12"
+              >
                 <v-menu
                   v-model="show2Date"
                   :close-on-content-click="false"
@@ -128,22 +153,33 @@
                     @input="show3Date = false"
                   />
                 </v-menu>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  :disabled="loadingFilter"
-                  :loading="loadingFilter"
-                  @click="addItemFilter()"
-                >
-                  Filtrar
-                </v-btn>
-                <v-spacer />
-              </v-card-actions>
-            </v-container>
-          </v-card>
-        </v-dialog>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              :disabled="loadingFilter"
+              :loading="loadingFilter"
+              @click="addItemFilter()"
+            >
+              <v-icon>mdi-filter</v-icon>
+              Filtrar
+            </v-btn>
+            <v-btn
+              :disabled="loadingGenerate"
+              :loading="loadingGenerate"
+              color="secondary"
+              outlined
+              @click="dowloandFile"
+            >
+              <v-icon>mdi-file-pdf</v-icon>
+              Descargar
+            </v-btn>
+            <v-spacer />
+          </v-card-actions>
+        </v-container>
         <v-data-table
           :headers="headers"
           :items="desserts"
@@ -151,21 +187,8 @@
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
-          <template v-slot:top>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              outlined
-              class="ml-5"
-              @click="dialog = true"
-            >
-              <v-icon>
-                mdi-filter
-              </v-icon>
-            </v-btn>
-          </template>
-          <template v-slot:item.jefe_familia="{ item }">
-            {{ item.jefe_familia ? item.jefe_familia : '-' }}
+          <template v-slot:item.contaminacion="{ item }">
+            {{ item.contaminacion ? item.contaminacion.join(", ") : '-' }}
           </template>
           <template v-slot:item.created_at="{ item }">
             {{ moment(item.created_at).format('D-M-YYYY') }}
@@ -209,6 +232,7 @@
         zone: [],
         levelTotal: [],
         culturalGroup: [],
+        contamination: [],
         headers: [
           {
             text: 'Número de historia',
@@ -231,8 +255,8 @@
             value: 'numero_telefono',
           },
           {
-            text: 'Jefe de familia',
-            value: 'jefe_familia',
+            text: 'Contaminantes',
+            value: 'contaminacion',
           },
           {
             text: 'Nivel de riesgo',
@@ -261,6 +285,7 @@
           zone: [],
           levelTotalRisk: [],
           culturalGroup: [],
+          contamination: [],
           startDate: null,
           endDate: null,
         },
@@ -268,6 +293,7 @@
           zone: [],
           levelTotalRisk: [],
           culturalGroup: [],
+          contamination: [],
           startDate: null,
           endDate: null,
         },
@@ -288,12 +314,14 @@
       this.listItemZone()
       this.listItemLevelTotal()
       this.listItemCulturalGroup()
+      this.listItemContamination()
     },
     methods: {
       ...mapMutations(['alert']),
       ...mapActions('zone', ['zoneAllActions']),
       ...mapActions('levelTotal', ['levelTotalAllActions']),
       ...mapActions('culturalGroup', ['culturalGroupAllActions']),
+      ...mapActions('contamination', ['contaminationAllActions']),
       async listItem () {
         this.loadingDataTable = true
         const serviceResponse = await reportFilefamilyAllApi(this.filter)
@@ -341,6 +369,17 @@
           })
         }
       },
+      async listItemContamination () {
+        const serviceResponse = await this.contaminationAllActions()
+        if (serviceResponse.ok) {
+          this.contamination = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
       async addItemFilter () {
         this.loadingFilter = true
         const serviceResponse = await reportFilefamilyAllApi(this.filter)
@@ -355,13 +394,7 @@
             color: 'warning',
           })
         }
-      },
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.loadingFilter = false
-          this.filter = Object.assign({}, this.defaultFilter)
-        })
+        this.loadingFilter = false
       },
       dowloandFile () {
         this.loadingGenerate = true

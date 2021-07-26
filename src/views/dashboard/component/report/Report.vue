@@ -10,12 +10,12 @@
           <v-tabs-slider />
 
           <v-tab href="#tab-1">
-            Estructurados
+            Reportes estructurados
             <v-icon>mdi-file</v-icon>
           </v-tab>
           <v-tab href="#tab-2">
-            Estadisticos
-            <v-icon>mdi-file</v-icon>
+            Reportes estadísticos
+            <v-icon>mdi-chart-areaspline</v-icon>
           </v-tab>
         </v-tabs>
       </template>

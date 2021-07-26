@@ -67,6 +67,14 @@
               class="ml-1"
             >
               <v-icon>mdi-human-pregnant</v-icon>
+            </v-chip> <v-chip
+              v-if="item.fallecido"
+              color="pink"
+              outlined
+              dark
+              class="ml-1"
+            >
+              <v-icon>mdi-account-off</v-icon>
             </v-chip>
           </template>
           <template v-slot:item.edad="{ item }">
@@ -76,13 +84,17 @@
             {{ item.groupAge.name }}
           </template> -->
           <template v-slot:item.accion="{ item }">
-            <span class="d-none">{{ item.value }}</span>
             <v-btn
               x-small
               fab
               @click="editItem(item)"
             >
-              <v-icon>mdi-account-edit</v-icon>
+              <v-icon v-if="!item.fallecido">
+                mdi-account-edit
+              </v-icon>
+              <v-icon v-else>
+                mdi-eye
+              </v-icon>
             </v-btn>
             <!-- <v-btn
               x-small
@@ -156,6 +168,7 @@
                         <v-text-field
                           v-model="editedItem.nombre"
                           v-validate="'required'"
+                          :disabled="editedItem.fallecido === 1"
                           label="Nombres (*)"
                           outlined
                           dense
@@ -171,6 +184,7 @@
                         <v-text-field
                           v-model="editedItem.apellido"
                           v-validate="'required'"
+                          :disabled="editedItem.fallecido === 1"
                           label="Apellidos (*)"
                           outlined
                           dense
@@ -187,6 +201,7 @@
                         <v-text-field
                           v-model="editedItem.correo"
                           v-validate="'required'"
+                          :disabled="editedItem.fallecido === 1"
                           label="Correo electrónico"
                           outlined
                           dense
@@ -209,6 +224,7 @@
                         <v-select
                           v-model="editedItem.type_document_id"
                           :items="typeDocument"
+                          :disabled="editedItem.fallecido === 1"
                           item-text="nombre"
                           item-value="id"
                           label="Tipo de documento (*)"
@@ -226,6 +242,7 @@
                         <v-text-field
                           v-model="editedItem.cedula"
                           label="Cédula (*)"
+                          :disabled="editedItem.fallecido === 1"
                           outlined
                           dense
                           @blur="verifyDocument()"
@@ -243,6 +260,7 @@
                       >
                         <v-text-field
                           v-model="editedItem.ocupacion"
+                          :disabled="editedItem.fallecido === 1"
                           label="Ocupación"
                           outlined
                           dense
@@ -254,6 +272,7 @@
                       >
                         <v-menu
                           v-model="show2Date"
+                          :disabled="editedItem.fallecido === 1"
                           :close-on-content-click="false"
                           :nudge-right="40"
                           transition="scale-transition"
@@ -299,6 +318,7 @@
                       >
                         <v-select
                           v-model="editedItem.scholarship_id"
+                          :disabled="editedItem.fallecido === 1"
                           label="Escolaridad"
                           :items="scholarship"
                           item-text="name"
@@ -313,6 +333,7 @@
                       >
                         <v-select
                           v-model="editedItem.gender_id"
+                          :disabled="editedItem.fallecido === 1"
                           dense
                           outlined
                           label="Género (*)"
@@ -327,6 +348,7 @@
                       >
                         <v-radio-group
                           v-model="editedItem.vacunacion"
+                          :disabled="editedItem.fallecido === 1"
                           colum
                           :error-messages="errors.collect('member.vaccination')"
                           data-vv-name="vaccination"
@@ -358,6 +380,7 @@
                       >
                         <v-radio-group
                           v-model="editedItem.salud_bucal"
+                          :disabled="editedItem.fallecido === 1"
                           colum
                           :error-messages="errors.collect('member.oralHealth')"
                           data-vv-name="oralHealth"
@@ -389,6 +412,7 @@
                       >
                         <v-select
                           v-model="editedItem.patologias"
+                          :disabled="editedItem.fallecido === 1"
                           label="Patologías"
                           :items="pathology"
                           item-text="name"
@@ -406,6 +430,7 @@
                       >
                         <v-select
                           v-model="editedItem.discapacidades"
+                          :disabled="editedItem.fallecido === 1"
                           label="Discapacidades"
                           :items="disability"
                           item-text="name"
@@ -421,7 +446,23 @@
                         sm="4"
                       >
                         <v-select
+                          v-model="editedItem.type_blood_id"
+                          :disabled="editedItem.fallecido === 1"
+                          label="Tipo de sangre"
+                          :items="typeBlood"
+                          item-text="name"
+                          item-value="id"
+                          outlined
+                          dense
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="4"
+                      >
+                        <v-select
                           v-model="editedItem.relationship_id"
+                          :disabled="editedItem.fallecido === 1"
                           :error-messages="errors.collect('member.idRelationship')"
                           data-vv-name="idRelationship"
                           validate-on-blur
@@ -474,6 +515,7 @@
                       >
                         <v-radio-group
                           v-model="editedItem.embarazo"
+                          :disabled="editedItem.fallecido === 1"
                           row
                           mandatory
                         >
@@ -499,7 +541,6 @@
                           </v-radio>
                         </v-radio-group>
                       </v-col>
-                      {{ editedItem.pregnant }}
                       <v-col
                         v-if="infoPregnant"
                         cols="12"
@@ -545,6 +586,7 @@
                       >
                         <v-menu
                           v-model="show5Date"
+                          :disabled="editedItem.fallecido === 1"
                           :close-on-content-click="false"
                           :nudge-right="40"
                           transition="scale-transition"
@@ -596,15 +638,15 @@
                         cols="12"
                         sm="6"
                       >
-                        <v-subheader class="pl-0">
-                          Semana de gestación
-                        </v-subheader>
-                        <v-slider
+                        <v-text-field
                           v-model="editedItem.prenatal.semana_gestacion"
-                          :thumb-size="24"
-                          max="42"
-                          min="1"
-                          :thumb-label="true"
+                          :disabled="editedItem.fallecido === 1"
+                          outlined
+                          label="Semana de gestación"
+                          type="number"
+                          :max="42"
+                          :min="1"
+                          dense
                         />
                       </v-col>
                       <v-col
@@ -613,19 +655,9 @@
                       >
                         <v-select
                           v-model="editedItem.prenatal.vaccine_dt"
+                          :disabled="editedItem.fallecido === 1"
                           label="Dosis de vacunación DT"
                           :items="vaccione"
-                          outlined
-                          dense
-                        />
-                      </v-col>
-                      <v-col
-                        cols="12"
-                        sm="6"
-                      >
-                        <v-textarea
-                          v-model="editedItem.prenatal.antecedentes_patologicos"
-                          label="Antecedentes patológías obstétricas"
                           outlined
                           dense
                         />
@@ -639,60 +671,52 @@
                         cols="12"
                         sm="4"
                       >
-                        <v-subheader class="pl-0">
-                          Gestas
-                        </v-subheader>
-                        <v-slider
+                        <v-text-field
                           v-model="editedItem.prenatal.gestas"
-                          :thumb-size="24"
-                          max="50"
-                          min="0"
-                          :thumb-label="true"
+                          :disabled="editedItem.fallecido === 1"
+                          outlined
+                          label="Gestas"
+                          type="number"
+                          dense
                         />
                       </v-col>
                       <v-col
                         cols="12"
                         sm="4"
                       >
-                        <v-subheader class="pl-0">
-                          Partos
-                        </v-subheader>
-                        <v-slider
+                        <v-text-field
                           v-model="editedItem.prenatal.partos"
-                          :thumb-size="24"
-                          max="50"
-                          min="0"
-                          :thumb-label="true"
+                          :disabled="editedItem.fallecido === 1"
+                          outlined
+                          label="Partos"
+                          type="number"
+                          dense
                         />
                       </v-col>
                       <v-col
                         cols="12"
                         sm="4"
                       >
-                        <v-subheader class="pl-0">
-                          Abortos
-                        </v-subheader>
-                        <v-slider
+                        <v-text-field
                           v-model="editedItem.prenatal.abortos"
-                          :thumb-size="24"
-                          max="50"
-                          min="0"
-                          :thumb-label="true"
+                          :disabled="editedItem.fallecido === 1"
+                          outlined
+                          label="Abortos"
+                          type="number"
+                          dense
                         />
                       </v-col>
                       <v-col
                         cols="12"
                         sm="4"
                       >
-                        <v-subheader class="pl-0">
-                          Cesarias
-                        </v-subheader>
-                        <v-slider
+                        <v-text-field
                           v-model="editedItem.prenatal.cesarias"
-                          :thumb-size="24"
-                          max="50"
-                          min="0"
-                          :thumb-label="true"
+                          :disabled="editedItem.fallecido === 1"
+                          outlined
+                          label="Cesarias"
+                          type="number"
+                          dense
                         />
                       </v-col>
                     </v-row>
@@ -712,7 +736,7 @@
             Cancelar
           </v-btn>
           <v-btn
-            :disabled="validate"
+            :disabled="validate || editedItem.fallecido === 1"
             color="primary"
             text
             @click="addItem()"
@@ -778,6 +802,12 @@
         >
           <template v-slot:item.relationship_id="{ item }">
             {{ getRelationship(item.relationship_id) }}
+          </template>
+          <template v-slot:item.nombre="{ item }">
+            {{ item.nombe }} {{ item.apellido }}
+          </template>
+          <template v-slot:item.cause_mortality_id="{ item }">
+            {{ getCauseMortality(item.cause_mortality_id) }}
           </template>
           <template v-slot:item.accion="{ item }">
             <v-btn
@@ -871,10 +901,62 @@
                   cols="12"
                   sm="6"
                 >
+                  <v-menu
+                    v-model="show7Date"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="100px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="editedItemMortality.fecha_fallecimiento"
+                        label="Fecha de fallecimiento"
+                        prepend-icon="mdi-calendar"
+                        outlined
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      />
+                    </template>
+                    <v-date-picker
+                      v-model="editedItemMortality.fecha_fallecimiento"
+                      @input="show8Date = false"
+                    />
+                  </v-menu>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-select
+                    v-model="editedItemMortality.member_id"
+                    label="Miembro fallecido (*)"
+                    outlined
+                    :disabled="editedItemMortality.fecha_fallecimiento === null"
+                    dense
+                    item-text="cedula"
+                    item-value="cedula"
+                    :items="miembros"
+                    hint="Seleccione la cédula del miembro fallecido"
+                    @change="captureMortality"
+                  />
+                </v-col>
+              </v-row>
+              <v-subheader>
+                Datos del miembro familiar fallecido
+              </v-subheader>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
                   <v-text-field
                     v-model="editedItemMortality.nombre"
                     v-validate="'required'"
                     label="Nombres (*)"
+                    disabled
                     outlined
                     dense
                     :error-messages="errors.collect('mortality.nombres')"
@@ -890,6 +972,7 @@
                     v-model="editedItemMortality.apellido"
                     v-validate="'required'"
                     label="Apellidos (*)"
+                    disabled
                     outlined
                     dense
                     :error-messages="errors.collect('mortality.apellidos')"
@@ -901,19 +984,16 @@
                   cols="12"
                   sm="3"
                 >
-                  <v-subheader class="pl-0 pt-0 mt-0">
-                    Edad al fallecer (*)
-                  </v-subheader>
-                  <v-slider
+                  <v-text-field
                     v-model="editedItemMortality.edad"
                     v-validate="'required'"
-                    :thumb-size="24"
-                    max="150"
-                    min="1"
-                    :thumb-label="true"
+                    outlined
+                    disabled
+                    label="Edad al fallecer (*)"
                     :error-messages="errors.collect('mortality.edad')"
                     data-vv-name="edad"
                     validate-on-blur
+                    dense
                   />
                 </v-col>
                 <v-col
@@ -929,6 +1009,7 @@
                     item-value="id"
                     outlined
                     dense
+                    disabled
                     :error-messages="errors.collect('mortality.parentesco')"
                     data-vv-name="parentesco"
                     validate-on-blur
@@ -938,14 +1019,17 @@
                   cols="12"
                   sm="6"
                 >
-                  <v-textarea
-                    v-model="editedItemMortality.causa"
+                  <v-select
+                    v-model="editedItemMortality.cause_mortality_id"
                     v-validate="'required'"
                     label="Causa de muerte (*)"
                     outlined
                     dense
+                    :items="causeMortality"
+                    item-text="nombre"
+                    item-value="id"
                     :error-messages="errors.collect('mortality.causa')"
-                    data-vv-name="causa"
+                    data-vv-name="causa de muerte"
                     validate-on-blur
                   />
                 </v-col>
@@ -1015,6 +1099,8 @@
         dialog2: false,
         dialogDelete: false,
         dialogDeleteMortlity: false,
+        show8Date: false,
+        show7Date: false,
         show5Date: false,
         show6Date: false,
         show4Date: false,
@@ -1058,6 +1144,8 @@
         pathology: [],
         disability: [],
         gender: [],
+        typeBlood: [],
+        causeMortality: [],
         vaccione: [
           'Primera',
           'Segunda',
@@ -1068,6 +1156,7 @@
           nombre: '',
           apellido: '',
           type_document_id: null,
+          type_blood_id: null,
           cedula: '',
           correo: '',
           ocupacion: '',
@@ -1082,6 +1171,7 @@
           discapacidades: [],
           embarazo: false,
           ficha_obstetric: false,
+          fallecido: 0,
           prenatal: {
             fum: null,
             fpp: null,
@@ -1104,6 +1194,7 @@
           nombre: '',
           apellido: '',
           type_document_id: null,
+          type_blood_id: null,
           cedula: '',
           correo: '',
           ocupacion: '',
@@ -1118,6 +1209,7 @@
           discapacidades: [],
           embarazo: false,
           ficha_obstetric: false,
+          fallecido: 0,
           prenatal: {
             fum: null,
             fpp: null,
@@ -1156,9 +1248,9 @@
             sortable: false,
           },
           {
-            text: 'Causa',
+            text: 'Causa de muerte',
             align: 'start',
-            value: 'causa',
+            value: 'cause_mortality_id',
             sortable: false,
           },
           {
@@ -1170,22 +1262,31 @@
         ],
         editedItemMortality: {
           nombre: '',
+          apellido: '',
           relationship_id: null,
-          edad: 0,
-          causa: '',
+          member_id: null,
+          fecha_fallecimiento: null,
+          edad: '',
+          cause_mortality_id: '',
         },
         defaultItemMortality: {
           nombre: '',
+          apellido: '',
           relationship_id: null,
-          edad: 0,
-          causa: '',
+          member_id: null,
+          fecha_fallecimiento: null,
+          edad: '',
+          cause_mortality_id: '',
         },
       }
     },
     computed: {
       ...mapState('fileFamily', ['steps', 'fileFamily']),
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar miembro' : 'Editar miembro'
+        if (this.editedIndex === -1) return 'Agregar miembro'
+        else if (this.editedIndex !== -1 && !this.editedItem.fallecido) return 'Editar miembro'
+        else if (this.editedIndex !== -1 && this.editedItem.fallecido) return ' Miembro fallecido'
+        return ''
       },
       availableSteps () {
         if (
@@ -1218,7 +1319,9 @@
           !this.editedItemMortality.nombre ||
           !this.editedItemMortality.apellido ||
           !this.editedItemMortality.edad ||
-          !this.editedItemMortality.causa ||
+          !this.editedItemMortality.cause_mortality_id ||
+          !this.editedItemMortality.fecha_fallecimiento ||
+          !this.editedItemMortality.member_id ||
           !this.editedItemMortality.relationship_id
         ) return true
         else return false
@@ -1232,6 +1335,9 @@
       dialog (val) {
         val || this.close()
       },
+      dialog2 (val) {
+        val || this.close()
+      },
     },
     created () {
       this.ShowFileFamily()
@@ -1242,6 +1348,8 @@
       this.listItemTypeDocument()
       this.listItemGroupAge()
       this.listItemGender()
+      this.listItemTypeBlood()
+      this.listItemCauseMortality()
     },
     methods: {
       ...mapMutations(['alert']),
@@ -1251,12 +1359,36 @@
       ...mapActions('disability', ['disabilityAllActions']),
       ...mapActions('typeDocument', ['typeDocumentAllActions']),
       ...mapActions('groupAge', ['groupAgeAllActions']),
+      ...mapActions('typeBlood', ['typeBloodAllActions']),
       ...mapActions('gender', ['genderAllActions']),
+      ...mapActions('causeMortality', ['causeMortalityAllActions']),
       async ShowFileFamily () {
         this.id = this.$route.params.id
         if (this.id !== undefined) {
           this.miembros = this.fileFamily.miembros
           this.mortalidad = this.fileFamily.mortalidad
+        }
+      },
+      async listItemTypeBlood () {
+        const serviceResponse = await this.typeBloodAllActions()
+        if (serviceResponse.ok) {
+          this.typeBlood = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemCauseMortality () {
+        const serviceResponse = await this.causeMortalityAllActions()
+        if (serviceResponse.ok) {
+          this.causeMortality = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
         }
       },
       async listItemGroupAge () {
@@ -1375,12 +1507,14 @@
         this.$nextTick(() => {
           this.infoPregnant = false
           this.infoDiabetic = false
+          this.editedIndex = -1
           this.editedItem = Object.assign({}, this.defaultItem)
         })
       },
       closeMortality () {
         this.dialog2 = false
         this.$nextTick(() => {
+          this.editedIndexMortality = -1
           this.editedItemMortality = Object.assign({}, this.defaultItemMortality)
         })
       },
@@ -1490,6 +1624,16 @@
           return ''
         }
       },
+      getCauseMortality (val) {
+        if (this.causeMortality.length > 0) {
+          const v = this.causeMortality.find(item => {
+            return item.id === val
+          })
+          return v.nombre
+        } else {
+          return ''
+        }
+      },
       async verifyDocument () {
         if (this.editedItem.cedula) {
           const serviceResponse = await this.fileFamilyVerifyDocumentActions(this.editedItem.cedula)
@@ -1534,6 +1678,14 @@
           this.editedItem.prenatal = Object.assign({}, prenatal)
           this.editedItem.prenatal.numero_historia = `FO000${Math.round(Math.random() * (900 - 100) + 100)}`
         }
+      },
+      captureMortality (val) {
+        const member = this.miembros.find(item => item.cedula === val)
+        member.fallecido = 1
+        this.editedItemMortality.nombre = member.nombre
+        this.editedItemMortality.apellido = member.apellido
+        this.editedItemMortality.relationship_id = member.relationship_id
+        this.editedItemMortality.edad = calAge(member.fecha_nacimiento, this.editedItemMortality.fecha_fallecimiento)
       },
     },
   }

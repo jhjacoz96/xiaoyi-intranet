@@ -1,5 +1,11 @@
 <template>
   <v-container fluid>
+    <v-alert
+      dense
+      type="info"
+    >
+      Para avanzar al siguiente paso debe <strong>programar las actividades</strong> para cada riesgo
+    </v-alert>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
       6. Evolución de la gestión del riesgo familiar
     </div>
@@ -121,36 +127,60 @@
             lazy-validation
           >
             <v-container>
-              <v-row>
-                <v-col
-                  cols="12"
+              <v-card-text>
+                <v-select
+                  v-model="editedItem.compromiso_id"
+                  :items="editedItem.activity_evolutions"
+                  item-text="compromiso_familiar"
+                  item-value="id"
+                  dense
+                  outlined
+                  label="Seleccione una actividad (*)"
+                  @change="getActivity"
+                />
+                <v-menu
+                  v-model="show3Date"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="100px"
                 >
-                  <v-textarea
-                    v-model="editedItem.compromiso_familiar"
-                    v-validate="'required'"
-                    label="Compromiso de la familia"
-                    outlined
-                    name="input-7-4"
-                    :error-messages="errors.collect('actividad.compromiso_familiar')"
-                    data-vv-name="compromiso familiar"
-                    validate-on-blur
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="editedItem.fecha_programacion"
+                      label="Fecha de programación de actividad (*)"
+                      prepend-icon="mdi-calendar"
+                      outlined
+                      dense
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker
+                    v-model="editedItem.fecha_programacion"
+                    @input="show4Date = false"
                   />
-                </v-col>
-                <v-col
-                  cols="12"
-                >
-                  <v-textarea
-                    v-model="editedItem.compromiso_equipo"
-                    v-validate="'required'"
-                    label="Compromiso del equipo de salud"
-                    outlined
-                    name="input-7-4"
-                    :error-messages="errors.collect('actividad.compromiso_equipo')"
-                    data-vv-name="compromiso equipo médico"
-                    validate-on-blur
-                  />
-                </v-col>
-              </v-row>
+                </v-menu>
+              </v-card-text>
+              <v-card-text v-if="editedItem.compromiso_id">
+                <v-row>
+                  <v-col cols="5">
+                    <span class="font-weight-medium">Compromiso de la familia</span>
+                  </v-col>
+                  <v-col cols="6">
+                    <span>{{ compromiso_familiar }}</span>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="5">
+                    <span class="font-weight-medium">Compromiso del equipo de salud</span>
+                  </v-col>
+                  <v-col cols="6">
+                    {{ compromiso_equipo }}
+                  </v-col>
+                </v-row>
+              </v-card-text>
             </v-container>
           </v-form>
         </v-card-text>
@@ -188,7 +218,7 @@
               <span class="font-weight-medium">Compromiso de la familia</span>
             </v-col>
             <v-col cols="6">
-              <span>{{ editedItem.compromiso_familiar }}</span>
+              <span>{{ compromiso_familiar }}</span>
             </v-col>
           </v-row>
           <v-row>
@@ -196,7 +226,7 @@
               <span class="font-weight-medium">Compromiso del equipo de salud</span>
             </v-col>
             <v-col cols="6">
-              {{ editedItem.compromiso_equipo }}
+              {{ compromiso_equipo }}
             </v-col>
           </v-row>
         </v-card-text>
@@ -253,6 +283,32 @@
                   name="input-7-4"
                 />
               </v-col>
+              <v-col>
+                <v-menu
+                  v-model="show2Date"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="100px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="editedItem.fecha_evaluacion"
+                      label="Fecha de evaluación"
+                      prepend-icon="mdi-calendar"
+                      outlined
+                      dense
+                      v-bind="attrs"
+                      v-on="on"
+                    />
+                  </template>
+                  <v-date-picker
+                    v-model="editedItem.fecha_evaluacion"
+                    @input="showDate = false"
+                  />
+                </v-menu>
+              </v-col>
             </v-row>
           </v-form>
         </v-card-text>
@@ -306,6 +362,12 @@
         value: '',
         valid: false,
         valid1: false,
+        show2Date: false,
+        showDate: false,
+        show3Date: false,
+        show4Date: false,
+        compromiso_familiar: '',
+        compromiso_equipo: '',
         l: 400,
         headers: [
           {
@@ -328,14 +390,18 @@
           },
         ],
         editedItem: {
-          compromiso_familiar: '',
-          compromiso_equipo: '',
+          activity_evolutions: [],
+          fecha_evaluacion: null,
+          fecha_programacion: null,
+          compromiso_id: null,
           cumplio: '',
           causas: '',
         },
         defaultItem: {
-          compromiso_familiar: '',
-          compromiso_equipo: '',
+          activity_evolutions: [],
+          fecha_evaluacion: null,
+          fecha_programacion: null,
+          compromiso_id: null,
           cumplio: '',
           causas: '',
         },
@@ -349,10 +415,10 @@
         if (this.evolucion.length > 0 && this.l !== 400) {
           if (
             this.evolucion.filter(item => {
-              return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
+              return item.compromiso_id !== null && item.fecha_programacion !== null
             }).length === this.evolucion.length &&
             this.evolucion.filter(item => {
-              return item.compromiso_familiar !== '' && item.compromiso_equipo !== ''
+              return item.compromiso_id !== null && item.fecha_programacion !== null
             }).length !== 0 &&
             this.steps.includes(3)
           ) {
@@ -376,8 +442,8 @@
       },
       validateCompromiso () {
         if (
-          !this.editedItem.compromiso_familiar ||
-          !this.editedItem.compromiso_equipo
+          !this.editedItem.fecha_programacion ||
+          !this.editedItem.compromiso_id
         ) return true
         else return false
       },
@@ -386,6 +452,14 @@
           !this.editedItem.cumplio
         ) return true
         else return false
+      },
+    },
+    watch: {
+      dialogActivity (val) {
+        val || this.closeActivity()
+      },
+      dialogEvaluation (val) {
+        val || this.closeEvaluation()
       },
     },
     created () {
@@ -413,16 +487,18 @@
           if (this.id !== undefined) {
             return {
               ...item,
-              compromiso_familiar: item.compromiso_familiar,
-              compromiso_equipo: item.compromiso_familiar,
+              fecha_evaluacion: item.fecha_evaluacion,
+              fecha_programacion: item.fecha_programacion,
+              compromiso_id: item.compromiso_id,
               cumplio: item.cumplio,
               causas: item.causas,
             }
           } else {
             return {
               ...item,
-              compromiso_familiar: '',
-              compromiso_equipo: '',
+              fecha_evaluacion: null,
+              fecha_programacion: null,
+              compromiso_id: null,
               cumplio: '',
               causas: '',
             }
@@ -437,16 +513,18 @@
           if (this.id !== undefined) {
             return {
               ...item,
-              compromiso_familiar: item.compromiso_familiar,
-              compromiso_equipo: item.compromiso_familiar,
+              fecha_evaluacion: item.fecha_evaluacion,
+              fecha_programacion: item.fecha_programacion,
+              compromiso_id: item.compromiso_id,
               cumplio: item.cumplio,
               causas: item.causas,
             }
           } else {
             return {
               ...item,
-              compromiso_familiar: '',
-              compromiso_equipo: '',
+              fecha_evaluacion: null,
+              fecha_programacion: null,
+              compromiso_id: null,
               cumplio: '',
               causas: '',
             }
@@ -475,22 +553,33 @@
       editedActivity (item) {
         this.editedIndex = this.evolucion.indexOf(item)
         Object.assign(this.editedItem, item)
+        if (this.editedItem.compromiso_id) this.getActivity(this.editedItem.compromiso_id)
         this.dialogActivity = true
       },
       editedEvaluation (item) {
         this.editedIndex = this.evolucion.indexOf(item)
         Object.assign(this.editedItem, item)
+        if (this.editedItem.compromiso_id) this.getActivity(this.editedItem.compromiso_id)
         this.dialogEvaluation = true
       },
       addItemActivity () {
         Object.assign(this.evolucion[this.editedIndex], this.editedItem)
         // this.setEvaluation(this.evolucion)
+        this.compromiso_equipo = ''
+        this.compromiso_familiar = ''
         this.closeActivity()
       },
       addItemEvaluation () {
         Object.assign(this.evolucion[this.editedIndex], this.editedItem)
         // this.setEvaluation(this.evolucion)
+        this.compromiso_equipo = ''
+        this.compromiso_familiar = ''
         this.closeEvaluation()
+      },
+      getActivity (val) {
+        const actvity = this.editedItem.activity_evolutions.find(item => item.id === val)
+        this.compromiso_familiar = actvity.compromiso_familiar
+        this.compromiso_equipo = actvity.compromiso_equipo
       },
     },
   }

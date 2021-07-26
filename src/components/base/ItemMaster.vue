@@ -1,7 +1,6 @@
 <template>
   <v-hover
     v-slot="{ hover }"
-    close-delay="200"
   >
     <v-card
       v-bind="$attrs"
@@ -19,7 +18,6 @@
         </v-icon>
       </span>
       <div
-        class="font-weight-medium pa-1"
         :class="{'white--text' : hover}"
       >
         {{ title }}

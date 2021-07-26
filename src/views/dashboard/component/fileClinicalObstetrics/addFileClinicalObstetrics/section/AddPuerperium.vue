@@ -20,6 +20,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.loquios"
+            :disabled="!history"
             row
             mandatory
           >
@@ -42,6 +43,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.involucion_uterina"
+            :disabled="!history"
             row
             mandatory
           >
@@ -61,6 +63,7 @@
         >
           <v-select
             v-model="editedItem.dolor_eva"
+            :disabled="!history"
             label="Dolor eva"
             :items="[1, 2, 3, 4, 5]"
             outlined
@@ -76,6 +79,7 @@
           </p>
           <v-radio-group
             v-model="editedItem.educacion_lactancia"
+            :disabled="!history"
             row
             mandatory
           >
@@ -98,6 +102,7 @@
         >
           <v-select
             v-model="editedItem.satisfaccion_lactancia"
+            :disabled="!history"
             label="Nivel de satifacción"
             :items="[1, 2, 3, 4, 5]"
             outlined
@@ -160,6 +165,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[0]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -179,6 +185,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[1]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -198,6 +205,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[2]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -217,6 +225,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[3]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -235,6 +244,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[4]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -254,6 +264,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[5]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -273,6 +284,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[6]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -292,6 +304,7 @@
               <td>
                 <v-select
                   v-model="score_mama_inmediato[7]"
+                  :disabled="!history"
                   :items="[0,1,2,3]"
                 />
               </td>
@@ -404,6 +417,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[0]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -423,6 +437,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[1]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -442,6 +457,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[2]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -461,6 +477,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[3]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -479,6 +496,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[4]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -498,6 +516,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[5]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -517,6 +536,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[6]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -536,6 +556,7 @@
                 <td>
                   <v-select
                     v-model="score_mama_mediato[7]"
+                    :disabled="!history"
                     :items="[0,1,2,3]"
                   />
                 </td>
@@ -571,7 +592,7 @@
         Tardío
       </div>
       <v-container>
-        <v-row>
+        <v-row v-if="organization">
           <v-col
             class="col"
             sm="6"
@@ -580,8 +601,8 @@
               dense
               outlined
               disabled
-              label="Codigo de ficha familiar"
-              value="001"
+              label="Código de la unidad operativa"
+              :value="organization.code_uo"
             />
           </v-col>
           <v-col
@@ -592,8 +613,8 @@
               dense
               outlined
               disabled
-              label="Centro de salud"
-              value="Santa isabel"
+              label="Nombre de la unidad operativa"
+              :value="organization.name"
             />
           </v-col>
           <v-col
@@ -605,6 +626,7 @@
             </p>
             <v-radio-group
               v-model="editedItem.educacion_paciente"
+              :disabled="!history"
               row
               mandatory
             >
@@ -627,6 +649,7 @@
             </p>
             <v-radio-group
               v-model="editedItem.educacion_depresion"
+              :disabled="!history"
               row
               mandatory
             >
@@ -649,6 +672,7 @@
             </p>
             <v-radio-group
               v-model="editedItem.proporcionar_telefono"
+              :disabled="!history"
               row
               mandatory
             >
@@ -667,6 +691,7 @@
           >
             <v-select
               v-model="editedItem.senal_alarma"
+              :disabled="!history"
               label="señales de alarmas en las que se educó a la paciente"
               outlined
               item-text="nombre"
@@ -681,7 +706,8 @@
           >
             <v-textarea
               v-model="editedItem.recomendaciones"
-              label="Recomendaciones"
+              :disabled="!history"
+              label="Recomendaciones (*)"
               outlined
               dense
             />
@@ -705,12 +731,17 @@
   } from 'vuex'
   import {
     senalAlarmAllApi,
+    webOrganizationAllApi,
   } from '@/api/modules'
   export default {
     props: {
       click: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
     data () {
@@ -733,6 +764,10 @@
         score_mama_mediato: [],
         score_mama_inmediato: [],
         senalesAlarma: [],
+        organization: {
+          name: '',
+          cede_uo: '',
+        },
       }
     },
     computed: {
@@ -795,6 +830,7 @@
       },
       availableSteps () {
         if (
+          this.editedItem.recomendaciones &&
           this.steps.includes(5)
         ) {
           this.setSteps(6)
@@ -831,6 +867,7 @@
     created () {
       this.editedItem = Object.assign({}, this.fileObstetric)
       this.listItem()
+      this.itemOrganization()
     },
     methods: {
       ...mapMutations(['alert']),
@@ -847,6 +884,17 @@
         const serviceResponse = await senalAlarmAllApi()
         if (serviceResponse.ok) {
           this.senalesAlarma = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async itemOrganization () {
+        const serviceResponse = await webOrganizationAllApi()
+        if (serviceResponse.ok) {
+          this.organization = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,

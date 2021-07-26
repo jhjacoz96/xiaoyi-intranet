@@ -17,9 +17,25 @@ import {
 
    export default {
        namespaced: true,
-       state: {},
+       state: {
+         organization: {
+           name: '',
+           province_id: undefined,
+           canton_id: undefined,
+           address: '',
+           institution_id: undefined,
+           code_uo: '',
+           parroquia: '',
+           image: undefined,
+         },
+       },
        getters: {},
-       mutations: {},
+       mutations: {
+         setOrganization (state, payload) {
+           Object.assign(state.organization, payload)
+           state.organization.image = payload.image ? payload.image.url : undefined
+         },
+       },
        actions: {
            async webDiabeticPostActions (commit, payload) {
                const serviceResponse = await webDiabeticPostApi(payload)
@@ -71,10 +87,16 @@ import {
             },
            async webOrganizationPostActions (commit, payload) {
              const serviceResponse = await webOrganizationPostApi(payload)
+             if (serviceResponse.ok) {
+               commit('setOrganization', serviceResponse.data)
+             }
              return serviceResponse
            },
-            async webOrganizationAllActions (commit) {
+            async webOrganizationAllActions ({ commit }) {
               const serviceResponse = await webOrganizationAllApi()
+              if (serviceResponse.ok) {
+                commit('setOrganization', serviceResponse.data)
+              }
               return serviceResponse
             },
        },

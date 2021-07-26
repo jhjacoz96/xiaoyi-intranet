@@ -173,6 +173,7 @@ import {
          },
          setMiembro (state, payload) {
             state.miembro = Object.assign({}, payload)
+            state.fileNeonatology.patologias_maternas = payload.patologias
          },
        },
        actions: {

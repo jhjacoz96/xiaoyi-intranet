@@ -13,8 +13,8 @@
             cols="8"
             sm="6"
             md="5"
-            lg="3"
-            xl="3"
+            lg="4"
+            xl="4"
           >
             <!-- <v-fade-transition mode="out-in"> -->
             <v-slide-y-transition>
@@ -80,7 +80,7 @@
                   </v-form>
                 </v-card-text>
                 <v-card-text class="text-center">
-                  <router-link to="#">
+                  <router-link to="/verificar-correo">
                     ¿Ha olvidado la contraseña?
                   </router-link>
                 </v-card-text>

@@ -1,5 +1,11 @@
 <template>
   <v-container fluid>
+    <v-alert
+      dense
+      type="info"
+    >
+      Para avanzar al siguiente paso debe <strong>seleccionar un nivel de riesgo</strong> para cada riesgo
+    </v-alert>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
       5. Clasificación de riesgos familiares
       <v-btn

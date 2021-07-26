@@ -152,6 +152,34 @@
             to="/intranet/configuracion-basica/nivel-riesgos-total"
           />
         </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Causas de mortalidad"
+            icon="mdi-36px mdi-36px mdi-account-off"
+            to="/intranet/configuracion-basica/causa-mortalidad"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Actividades de evolución"
+            icon="mdi-36px mdi-36px mdi-file"
+            to="/intranet/configuracion-basica/actividad-evolucion"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Causas de contaminación"
+            icon="mdi-36px mdi-36px mdi-file"
+            to="/intranet/configuracion-basica/causa-contaminacion"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Contaminaciones"
+            icon="mdi-36px mdi-36px mdi-file"
+            to="/intranet/configuracion-basica/contaminacion"
+          />
+        </v-col>
       </v-row>
     </v-container>
     <v-subheader>
@@ -178,13 +206,6 @@
             title="Semana de gestción"
             icon="mdi-36px mdi-36px mdi-human-pregnant"
             to="/intranet/configuracion-basica/semana-gestacion"
-          />
-        </v-col> -->
-        <!-- <v-col cols="3">
-          <base-item-master
-            title="Cacteristicas del parto"
-            icon="mdi-36px mdi-36px mdi-bacteria"
-            to="configuracion-basica/caracteristicas"
           />
         </v-col>
         <v-col cols="3">

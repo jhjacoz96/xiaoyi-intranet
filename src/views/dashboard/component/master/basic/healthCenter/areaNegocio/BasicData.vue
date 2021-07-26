@@ -35,40 +35,50 @@
               <v-col
                 cols="12"
                 sm="6"
-                md="3"
               >
-                <v-select
-                  v-model="editedItem.institution_id"
-                  item-text="name"
-                  item-value="id"
-                  :items="institution"
-                  dense
-                  outlined
-                  label="Institución del sistema"
-                />
+                <v-row>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-select
+                      v-model="editedItem.institution_id"
+                      item-text="name"
+                      item-value="id"
+                      :items="institution"
+                      dense
+                      outlined
+                      label="Institución del sistema"
+                    />
+                  </v-col>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-text-field
+                      v-model="editedItem.name"
+                      dense
+                      outlined
+                      label="Nombre de la unidad operativa"
+                    />
+                  </v-col>
+                  <v-col
+                    cols="12"
+                  >
+                    <v-text-field
+                      v-model="editedItem.code_uo"
+                      dense
+                      outlined
+                      label="Código de la unidad operativa"
+                    />
+                  </v-col>
+                </v-row>
               </v-col>
               <v-col
-                sm="6"
                 cols="12"
-                md="3"
-              >
-                <v-text-field
-                  v-model="editedItem.name"
-                  dense
-                  outlined
-                  label="Nombre de la unidad operativa"
-                />
-              </v-col>
-              <v-col
                 sm="6"
-                cols="12"
-                md="3"
               >
-                <v-text-field
-                  v-model="editedItem.code_uo"
-                  dense
-                  outlined
-                  label="Código de la unidad operativa"
+                <base-preview-image
+                  :image="typeof editedItem.image === 'object' ? editedItem.image.url : editedItem.image"
+                  @imagen="editedItem.image = $event"
                 />
               </v-col>
             </v-row>
@@ -125,7 +135,7 @@
                   v-model="editedItem.parroquia"
                   dense
                   outlined
-                  label="Ciudad"
+                  label="Ciudad, pueblo ó caserio"
                 />
               </v-col>
               <v-col
@@ -173,6 +183,7 @@
           institution_id: undefined,
           code_uo: '',
           parroquia: '',
+          image: undefined,
         },
         canton: [],
         institution: [],
@@ -188,6 +199,7 @@
           this.editedItem.province_id &&
           this.editedItem.canton_id &&
           this.editedItem.parroquia &&
+          this.editedItem.image &&
           this.editedItem.address
         ) return false
         return true
@@ -208,6 +220,7 @@
         if (serviceResponsee.ok) {
           if (serviceResponsee.data) {
             Object.assign(this.editedItem, serviceResponsee.data)
+            this.editedItem.image = serviceResponsee.data.image ? serviceResponsee.data.image.url : undefined
             if (this.editedItem.province_id) this.listItemCanton(this.editedItem.province_id)
           }
         } else {
@@ -255,9 +268,20 @@
         }
       },
       async addItem () {
-        const serviceResponsee = await this.webOrganizationPostActions(this.editedItem)
+        console.log(this.editedItem)
+        const formData = new FormData()
+        formData.append('institution_id', this.editedItem.institution_id)
+        formData.append('name', this.editedItem.name)
+        formData.append('code_uo', this.editedItem.code_uo)
+        formData.append('province_id', this.editedItem.province_id)
+        formData.append('canton_id', this.editedItem.canton_id)
+        formData.append('parroquia', this.editedItem.parroquia)
+        formData.append('address', this.editedItem.address)
+        formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+        const serviceResponsee = await this.webOrganizationPostActions(formData)
         if (serviceResponsee.ok) {
           Object.assign(this.editedItem, serviceResponsee.data)
+          this.editedItem.image = serviceResponsee.data.image ? serviceResponsee.data.image.url : undefined
           this.alert({
             text: serviceResponsee.message,
             color: 'success',

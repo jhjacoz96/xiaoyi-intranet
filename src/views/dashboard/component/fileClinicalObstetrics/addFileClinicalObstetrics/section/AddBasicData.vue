@@ -198,10 +198,11 @@
           <v-select
             v-model="editedItem.type_blood_id"
             outlined
+            :disabled="!history"
             :items="typeBloods"
             item-text="name"
             item-value="id"
-            label="Tipo de sangre"
+            label="Tipo de sangre (*)"
             dense
           />
         </v-col>
@@ -214,8 +215,9 @@
             v-validate="'required'"
             :error-messages="errors.collect('basic.civilStatus')"
             data-vv-name="estado civil"
+            :disabled="!history"
             outlined
-            label="Estado civil"
+            label="Estado civil  (*)"
             :items="['Soltera/o', 'Casada/o', 'Viuda/o']"
             dense
             validate-on-blur
@@ -229,7 +231,8 @@
             v-model="editedItem.vive_con"
             v-validate="'required'"
             :error-messages="errors.collect('basic.liveWith')"
-            data-vv-name="vive con"
+            data-vv-name="vive con  (*)"
+            :disabled="!history"
             outlined
             label="Vive con"
             dense
@@ -243,6 +246,7 @@
         </v-subheader>
         <v-btn
           fab
+          :disabled="!history"
           color="secondary"
           class="float-right d-inline-block"
           @click="addTelofono()"
@@ -258,6 +262,7 @@
           <td>
             <v-text-field
               v-model="item.nombre"
+              :disabled="!history"
               outlined
               label="Nombre"
               dense
@@ -266,6 +271,7 @@
           <td>
             <v-text-field
               v-model="item.telefono"
+              :disabled="!history"
               class="mx-2"
               outlined
               label="Telefono"
@@ -275,6 +281,7 @@
           <td>
             <v-select
               v-model="item.relationship_id"
+              :disabled="!history"
               outlined
               :items="relationship"
               label="Parentesco"
@@ -286,6 +293,7 @@
           <td>
             <v-btn
               color="pink"
+              :disabled="!history"
               icon
               dark
               @click="deleteTelefono(item)"
@@ -317,6 +325,10 @@
       click: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
     data () {
@@ -375,7 +387,7 @@
     },
     methods: {
       ...mapMutations(['alert']),
-      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions', 'fileClinicalObstetricCheckActions']),
+      ...mapActions('fileClinicalObstetric', ['fileClinicalObstetricGetActions', 'fileClinicalObstetricCheckActions', 'fileClinicalObstetricCheckPregnantActions']),
       ...mapMutations('fileClinicalObstetric', ['setSteps', 'setFileObstetric', 'setMiembro', 'resetFileObstetric']),
       ...mapActions('disability', ['disabilityAllActions']),
       ...mapActions('typeBlood', ['typeBloodAllActions']),
@@ -452,7 +464,7 @@
           textTwo.indexOf(searchText) > -1
       },
       async checkMember (val) {
-        const serviceResponse = await this.fileClinicalObstetricCheckActions(val)
+        const serviceResponse = await this.fileClinicalObstetricCheckPregnantActions(val)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
         } else {

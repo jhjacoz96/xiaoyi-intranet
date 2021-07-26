@@ -53,7 +53,11 @@ function buildErrorMessage (error) {
         errorResponse.message.text = i18n.t('message.apiError405_406')
       } else errorResponse.message.text = error.response.data.message.text
     errorResponse.ok = error.response.title
-    errorResponse.message.text = error.response.data.message
+    // eslint-disable-next-line no-prototype-builtins
+    if (error.response.data.hasOwnProperty('errors')) errorResponse.message.text = Object.values(error.response.data.errors)[0][0]
+    // eslint-disable-next-line no-prototype-builtins
+    else if (error.response.data.hasOwnProperty('motives')) errorResponse.message.text = error.response.data.motives.message
+    else errorResponse.message.text = error.response.data.message
     errorResponse.data = error.response.data
     return errorResponse
   }

@@ -24,20 +24,27 @@
       >
         <td>
           <v-select
-            v-model="item.tipo_contaminación"
+            v-model="item.contamination_id"
             label="Tipo/descripción de contaminante"
             outlined
             class="ml-2 mr-2"
             dense
-            :items="['Hidrico', 'Suelo', 'acustica', 'lúminica', 'Visual', 'Terminca']"
+            item-text="nombre"
+            item-value="id"
+            :items="type_contamination"
+            @change="getCause(item)"
           />
         </td>
         <td>
-          <v-text-field
-            v-model="item.causas"
-            label="Causante de la contaminación"
+          <v-select
+            v-model="item.cause_contamination_id"
+            label="Causas de contaminante"
             outlined
+            class="ml-2 mr-2"
             dense
+            item-text="nombre"
+            item-value="id"
+            :items="getCause(item)"
           />
         </td>
         <td>
@@ -53,7 +60,7 @@
         </td>
       </tr>
     </v-card-text>
-    <div
+    <!-- <div
       class="text-center text-h4 d-fleX font-weight-bold mb-6 blue--text"
     >
       <div
@@ -97,7 +104,7 @@
           </v-btn>
         </td>
       </tr>
-    </v-card-text>
+    </v-card-text> -->
     <div
       class="d-none"
     >
@@ -110,6 +117,7 @@
   import {
     mapState,
     mapMutations,
+    mapActions,
   } from 'vuex'
   export default {
     props: {
@@ -123,10 +131,12 @@
         showDate: false,
         show2Date: false,
         contaminacion: [],
+        type_contamination: [],
+        cause_contamination: [],
         sitios_tratamiento: [],
         editedItem: {
-          tipo_contaminación: '',
-          causas: '',
+          contamination_id: null,
+          cause_contamination_id: null,
         },
         editedItem1: {
           lugar: '',
@@ -151,9 +161,12 @@
     },
     created () {
       this.listItem()
+      this.listItemContamination()
     },
     methods: {
       ...mapMutations('fileFamily', ['setSteps', 'setContaminacion']),
+      ...mapActions('contamination', ['contaminationAllActions']),
+      ...mapActions('causeContamination', ['causeContaminationFindActions']),
       ...mapMutations(['alert']),
       listItem () {
         this.id = this.$route.params.id
@@ -162,10 +175,26 @@
           this.sitios_tratamiento = this.fileFamily.sitios_tratamiento
         }
       },
+      async listItemContamination () {
+        const serviceResponse = await this.contaminationAllActions()
+        if (serviceResponse.ok) {
+          this.type_contamination = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      getCause (val) {
+        var c = this.type_contamination.find(item => item.id === val.contamination_id)
+        var d = { ...c }
+        return d.causa_contaminacions
+      },
       pushContaminacion () {
         var c = {
-          tipo_contaminación: '',
-          causas: '',
+          contamination_id: null,
+          cause_contamination_id: null,
         }
         this.contaminacion.push(c)
       },

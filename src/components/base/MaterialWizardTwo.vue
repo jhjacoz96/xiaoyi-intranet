@@ -92,6 +92,7 @@
         Siguiente
       </v-btn>
       <v-btn
+        v-if="history"
         :disabled="!availableSteps.includes(internalValue + 1) || loading"
         :loading="loading"
         color="primary"
@@ -133,6 +134,10 @@
       subtitle: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
   }

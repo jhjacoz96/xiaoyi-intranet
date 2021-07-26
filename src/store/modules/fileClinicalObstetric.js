@@ -7,6 +7,7 @@ import {
        fileClinicalObstetricCheckApi,
        fileClinicalObstetricUpdateApi,
        fileClinicalObstetricFilterApi,
+       fileClinicalObstetricCheckPregnantApi,
     } from '@/api/modules'
 
    export default {
@@ -33,6 +34,10 @@ import {
                 antecentedes_paternos: '',
                 antecentedes_maternos: '',
                 antecentedes_prenatales: '',
+                patologias_prenatales: [],
+                patologias_maternas: [],
+                patologias_paternas: [],
+                patologias: [],
                 medicamentos: '',
                 embarazo_planificado: false,
                 causa_embarazo: '',
@@ -95,8 +100,12 @@ import {
                 antecentedes_paternos: '',
                 antecentedes_maternos: '',
                 antecentedes_prenatales: '',
+                patologias_prenatales: [],
+                patologias_maternas: [],
+                patologias_paternas: [],
+                patologias: [],
                 medicamentos: '',
-                embarazo_planificado: false,
+                embarazo_planificado: null,
                 causa_embarazo: '',
                 ayuda_violacion: '',
                 ayuda_anticoceptivo: '',
@@ -185,6 +194,10 @@ import {
            },
            async fileClinicalObstetricCheckActions (commit, payload) {
                const serviceResponse = await fileClinicalObstetricCheckApi(payload)
+               return serviceResponse
+           },
+           async fileClinicalObstetricCheckPregnantActions (commit, payload) {
+               const serviceResponse = await fileClinicalObstetricCheckPregnantApi(payload)
                return serviceResponse
            },
            async fileClinicalObstetricUpdateActions (commit, payload) {

@@ -9,12 +9,11 @@
     >
       <v-row
         class="mx-auto"
-        justify="center"
         style="max-width: 900px;"
       >
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
           <v-menu
             v-model="showDate"
@@ -27,10 +26,11 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="editedItem.fum"
-                label="Fecha de ultima mestruación"
+                :disabled="!history"
+                label="Fecha de ultima mestruación (*)"
                 prepend-icon="mdi-calendar"
                 :error-messages="errors.collect('member.birthday')"
-                data-vv-name="Fecha de cupleaños"
+                data-vv-name="fecha de ultima mestruación"
                 validate-on-blur
                 outlined
                 dense
@@ -45,8 +45,8 @@
           </v-menu>
         </v-col>
         <v-col
-          cols="6"
-          sm="5"
+          cols="12"
+          sm="6"
         >
           <v-text-field
             :value="moment(date).locale('es').format('dddd, MMMM Do YYYY')"
@@ -63,34 +63,36 @@
         style="max-width: 900px;"
       >
         <v-col
-          cols="4"
-          sm="3"
+          cols="6"
+          sm="4"
         >
           <v-text-field
             v-model.number="editedItem.talla"
+            :disabled="!history"
             outlined
             type="number"
             dense
-            label="Talla"
+            label="Talla (*)"
             suffix="Mtrs"
           />
         </v-col>
         <v-col
-          cols="4"
-          sm="3"
+          cols="6"
+          sm="4"
         >
           <v-text-field
             v-model.number="editedItem.peso"
+            :disabled="!history"
             outlined
             dense
             type="number"
-            label="Peso"
+            label="Peso (*)"
             suffix="Kg"
           />
         </v-col>
         <v-col
-          cols="4"
-          sm="3"
+          cols="6"
+          sm="4"
         >
           <v-text-field
             v-model.number="imc"
@@ -101,11 +103,12 @@
           />
         </v-col>
         <v-col
-          cols="5"
-          sm="4"
+          cols="12"
+          sm="6"
         >
           <v-select
             v-model="editedItem.vacuna"
+            :disabled="!history"
             outlined
             multiple
             :items="vaccine"
@@ -116,11 +119,12 @@
           />
         </v-col>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
           <v-select
             v-model="editedItem.examenes_rutinarios"
+            :disabled="!history"
             :items="examRutine"
             item-value="id"
             item-text="name"
@@ -142,19 +146,17 @@
           />
         </v-col> -->
       </v-row>
-      <v-row
-        class="mx-auto"
-        justify="center"
-      >
+      <v-row>
         <v-col
-          cols="6"
-          sm="4"
+          cols="12"
+          sm="6"
         >
           <p class="text-h6 font-weight-light">
             ¿Embarazo planificado?
           </p>
           <v-radio-group
             v-model="editedItem.embarazo_planificado"
+            :disabled="!history"
             mandatory
             row
           >
@@ -170,19 +172,21 @@
         </v-col>
         <v-col
           cols="12"
-          sm="4"
+          sm="6"
         >
           <v-select
             v-if="editedItem.embarazo_planificado === true"
             v-model="editedItem.causa_embarazo"
+            :disabled="!history"
             label="Causa de embarazo"
-            :items="['Inseminación', 'Vientre alquilado', 'Otros']"
+            :items="['Inseminación', 'Vientre alquilado', 'Método convencional', 'Otros']"
             dense
             outlined
           />
           <v-select
             v-else
             v-model="editedItem.causa_embarazo"
+            :disabled="!history"
             label="Causa de embarazo"
             :items="['Fallo de método anticonceptivo', 'Violación', 'Otros']"
             dense
@@ -192,18 +196,25 @@
         <v-col
           v-if="editedItem.causa_embarazo === 'Violación'"
           cols="12"
-          sm="4"
+          sm="6"
         >
-          <v-text-field
+          <v-textarea
             v-model="editedItem.ayuda_violacion"
+            :disabled="!history"
             label="Ayuda psicológica"
             placeholder="En caso de violación"
             dense
             outlined
           />
-          <v-text-field
-            v-if="editedItem.causa_embarazo === 'Fallo de método anticonceptivo'"
+        </v-col>
+        <v-col
+          v-if="editedItem.causa_embarazo === 'Fallo de método anticonceptivo'"
+          cols="12"
+          sm="6"
+        >
+          <v-textarea
             v-model="editedItem.ayuda_anticoceptivo"
+            :disabled="!history"
             label="Educación sexual"
             placeholder="En caso de falla de método anticonceptivo"
             dense
@@ -305,6 +316,10 @@
       click: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
     data () {

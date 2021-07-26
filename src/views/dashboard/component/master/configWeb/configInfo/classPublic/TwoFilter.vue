@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Segundo filtro de busqueda
+              Pratrones funcionales generales
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite agregar filtros sobre la información general de la referencia indicada.
+              Permite filtrar los patrones funcionales del grupo de pesonas a quíenes van a ir dirigidas las publicaciones
             </div>
           </v-col>
         </v-row>
@@ -277,6 +277,7 @@
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         this.editedId = item.id
+        item.filter_one_publication_id = typeof item.filter_one_publication_id === 'object' ? item.filter_one_publication_id.id : item.filter_one_publication_id
         Object.assign(this.editedItem, item)
         this.dialog = true
       },
@@ -284,7 +285,7 @@
         if (this.editedIndex > -1) {
           const serviceResponse = await this.filterTwoPublicationUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            Object.assign(this.desserts[this.editedIndex], serviceResponse.data)
             this.close()
             this.alert({
               text: serviceResponse.message,

@@ -78,13 +78,29 @@
                   cols="12"
                 >
                   <v-select
-                    v-model="editedItem.risk_classification_id"
+                    v-model="editedItem.risk_classification"
                     label="Tipo de riesgo"
                     dense
                     :items="riskClassification"
                     item-value="id"
                     item-text="name"
                     outlined
+                  />
+                </v-col>
+              </v-row>
+              <v-subheader>
+                Asignar actividades de evolución de riesgos
+              </v-subheader>
+              <v-row>
+                <v-col
+                  v-for="(item, index) in activityEvolucion"
+                  :key="index"
+                  cols="12"
+                >
+                  <v-checkbox
+                    v-model="editedItem.activity_evolutions"
+                    :label="item.compromiso_familiar"
+                    :value="item.id"
                   />
                 </v-col>
               </v-row>
@@ -138,33 +154,34 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            name: 'Contaminación de desechos industriales cerca',
-            typeRisk: undefined,
-          },
-        ],
+        desserts: [],
         riskClassification: [],
+        activityEvolucion: [],
         editedItem: {
           name: '',
-          risk_classification_id: undefined,
+          risk_classification: undefined,
+          activity_evolutions: [],
         },
         defaultItem: {
           name: '',
-          risk_classification_id: undefined,
+          risk_classification: undefined,
+          activity_evolutions: [],
         },
       }
     },
     created () {
       this.listItem()
       this.listItemRiskClassification()
+      this.listItemActivityEvolution()
     },
     methods: {
       ...mapActions('risk', ['riskAllActions', 'riskGetActions', 'riskUpdateActions']),
       ...mapActions('riskClassification', ['riskClassificationAllActions']),
+      ...mapActions('activityEvolution', ['activityEvolutionAllActions']),
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.riskAllActions()
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -178,6 +195,18 @@
         const serviceResponse = await this.riskClassificationAllActions()
         if (serviceResponse.ok) {
           this.riskClassification = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemActivityEvolution () {
+        const serviceResponse = await this.activityEvolutionAllActions()
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.activityEvolucion = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,

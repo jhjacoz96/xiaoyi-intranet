@@ -18,7 +18,6 @@
         >
           <v-autocomplete
             v-model="editedItem.patologias_maternas"
-            disabled
             outlined
             :items="pathology"
             multiple
@@ -300,7 +299,6 @@
           alimentacion_neonato: '',
           aplicacion_vitamina: false,
           alergina_leche_materna: false,
-
           antecedentes_neonatales: [],
           alteraciones_embarazo: [],
           patologias_embarazo: [],
@@ -354,6 +352,7 @@
       this.listItemPathology()
       this.listItemTypeBlood()
       this.editedItem = Object.assign({}, this.fileNeonatology)
+      this.editedItem.patologias_maternas = this.miembro.patologias
     },
     methods: {
       ...mapMutations(['alert']),

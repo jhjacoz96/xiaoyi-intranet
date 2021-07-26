@@ -4,9 +4,10 @@
       v-model="tab"
       :available-steps="steps"
       :items="tabs"
-      :title="!this.$route.params.id ? 'Registro de ficha clinica de obstetricia' : 'Control de ficha clinica de obstetricia'"
+      :title="history ? 'Control de ficha clinica de obstetricia' : 'Visualizar ficha clinica de obstetricia'"
       subtitle="Llenado de ficha clinica de obstetricia"
       class="mx-auto"
+      :history="history"
       :loading="loading"
       @click:event="event($event)"
       @click:next="next"
@@ -15,6 +16,7 @@
     >
       <v-tab-item class="pb-12">
         <add-basic-data
+          :history="history"
           :click="click"
           @click:save="confirmSave"
           @click:next="next"
@@ -23,6 +25,7 @@
 
       <v-tab-item class="pb-12">
         <add-record
+          :history="history"
           :click="click1"
           @click:save="confirmSave"
           @click:next="next"
@@ -31,6 +34,7 @@
 
       <v-tab-item class="pb-12">
         <add-obstetric-data
+          :history="history"
           :click="click2"
           @click:save="confirmSave"
           @click:next="next"
@@ -39,6 +43,7 @@
 
       <v-tab-item class="pb-12">
         <add-plan-birth
+          :history="history"
           :click="click3"
           @click:save="confirmSave"
           @click:next="next"
@@ -47,6 +52,7 @@
 
       <v-tab-item class="pb-12">
         <add-birth
+          :history="history"
           :click="click4"
           @click:save="confirmSave"
           @click:next="next"
@@ -55,6 +61,7 @@
 
       <v-tab-item class="pb-12">
         <add-puerperium
+          :history="history"
           :click="click5"
           @click:save="confirmSave"
           @click:next="next"
@@ -107,6 +114,12 @@
       AddPlanBirth: () => import('./section/AddPlanBirth'),
       AddBirth: () => import('./section/AddBirth'),
       AddPuerperium: () => import('./section/AddPuerperium'),
+    },
+    props: {
+      history: {
+        type: Boolean,
+        default: false,
+      },
     },
     data: () => ({
       dialogConfirm: false,
@@ -170,6 +183,7 @@
         this.loading = true
         if (this.$route.params.id) {
           const serviceResponse = await this.fileClinicalObstetricUpdateActions(this.fileObstetric)
+          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()
@@ -185,7 +199,9 @@
             })
           }
         } else {
+          console.log(this.fileObstetric)
           const serviceResponse = await this.fileClinicalObstetricPostActions(this.fileObstetric)
+          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()

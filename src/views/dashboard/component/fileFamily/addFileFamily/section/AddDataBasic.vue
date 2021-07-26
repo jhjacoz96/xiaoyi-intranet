@@ -149,9 +149,42 @@
             :error-messages="errors.collect('basic.numero_telefono')"
             data-vv-name="número telefono"
             outlined
-            label="Número de telefono (*)"
+            label="Número de telefono de casa (*)"
             dense
             validate-on-blur
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.telefono_celular_uno"
+            outlined
+            label="Número de telefono celular 1"
+            dense
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.telefono_celular_dos"
+            outlined
+            label="Número de telefono celular 2"
+            dense
+          />
+        </v-col>
+        <v-col
+          cols="6"
+          sm="4"
+        >
+          <v-text-field
+            v-model="editedItem.correo"
+            outlined
+            label="Correo electrónico"
+            dense
           />
         </v-col>
       </v-row>
@@ -193,6 +226,9 @@
           direccion_habitual: '',
           numero_casa: '',
           numero_telefono: '',
+          telefono_celular_uno: '',
+          telefono_celular_dos: '',
+          correo: '',
           numero_historia: '',
           zone_id: undefined,
           cultural_group_id: undefined,

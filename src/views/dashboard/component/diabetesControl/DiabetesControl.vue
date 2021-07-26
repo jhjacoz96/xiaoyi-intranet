@@ -52,7 +52,7 @@
                   <v-icon>mdi-water</v-icon>
                 </v-btn>
               </template>
-              <span>Control del glucemia</span>
+              <span>Control del glucosa</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -507,7 +507,7 @@
               <v-list-item-content>
                 <v-list-item-title
                   class="text-center"
-                  v-text="`Control de glucemia`"
+                  v-text="`Control de glucosa`"
                 />
                 <v-list>
                   <v-list-item-content>
@@ -1045,7 +1045,7 @@
           color: 'warning',
         }
         var risk4 = {
-          message: 'Obecidad',
+          message: 'Obesidad',
           color: 'red',
         }
         var imcConvert = 0

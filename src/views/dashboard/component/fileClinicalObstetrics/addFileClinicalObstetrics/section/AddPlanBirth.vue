@@ -18,6 +18,7 @@
             v-model="editedItem.dar_luz"
             v-validate="'required'"
             label="¿Cómo desea dar a luz?"
+            :disabled="!history"
             outlined
             dense
             :error-messages="errors.collect('basic.dar_luz')"
@@ -31,6 +32,7 @@
           <v-text-field
             v-model="editedItem.nombre_acompanate"
             v-validate="'required'"
+            :disabled="!history"
             label="Nombre del acompañante"
             outlined
             dense
@@ -48,6 +50,7 @@
           </v-subheader>
           <v-radio-group
             v-model="editedItem.aceptaria_formula"
+            :disabled="!history"
             row
             mandatory
           >
@@ -70,6 +73,7 @@
           </v-subheader>
           <v-radio-group
             v-model="editedItem.administrar_hemoderivado"
+            :disabled="!history"
             mandatory
             row
           >
@@ -92,6 +96,7 @@
           </v-subheader>
           <v-radio-group
             v-model="editedItem.estimulacion_embarazo"
+            :disabled="!history"
             mandatory
             row
           >
@@ -114,6 +119,7 @@
           </v-subheader>
           <v-radio-group
             v-model="editedItem.capacitacion_prenatal"
+            :disabled="!history"
             mandatory
             row
           >
@@ -136,6 +142,7 @@
           </v-subheader>
           <v-radio-group
             v-model="editedItem.capacitacion_epidural"
+            :disabled="!history"
             mandatory
             row
           >
@@ -170,6 +177,10 @@
       click: {
         type: String,
         default: '',
+      },
+      history: {
+        type: Boolean,
+        default: false,
       },
     },
     data () {

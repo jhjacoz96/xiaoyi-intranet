@@ -32,3 +32,7 @@ $headings: (
   'subtitle-2': ( 'size': 1rem ),
   'overline': ( 'letter-spacing': 0 )
 );
+
+@import '~vuetify/src/components/VBtn/_variables.scss';
+@import '~vuetify/src/components/VList/_variables.scss';
+@import 'overrides.sass'

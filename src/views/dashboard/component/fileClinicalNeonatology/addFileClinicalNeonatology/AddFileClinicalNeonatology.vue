@@ -8,6 +8,7 @@
       subtitle="Llenado de ficha clinica de neonatología"
       class="mx-auto"
       :loading="loading"
+      :history="history"
       @click:event="event($event)"
       @click:next="next"
       @click:prev="tab--"
@@ -15,6 +16,7 @@
     >
       <v-tab-item class="pb-12">
         <add-data-basic
+          :history="history"
           :click="click"
           @click:save="confirmSave"
           @click:next="next"
@@ -23,6 +25,7 @@
 
       <v-tab-item class="pb-12">
         <add-record
+          :history="history"
           :click="click1"
           @click:save="confirmSave"
           @click:next="next"
@@ -31,6 +34,7 @@
 
       <v-tab-item class="pb-12">
         <add-values
+          :history="history"
           :click="click2"
           @click:save="confirmSave"
           @click:next="next"
@@ -39,6 +43,7 @@
 
       <v-tab-item class="pb-12">
         <add-test
+          :history="history"
           :click="click3"
           @click:save="confirmSave"
           @click:next="next"
@@ -47,6 +52,7 @@
 
       <v-tab-item class="pb-12">
         <add-vaccination
+          :history="history"
           :click="click4"
           @click:save="confirmSave"
           @click:next="next"
@@ -98,6 +104,12 @@
       AddValues: () => import('./section/AddValues'),
       AddTest: () => import('./section/AddTest'),
       AddVaccination: () => import('./section/AddVaccination'),
+    },
+    props: {
+      history: {
+        type: Boolean,
+        default: false,
+      },
     },
     data: () => ({
       dialogConfirm: false,

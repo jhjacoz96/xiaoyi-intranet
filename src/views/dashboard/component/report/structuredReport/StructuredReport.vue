@@ -24,7 +24,7 @@
       <v-col cols="3">
         <base-item-master
           title="Ficha clinica neonatología"
-          to="reportes/estructurados/ficha-clinica-neonatologiaP"
+          to="reportes/estructurados/ficha-clinica-neonatologia"
           icon="mdi-36px mdi-file"
         />
       </v-col>

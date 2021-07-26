@@ -1,5 +1,9 @@
 import router from '@/router'
-import { loginApi } from '@/api/modules'
+import {
+    loginApi,
+    forgotApi,
+    resetApi,
+} from '@/api/modules'
 
 export default {
     namespaced: true,
@@ -42,6 +46,14 @@ export default {
         },
     },
     actions: {
+        async forgotAction ({ commit }, payload) {
+            const serviceResponse = await forgotApi(payload)
+            return serviceResponse
+        },
+        async resetAction ({ commit }, payload) {
+            const serviceResponse = await resetApi(payload)
+            return serviceResponse
+        },
         async loginAction ({ commit }, payload) {
             const serviceResponse = await loginApi(payload)
             if (serviceResponse.title === 'OK') {

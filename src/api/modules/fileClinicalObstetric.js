@@ -10,5 +10,6 @@ export const fileClinicalObstetricFilterApi = (body) => apiHttp('POST', `${fileC
 export const fileClinicalObstetricUpdateApi = (body, id) => apiHttp('PUT', `${fileClinicalObstetricPath}/${id}`, body)
 export const fileClinicalObstetricGetApi = (id) => apiHttp('GET', `${fileClinicalObstetricPath}/${id}`)
 export const fileClinicalObstetricCheckApi = (cedula) => apiHttp('GET', `${fileClinicalObstetricPath}/check/${cedula}`)
+export const fileClinicalObstetricCheckPregnantApi = (cedula) => apiHttp('GET', `${fileClinicalObstetricPath}/check-pregnant/${cedula}`)
 export const fileClinicalObstetricAllApi = () => apiHttp('GET', `${fileClinicalObstetricPath}`)
 export const fileClinicalObstetricDeleteApi = (id) => apiHttp('DELETE', `${fileClinicalObstetricPath}/${id}`)

@@ -61,7 +61,7 @@
                     mdi-help
                   </v-icon>
                 </template>
-                <span>Búsqueda por número de historia, manzana, parroquia, cédula de un miembro, número de casa</span>
+                <span>Búsqueda por número de historia, número de familia, manzana, parroquia, cédula de un miembro, número de casa</span>
               </v-tooltip>
               <v-col
                 cols="6"
@@ -138,6 +138,16 @@
                   :items="levelTotal"
                   multiple
                 />
+                <v-select
+                  v-model="editedItemFilter.group_cultural_id"
+                  label="Grupos culturales"
+                  outlined
+                  dense
+                  item-text="name"
+                  item-value="id"
+                  :items="groupCultural"
+                  multiple
+                />
                 <v-subheader>
                   Miembros de las familias
                 </v-subheader>
@@ -183,9 +193,6 @@
               {{ item.level_total_id.name }}
             </v-chip>
           </template>
-          <template v-slot:item.created_at="{ item }">
-            {{ moment(item.created_at).format('D-M-YYYY') }}
-          </template>
           <template v-slot:item.accion="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -229,15 +236,19 @@
         loadingDataTable: false,
         headers: [
           { text: 'Numero de historia', sortable: false, value: 'numero_historia' },
+          { text: 'Número de familia', sortable: false, value: 'numero_familia' },
           { text: 'Nivel de riesgo', sortable: false, value: 'level_riesgo' },
+          { text: 'Grupo cultural', sortable: false, value: 'cultural_group_id.name' },
           { text: 'Parroquia', sortable: false, value: 'zone_id.name' },
-          { text: 'Fecha de creación', sortable: false, value: 'created_at' },
+          { text: 'Barrio', sortable: false, value: 'barrio' },
+          { text: 'Manzana', sortable: false, value: 'manzana' },
           { text: 'Acción', sortable: false, align: 'center', value: 'accion' },
         ],
         desserts: [],
         levelTotal: [],
         zone: [],
         pathology: [],
+        groupCultural: [],
         editedItemSearch: {
           search: '',
           filter: '',
@@ -248,12 +259,14 @@
         },
         editedItemFilter: {
           zone_id: [],
+          group_cultural_id: [],
           level_total_id: [],
           pathology_id: [],
         },
         defaultItemFilter: {
           zone_id: [],
           level_total_id: [],
+          group_cultural_id: [],
           pathology_id: [],
         },
       }
@@ -268,11 +281,13 @@
       this.listItemZone()
       this.listItemLevelTotal()
       this.listItemPathology()
+      this.listItemGroupCultural()
     },
     methods: {
       ...mapActions('fileFamily', ['fileFamilyPostActions', 'fileFamilyAllActions', 'fileFamilySearchActions', 'fileFamilyFilterActions']),
       ...mapActions('zone', ['zoneAllActions']),
       ...mapActions('levelTotal', ['levelTotalAllActions']),
+      ...mapActions('culturalGroup', ['culturalGroupAllActions']),
       ...mapActions('pathology', ['pathologyAllActions']),
       ...mapMutations(['alert']),
       async listItem () {
@@ -292,6 +307,17 @@
         const serviceResponse = await this.zoneAllActions()
         if (serviceResponse.ok) {
           this.zone = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async listItemGroupCultural () {
+        const serviceResponse = await this.culturalGroupAllActions()
+        if (serviceResponse.ok) {
+          this.groupCultural = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,

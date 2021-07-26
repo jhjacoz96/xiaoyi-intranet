@@ -48,6 +48,8 @@
           :headers="headers"
           :items="desserts"
           :search="search"
+          :loading="loadingDataTable"
+          loading-text="Cargando... Porfavor espere"
         >
           <template v-slot:item.created_at="{ item }">
             {{ moment(item.created_at).format('D-M-YYYY') }}
@@ -58,7 +60,7 @@
               class="my-4"
             >
               <v-img
-                :src="item.image_mini.url"
+                :src="item.image_mini"
                 width="100"
                 height="100"
               />
@@ -217,12 +219,12 @@
                   />
                 </v-col>
                 <v-col
+                  v-if="editedIndex === -1"
                   cols="6"
                 >
                   <v-file-input
                     v-if="editedItem.type_resource==='image' || editedItem.type_resource==='document'"
                     v-model="editedItem.resource"
-                    :disabled="editedIndex !== -1"
                     label="Seleccione la imagen"
                     outlined
                     dense
@@ -231,7 +233,6 @@
                   <v-text-field
                     v-else
                     v-model="editedItem.resource"
-                    :disabled="editedIndex !== -1"
                     label="Ingrese el link de video de youtube"
                     outlined
                     dense
@@ -375,6 +376,9 @@
     mapActions,
     mapMutations,
   } from 'vuex'
+  import {
+    publicationUpdateApi,
+  } from '@/api/modules'
   import { quillEditor } from 'vue-quill-editor'
   import 'quill/dist/quill.js'
   export default {
@@ -400,6 +404,7 @@
         dialogDelete: false,
         loaderDialog: false,
         loaderDialogDelete: false,
+        loadingDataTable: false,
         editedIndex: -1,
         editedId: undefined,
         headers: [
@@ -493,6 +498,7 @@
       ...mapActions('filterThreePublication', ['filterThreePublicationFilterActions']),
       ...mapMutations(['alert']),
       async listItem () {
+        this.loadingDataTable = true
         const serviceResponse = await this.publicationAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
@@ -502,6 +508,7 @@
             color: 'warning',
           })
         }
+        this.loadingDataTable = false
       },
       async listItemFIlterOne () {
         const serviceResponse = await this.filterOnePublicationAllActions()
@@ -572,15 +579,16 @@
       async addItem () {
         this.loaderDialog = true
         if (this.editedIndex > -1) {
+          var image = typeof this.editedItem.image_mini === 'string' ? null : this.editedItem.image_mini
           const formData = new FormData()
+          formData.append('_method', 'PUT')
           formData.append('name', this.editedItem.name)
           formData.append('description', this.editedItem.description)
           formData.append('filter_one_publication_id', this.editedItem.filter_one_publication_id)
           formData.append('filter_two_publication_id', this.editedItem.filter_two_publication_id)
           formData.append('filter_three_publication_id', this.editedItem.filter_three_publication_id)
-          formData.append('image_mini', typeof this.editedItem.image_mini === 'string' ? null : this.editedItem.image_mini)
-
-          const serviceResponse = await this.publicationUpdateActions(this.editedItem)
+          formData.append('image_mini', image)
+          const serviceResponse = await publicationUpdateApi(formData, this.editedItem.id)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.loaderDialog = false

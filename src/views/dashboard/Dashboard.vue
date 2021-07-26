@@ -17,7 +17,7 @@
           {{ saludar }}, <span class="primary--text">{{ user.employee.name }}</span>
         </div>
         <div class="font-weight-medium grey--text mt-3">
-          Bienvenido al panel de control de KA-THANI.
+          Bienvenido al panel de control del centro de salud {{ organization.name }}.
         </div>
       </v-col>
       <v-col
@@ -167,7 +167,9 @@
 
 <script>
 
-  import { mapState } from 'vuex'
+  import {
+    mapState,
+  } from 'vuex'
   import {
     dashboardGetApi,
   } from '@/api/modules'
@@ -183,6 +185,7 @@
     },
     computed: {
       ...mapState('auth', ['user']),
+      ...mapState('configWeb', ['organization']),
       patologiasBarra () {
         return {
           options: {

@@ -17,36 +17,29 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Reporte de pacientes diabeticos
+              Reporte estructurado de pacientes diabeticos
             </div>
             <div class="text-subtitle-1 font-weight-light">
               Permite filtrar los pacientes diabeticos y posteriormente generar reportes estructurados en formato PDF.
             </div>
           </v-col>
         </v-row>
-        <v-btn
-          absolute
-          fab
-          right
-          :disabled="loadingGenerate"
-          :loading="loadingGenerate"
-          color="secondary"
-          @click="dowloandFile"
-        >
-          <v-icon>mdi-file-pdf</v-icon>
-        </v-btn>
       </template>
       <v-card-text>
-        <v-dialog
-          v-model="dialog"
-          width="400"
-        >
-          <v-card>
-            <v-container>
-              <v-card-text class="font-weight-bold text-center">
-                Filtrar busqueda
-              </v-card-text>
-              <v-card-text>
+        <v-container>
+          <v-card-text class="font-weight-bold text-center">
+            Criterios busqueda
+          </v-card-text>
+          <v-card-text>
+            <v-row
+              justify="center"
+              class="mx-auto"
+              style="max-width: 500px;"
+            >
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.groupAge"
                   outlined
@@ -57,9 +50,14 @@
                   item-value="id"
                   label="Grupo de edad"
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.pathology"
-                  label="Patologías (Comorbidates)"
+                  label="Comorbidates"
                   outlined
                   dense
                   item-text="name"
@@ -67,9 +65,14 @@
                   :items="pathology"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.treatment"
-                  label="Tratamientos no farmacológicos"
+                  label="Medicamentos"
                   outlined
                   dense
                   item-text="name"
@@ -77,6 +80,11 @@
                   :items="treatment"
                   multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.gender"
                   label="Genero"
@@ -85,80 +93,62 @@
                   item-text="nombre"
                   item-value="id"
                   :items="gender"
+                  multiple
                 />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
+                <v-select
+                  v-model="filter.imc"
+                  label="Clasificación de imc"
+                  outlined
+                  dense
+                  multiple
+                  :items="imc"
+                />
+              </v-col>
+              <v-col
+                sm="4"
+                cols="12"
+              >
                 <v-select
                   v-model="filter.alertTreatment"
-                  label="Incumplimiento de tratamiento no farmacologíco"
+                  label="Incumplimiento de medicamento"
                   outlined
                   dense
                   item-text="name"
                   item-value="value"
                   :items="alertTreatment"
                 />
-                <v-menu
-                  v-model="showDate"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="100px"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="filter.startDate"
-                      label="Fecha inicial"
-                      prepend-icon="mdi-calendar"
-                      outlined
-                      dense
-                      v-bind="attrs"
-                      v-on="on"
-                    />
-                  </template>
-                  <v-date-picker
-                    v-model="filter.startDate"
-                    @input="show1Date = false"
-                  />
-                </v-menu>
-                <v-menu
-                  v-model="show2Date"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="100px"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="filter.endDate"
-                      label="Fecha final"
-                      prepend-icon="mdi-calendar"
-                      outlined
-                      dense
-                      v-bind="attrs"
-                      v-on="on"
-                    />
-                  </template>
-                  <v-date-picker
-                    v-model="filter.endDate"
-                    @input="show3Date = false"
-                  />
-                </v-menu>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  :disabled="loadingFilter"
-                  :loading="loadingFilter"
-                  @click="addItemFilter()"
-                >
-                  Filtrar
-                </v-btn>
-                <v-spacer />
-              </v-card-actions>
-            </v-container>
-          </v-card>
-        </v-dialog>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              :disabled="loadingFilter"
+              :loading="loadingFilter"
+              @click="addItemFilter()"
+            >
+              <v-icon>mdi-filter</v-icon>
+              Filtrar
+            </v-btn>
+            <v-btn
+              :disabled="loadingGenerate"
+              :loading="loadingGenerate"
+              color="secondary"
+              outlined
+              @click="dowloandFile"
+            >
+              <v-icon>mdi-file-pdf</v-icon>
+              Descargar
+            </v-btn>
+            <v-spacer />
+          </v-card-actions>
+        </v-container>
         <v-data-table
           :headers="headers"
           :items="desserts"
@@ -166,19 +156,6 @@
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
-          <template v-slot:top>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              outlined
-              class="ml-5"
-              @click="dialog = true"
-            >
-              <v-icon>
-                mdi-filter
-              </v-icon>
-            </v-btn>
-          </template>
           <template v-slot:item.nombre="{ item }">
             {{ item.nombre }} {{ item.apellido }}
           </template>
@@ -199,6 +176,9 @@
           <template v-slot:item.cedula="{ item }">
             <span v-if="item.type_document_id">
               {{ item.type_document_id.nombre.charAt(0) }}</span>-<span v-if="item.cedula">{{ item.cedula }}</span>
+          </template>
+          <template v-slot:item.descripcion_imc="{ item }">
+            {{ item.descripcion_imc ? item.descripcion_imc : '-' }}
           </template>
         </v-data-table>
       </v-card-text>
@@ -248,6 +228,12 @@
             name: 'Más de 3 dias de retrazo',
           },
         ],
+        imc: [
+          'Desnutrición',
+          'Peso normal',
+          'Sobrepeso',
+          'Obesidad',
+        ],
         headers: [
           {
             text: 'Nombre',
@@ -270,16 +256,16 @@
             value: 'fecha_nacimiento',
           },
           {
-            text: 'Tratamiento farmacologíco',
+            text: 'Medicamentos',
             value: 'tratamiento_farmacologico',
           },
           {
-            text: 'Patologías (Comorbidades)',
+            text: 'Comorbidades',
             value: 'patologias',
           },
           {
-            text: 'Fecha de apertura de historia',
-            value: 'created_at',
+            text: 'Clasificación imc',
+            value: 'descripcion_imc',
           },
         ],
         desserts: [],
@@ -294,27 +280,24 @@
           pathology: [],
           treatment: [],
           gender: [],
+          imc: [],
           alertTreatment: null,
-          startDate: null,
-          endDate: null,
         },
         filter: {
           groupAge: [],
           pathology: [],
           treatment: [],
           gender: [],
+          imc: [],
           alertTreatment: null,
-          startDate: null,
-          endDate: null,
         },
         defaultFilter: {
           groupAge: [],
           pathology: [],
           treatment: [],
           gender: [],
+          imc: [],
           alertTreatment: null,
-          startDate: null,
-          endDate: null,
         },
       }
     },
@@ -402,21 +385,13 @@
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
           Object.assign(this.filterDownload, this.filter)
-          this.close()
         } else {
-          this.close()
           this.alert({
             text: serviceResponse.message.text,
             color: 'warning',
           })
         }
-      },
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.loadingFilter = false
-          this.filter = Object.assign({}, this.defaultFilter)
-        })
+        this.loadingFilter = false
       },
       async dowloandFile () {
         this.loadingGenerate = true

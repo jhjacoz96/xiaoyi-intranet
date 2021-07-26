@@ -17,10 +17,11 @@
             cols="12"
           >
             <v-text-field
-              v-model="editedItem.title"
+              v-model.number="editedItem.show"
               outlined
               dense
-              label="Titulo"
+              type="number"
+              label="Cantidad de publicaciones más recientes"
             />
             <v-text-field
               v-model="editedItem.description1"
@@ -63,6 +64,7 @@
       editedItem: {
         title: '',
         description1: '',
+        show: 0,
         description2: '',
       },
     }),
@@ -71,7 +73,8 @@
         if (
           this.editedItem.title &&
           this.editedItem.description1 &&
-          this.editedItem.description2
+          this.editedItem.description2 &&
+          this.editedItem.show
         ) return false
         return true
       },
@@ -89,6 +92,7 @@
             this.editedItem.title = serviceResponsee.data.title
             this.editedItem.description1 = serviceResponsee.data.description1
             this.editedItem.description2 = serviceResponsee.data.description2
+            this.editedItem.show = serviceResponsee.data.show
           }
         } else {
           this.alert({
@@ -103,6 +107,7 @@
           this.editedItem.title = serviceResponsee.data.title
           this.editedItem.description1 = serviceResponsee.data.description1
           this.editedItem.description2 = serviceResponsee.data.description2
+          this.editedItem.show = serviceResponsee.data.show
           this.alert({
             text: serviceResponsee.message,
             color: 'success',

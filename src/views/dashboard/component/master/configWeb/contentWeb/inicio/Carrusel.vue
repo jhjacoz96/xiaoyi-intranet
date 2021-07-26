@@ -48,7 +48,7 @@
             class="text-end"
           >
             <base-preview-image
-              imagen="imagen"
+              :image="typeof editedItem.image === 'object' ? editedItem.image.url : editedItem.image"
               @imagen="editedItem.image = $event"
             />
           </v-col>
@@ -57,15 +57,15 @@
     </v-card-text>
     <v-card-actions class="justify-end">
       <v-btn
+        :disabled="validated"
         class="float-none"
         color="primary"
         @click="addItem()"
       >
-        <v-icon>mdi-plus</v-icon>
-        Agregar
+        Actualizar
       </v-btn>
     </v-card-actions>
-    <v-card-text>
+    <!-- <v-card-text>
       <v-simple-table>
         <template v-slot:default>
           <thead>
@@ -144,7 +144,7 @@
           <v-spacer />
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </v-card>
 </template>
 
@@ -168,6 +168,17 @@
         url: '',
       },
     }),
+    computed: {
+      validated () {
+        if (
+          this.editedItem.image &&
+          this.editedItem.title &&
+          this.editedItem.description &&
+          this.editedItem.url
+        ) return false
+        return true
+      },
+    },
     created () {
       this.listItem()
     },
@@ -177,7 +188,12 @@
       async listItem () {
         const serviceResponse = await this.carruselAllActions()
         if (serviceResponse.ok) {
-          this.desserts = serviceResponse.data
+          if (serviceResponse.data) {
+            this.editedItem.image = serviceResponse.data.image || undefined
+            this.editedItem.title = serviceResponse.data.title
+            this.editedItem.description = serviceResponse.data.description
+            this.editedItem.url = serviceResponse.data.url
+          }
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -215,24 +231,19 @@
           this.editedId = undefined
         })
       },
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-          this.editedId = undefined
-        })
-      },
       async addItem () {
         const formData = new FormData()
-        formData.append('image', this.editedItem.image)
+        formData.append('_method', 'PUT')
         formData.append('title', this.editedItem.title)
         formData.append('description', this.editedItem.description)
         formData.append('url', this.editedItem.url)
-        const serviceResponse = await this.carruselPostActions(formData)
+        formData.append('image', typeof this.editedItem.image === 'string' ? null : this.editedItem.image)
+        const serviceResponse = await this.carruselUpdateActions(formData)
         if (serviceResponse.ok) {
-          this.desserts.push(serviceResponse.data)
-          this.close()
+          this.editedItem.image = serviceResponse.data.image || undefined
+          this.editedItem.title = serviceResponse.data.title
+          this.editedItem.description = serviceResponse.data.description
+          this.editedItem.url = serviceResponse.data.url
           this.alert({
             text: serviceResponse.message,
             color: 'success',
