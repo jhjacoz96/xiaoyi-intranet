@@ -276,7 +276,6 @@
       ...mapActions('groupAge', ['groupAgeAllActions']),
       async listItem () {
         const serviceResponse = await reportStadisticFileNeonatologyGestationApi(this.filter)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.data = serviceResponse.data
         } else {

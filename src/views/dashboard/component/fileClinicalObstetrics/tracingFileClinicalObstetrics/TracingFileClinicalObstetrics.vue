@@ -460,7 +460,6 @@
       async addItemSearch () {
         this.loadingSearch = true
         this.editedItemSearch.embarazo = this.history
-        console.log(this.editedItemSearch)
         const serviceResponse = await this.fileClinicalObstetricSearchActions(this.editedItemSearch)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data

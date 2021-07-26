@@ -268,7 +268,6 @@
         }
       },
       async addItem () {
-        console.log(this.editedItem)
         const formData = new FormData()
         formData.append('institution_id', this.editedItem.institution_id)
         formData.append('name', this.editedItem.name)

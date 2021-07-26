@@ -182,7 +182,6 @@
       if (this.permissions.includes('diabetes_control_access')) {
         window.Echo.channel('diabetic-patient')
           .listen('DiabeticPatientEvent', (res) => {
-            console.log(res)
             this.notifications.unshift({
               id: null,
               code: res.diabeticPatient.member.cedula,

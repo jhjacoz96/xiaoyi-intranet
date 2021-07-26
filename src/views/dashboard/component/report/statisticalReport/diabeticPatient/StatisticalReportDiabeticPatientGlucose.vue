@@ -233,7 +233,6 @@
       ...mapActions('gender', ['genderAllActions']),
       async listItem () {
         const serviceResponse = await reportStadisticDiabeticPatientGlucoseApi(this.filter)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.data = serviceResponse.data
         } else {

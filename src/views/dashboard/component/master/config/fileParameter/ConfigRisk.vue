@@ -181,7 +181,6 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.riskAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -204,7 +203,6 @@
       },
       async listItemActivityEvolution () {
         const serviceResponse = await this.activityEvolutionAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.activityEvolucion = serviceResponse.data
         } else {

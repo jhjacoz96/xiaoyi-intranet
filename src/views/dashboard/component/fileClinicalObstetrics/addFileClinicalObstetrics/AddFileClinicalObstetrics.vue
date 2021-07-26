@@ -183,7 +183,6 @@
         this.loading = true
         if (this.$route.params.id) {
           const serviceResponse = await this.fileClinicalObstetricUpdateActions(this.fileObstetric)
-          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()
@@ -199,9 +198,7 @@
             })
           }
         } else {
-          console.log(this.fileObstetric)
           const serviceResponse = await this.fileClinicalObstetricPostActions(this.fileObstetric)
-          console.log(serviceResponse)
           this.loading = false
           if (serviceResponse.ok) {
             this.resetSteps()
