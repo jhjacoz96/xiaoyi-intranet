@@ -32,12 +32,13 @@
     >
       {{ subIcon }}
     </v-icon>
-
-    <span
+    <router-link
       :class="subTextColor"
-      class="text-caption grey--text font-weight-light"
-      v-text="subText"
-    />
+      class="text-caption font-weight-light"
+      :to="to"
+    >
+      {{ subText }}
+    </router-link>
   </base-material-card>
 </template>
 
@@ -82,6 +83,10 @@
       smallValue: {
         type: String,
         default: undefined,
+      },
+      to: {
+        type: String,
+        default: '',
       },
     },
   }

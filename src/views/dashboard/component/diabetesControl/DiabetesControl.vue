@@ -81,7 +81,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="listTreatment(item.diabetic_patient)"
+                  @click="listTreatment"
                 >
                   <v-icon>mdi-pill</v-icon>
                 </v-btn>
@@ -93,11 +93,11 @@
                 <v-btn
                   fab
                   x-small
-                  color="warning"
+                  color="info"
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="editItem(item)"
+                  @click="$route.push(`/intranet/control-diabetes/${item.diabetic_patient.id}`)"
                 >
                   <v-icon>mdi-doctor</v-icon>
                 </v-btn>

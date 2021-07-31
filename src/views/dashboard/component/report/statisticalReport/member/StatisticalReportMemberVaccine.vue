@@ -200,7 +200,7 @@
         dialog: false,
         groupAge: [],
         zone: [],
-        gender: null,
+        gender: [],
         data: null,
         filter: {
           groupAge: [],

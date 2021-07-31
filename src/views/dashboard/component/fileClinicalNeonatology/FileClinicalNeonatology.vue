@@ -23,12 +23,12 @@
             />
           </v-col>
           <v-col cols="3">
-            <v-template @click="dialog = !dialog">
+            <div @click="dialog = !dialog">
               <base-item-master
                 title="Nuevo registro"
                 icon="mdi-36px mdi-36px mdi-file-document-edit"
               />
-            </v-template>
+            </div>
           </v-col>
         </v-row>
       </v-container>
@@ -38,7 +38,7 @@
       >
         <v-card>
           <v-card-title>
-            <span class="text-h5">Virificar paciente</span>
+            <span class="text-h5">Verificar paciente</span>
           </v-card-title>
           <v-card-text>
             <v-alert
@@ -97,6 +97,9 @@
     mapState,
     mapMutations,
   } from 'vuex'
+  import {
+    fileClinicalNeonatologyCheckPregnantApi,
+  } from '@/api/modules'
   export default {
     data () {
       return {
@@ -120,10 +123,10 @@
       ...mapMutations(['alert']),
       async fileObstetricc () {
         this.loading = true
-        const serviceResponse = await this.fileClinicalObstetricCheckActions(this.cedula)
+        const serviceResponse = await fileClinicalNeonatologyCheckPregnantApi(this.cedula)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
-          this.$router.push('/intranet/ficha-clinica-neonatologia/agregar')
+          this.$router.push('/agregar')
           this.loading = false
         } else {
           this.alert({

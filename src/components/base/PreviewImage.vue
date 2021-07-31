@@ -14,7 +14,7 @@
         @click="$refs.file.click()"
       >
         <v-img
-          v-if="imagenPreview"
+          v-if="imagenPreview || image"
           :src="imagenPreview"
           height="100%"
           width="100%"
@@ -68,7 +68,6 @@
     watch: {
       image (val) {
         if (val !== '') this.imagenPreview = val
-        else this.imagenPreview = null
       },
     },
     methods: {

@@ -17,10 +17,10 @@
           </v-col>
           <v-col md="auto">
             <div class="text-h3 font-weight-medium">
-              Señales de alarma
+              Patologías neonatales
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite gestionar los señales de alarma con las que se educó a la paciente
+              Permite gestionar las patologías neonatales
             </div>
           </v-col>
         </v-row>
@@ -200,7 +200,7 @@
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar señal de alarma' : 'Editar señal de alarma'
+        return this.editedIndex === -1 ? 'Agregar patología neonatal' : 'Editar patología neonatal'
       },
     },
     watch: {
@@ -215,10 +215,10 @@
       this.listItem()
     },
     methods: {
-      ...mapActions('senalAlarm', ['senalAlarmPostActions', 'senalAlarmAllActions', 'senalAlarmDeleteActions', 'senalAlarmGetActions', 'senalAlarmUpdateActions']),
+      ...mapActions('pathologyNeonatal', ['pathologyNeonatalPostActions', 'pathologyNeonatalAllActions', 'pathologyNeonatalDeleteActions', 'pathologyNeonatalGetActions', 'pathologyNeonatalUpdateActions']),
       ...mapMutations(['alert']),
       async listItem () {
-        const serviceResponse = await this.senalAlarmAllActions()
+        const serviceResponse = await this.pathologyNeonatalAllActions()
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -234,7 +234,7 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm () {
-        const serviceResponse = await this.senalAlarmDeleteActions(this.editedId)
+        const serviceResponse = await this.pathologyNeonatalDeleteActions(this.editedId)
         if (serviceResponse.ok) {
           this.desserts.splice(this.editedIndex, 1)
           this.closeDelete()
@@ -258,7 +258,7 @@
       },
       async addItem () {
         if (this.editedIndex > -1) {
-          const serviceResponse = await this.senalAlarmUpdateActions(this.editedItem)
+          const serviceResponse = await this.pathologyNeonatalUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
             this.close()
@@ -274,7 +274,7 @@
             })
           }
         } else {
-          const serviceResponse = await this.senalAlarmPostActions(this.editedItem)
+          const serviceResponse = await this.pathologyNeonatalPostActions(this.editedItem)
           if (serviceResponse.ok) {
             this.desserts.push(serviceResponse.data)
             this.close()

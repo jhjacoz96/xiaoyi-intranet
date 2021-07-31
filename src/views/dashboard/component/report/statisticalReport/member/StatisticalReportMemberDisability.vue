@@ -198,7 +198,7 @@
         dialog: false,
         groupAge: [],
         pathology: [],
-        gender: null,
+        gender: [],
         data: null,
         filter: {
           groupAge: [],

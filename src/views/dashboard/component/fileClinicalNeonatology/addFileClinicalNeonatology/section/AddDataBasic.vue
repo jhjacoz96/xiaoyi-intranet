@@ -39,16 +39,12 @@
         >
           <v-select
             v-model="editedItem.pregnant_id"
-            v-validate="'required'"
-            :error-messages="errors.collect('basic.pregnant_id')"
-            data-vv-name="Asignar ficha clínica de obstetricia"
             :items="miembro.prenatal_todos"
             item-text="numero_historia"
             item-value="id"
             outlined
-            label="Asignar ficha clínica de obstetricia (*)"
+            label="Ficha clínica de obstetricia asignada"
             dense
-            validate-on-blur
           />
         </v-col>
       </v-row>
@@ -200,6 +196,7 @@
         show2Date: false,
         editedItem: {
           numero_historia: null,
+          pregnant_id: null,
           cedula: '',
           nombre: '',
           apellido: '',
@@ -218,6 +215,7 @@
       availableSteps () {
         if (
           this.editedItem.numero_historia &&
+          this.editedItem.pregnant_id &&
           this.editedItem.nombre &&
           this.editedItem.cedula &&
           this.editedItem.fecha_nacimiento &&
@@ -275,6 +273,7 @@
             })
           }
         } else {
+          this.editedItem.pregnant_id = this.miembro.prenatal ? this.miembro.prenatal.id : null
           this.generateCode()
         }
       },

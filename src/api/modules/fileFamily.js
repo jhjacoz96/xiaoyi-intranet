@@ -6,6 +6,7 @@ import {
 
 export const fileFamilyPostApi = (body) => apiHttp('POST', `${fileFamilyPath}`, body)
 export const fileFamilySearchApi = (body) => apiHttp('POST', `${fileFamilyPath}/search`, body)
+export const fileFamilySearchNumberApi = (id) => apiHttp('GET', `${fileFamilyPath}/search/${id}`)
 export const fileFamilyVerifyEmailApi = (email) => apiHttp('GET', `${fileFamilyPath}/member/verify-email/${email}`)
 export const fileFamilyVerifyDocumentApi = (document) => apiHttp('GET', `${fileFamilyPath}/member/verify-document/${document}`)
 export const fileFamilyFilterApi = (body) => apiHttp('POST', `${fileFamilyPath}/filter`, body)

@@ -32,7 +32,7 @@ const router = new Router({
         {
           name: 'Dashboard',
           path: 'inicio',
-          component: () => import('@/views/dashboard/Dashboard'),
+          component: () => import('@/views/dashboard/dashboard/Dashboard'),
         },
         // Pages
         {
@@ -286,6 +286,26 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/AlarmSignals'),
         },
         {
+          name: 'Patologías prenatales',
+          path: 'configuracion-basica/patologia-prenatal',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileObstetric/PathologyPregnant'),
+        },
+        {
+          name: 'Reflejos',
+          path: 'configuracion-basica/reflejo',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileNeonatology/Reflex'),
+        },
+        {
+          name: 'Alteraciones prenatales',
+          path: 'configuracion-basica/alteracion-prenatal',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileNeonatology/AlterationPregnant'),
+        },
+        {
+          name: 'Patologías neonatales',
+          path: 'configuracion-basica/patologia-neonatal',
+          component: () => import('@/views/dashboard/component/master/basic/fileParameter/parameterFileNeonatology/PathologyNeonatal'),
+        },
+        {
           name: 'Configuracion servicios asistenciales',
           path: 'configuracion-maestros/servicios',
           component: () => import('@/views/dashboard/component/master/config/healthCenter/ConfigService'),
@@ -349,7 +369,7 @@ const router = new Router({
         },
         {
           name: 'Actualizar de ficha clinica de neonatología',
-          path: 'ficha-clinica-neonatologia/actualizar/:id',
+          path: 'ficha-clinica-neonatologia/:id',
           props: { history: true },
           component: () => import('@/views/dashboard/component/fileClinicalNeonatology/addFileClinicalNeonatology/AddFileClinicalNeonatology'),
         },
@@ -392,6 +412,11 @@ const router = new Router({
           name: 'Control de pacientes diabéticos',
           path: 'control-diabetes',
           component: () => import('@/views/dashboard/component/diabetesControl/DiabetesControl'),
+        },
+        {
+          name: 'Actualizar de pacientes diabéticos',
+          path: 'control-diabetes/:id',
+          component: () => import('@/views/dashboard/component/diabetesControl/ControlDiabeticControl'),
         },
         {
           name: 'Evaluar sugerencias y comentarios',

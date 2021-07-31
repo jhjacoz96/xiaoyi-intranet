@@ -24,6 +24,11 @@ import measure from './modules/measure'
 import typeBlood from './modules/typeBlood'
 import culturalGroup from './modules/culturalGroup'
 import pathology from './modules/pathology'
+import pathologyPregnant from './modules/pathologyPregnant'
+import pathologyNeonatal from './modules/pathologyNeonatal'
+import alterationPregnant from './modules/alterationPregnant'
+import reflex from './modules/reflex'
+import senalAlarm from './modules/senalAlarm'
 import disability from './modules/disability'
 import groupAge from './modules/groupAge'
 import causeMortality from './modules/causeMortality'
@@ -94,5 +99,10 @@ export default new Vuex.Store({
     controlDiabetic,
     fileClinicalObstetric,
     fileClinicalNeonatology,
+    reflex,
+    senalAlarm,
+    pathologyPregnant,
+    pathologyNeonatal,
+    alterationPregnant,
   },
 })

@@ -207,14 +207,49 @@
             icon="mdi-36px mdi-36px mdi-human-pregnant"
             to="/intranet/configuracion-basica/semana-gestacion"
           />
-        </v-col>
+        </v-col> -->
         <v-col cols="3">
           <base-item-master
             title="Señales de alarma"
             icon="mdi-36px mdi-36px mdi-bacteria"
             to="configuracion-basica/senal-alarma"
           />
-        </v-col> -->
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Patologias prenatales"
+            icon="mdi-36px mdi-36px  mdi-virus"
+            to="configuracion-basica/patologia-prenatal"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-subheader>
+      Parámetros de ficha de neonatología
+    </v-subheader>
+    <v-container fluid>
+      <v-row>
+        <v-col cols="3">
+          <base-item-master
+            title="Reflejos"
+            icon="mdi-36px mdi-36px mdi-virus"
+            to="/intranet/configuracion-basica/reflejo"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Alteraciones prenatales"
+            icon="mdi-36px mdi-36px mdi-virus"
+            to="/intranet/configuracion-basica/alteracion-prenatal"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-item-master
+            title="Patologias neonatales"
+            icon="mdi-36px mdi-36px mdi-virus"
+            to="/intranet/configuracion-basica/patologia-neonatal"
+          />
+        </v-col>
       </v-row>
     </v-container>
   </v-card>

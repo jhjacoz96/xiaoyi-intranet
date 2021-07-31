@@ -198,7 +198,7 @@
         dialog: false,
         groupAge: [],
         disability: [],
-        gender: null,
+        gender: [],
         data: null,
         filter: {
           groupAge: [],

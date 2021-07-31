@@ -195,7 +195,7 @@
       async listItemPermission () {
         const serviceResponse = await this.rolePermissionAllActions()
         if (serviceResponse.ok) {
-          this.permissions = serviceResponse.data
+          this.permissions = serviceResponse.data.filter(this.filterPermission)
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -203,14 +203,64 @@
           })
         }
       },
+      filterPermission (item) {
+        const notPermission = [
+          'home_access',
+          'initial_information_access',
+          'file_clinical_access',
+          'patient_care_access',
+        ]
+        return !notPermission.includes(item.name)
+      },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
         this.editedId = item.id
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
+      addPermissions () {
+        var p = [
+          {
+            childen: 'master_access',
+            father: 'initial_information_access',
+          },
+          {
+            childen: 'configuration_master_access',
+            father: 'initial_information_access',
+          },
+          {
+            childen: 'configuration_web_site_access',
+            father: 'initial_information_access',
+          },
+          {
+            childen: 'configuration_mobile_access',
+            father: 'initial_information_access',
+          },
+          {
+            childen: 'neonatology_access',
+            father: 'file_clinical_access',
+          },
+          {
+            childen: 'obstetrics_access',
+            father: 'file_clinical_access',
+          },
+          {
+            childen: 'evaluate_suggestion_access',
+            father: 'patient_care_access',
+          },
+        ]
+        if (!this.editedItem.permissions.includes('home_access')) this.editedItem.permissions.push('home_access')
+        this.editedItem.permissions.forEach(item => {
+          var d = null
+          d = p.find(item1 => item1.childen === item)
+          if (d) {
+            if (!this.editedItem.permissions.includes(d.father)) this.editedItem.permissions.push(d.father)
+          }
+        })
+      },
       async addItem () {
         if (this.editedIndex > -1) {
+          this.addPermissions()
           const serviceResponse = await this.roleAssignPermissionActions(this.editedItem)
           if (serviceResponse.ok) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)

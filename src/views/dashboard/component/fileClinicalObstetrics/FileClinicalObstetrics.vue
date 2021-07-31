@@ -30,12 +30,12 @@
             />
           </v-col>
           <v-col cols="3">
-            <v-template @click="openCheck()">
+            <div @click="openCheck()">
               <base-item-master
                 title="Nuevo registro"
                 icon="mdi-36px mdi-36px mdi-file-document-edit"
               />
-            </v-template>
+            </div>
           </v-col>
         </v-row>
       </v-container>

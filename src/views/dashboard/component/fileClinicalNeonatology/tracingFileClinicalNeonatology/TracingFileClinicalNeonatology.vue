@@ -177,7 +177,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="$router.push(`/intranet/ficha-clinica-neonatologia/actualizar/${item.id}`)"
+                  @click="$router.push(`/intranet/ficha-clinica-neonatologia/${item.id}`)"
                 >
                   <v-icon>mdi-baby</v-icon>
                 </v-btn>

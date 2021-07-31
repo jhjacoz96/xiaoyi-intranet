@@ -143,7 +143,7 @@
         dialog: false,
         zone: [],
         data: null,
-        contaminantion: [],
+        contamination: [],
         level: [],
         filter: {
           zone: [],
@@ -194,10 +194,6 @@
             },
             labels: this.data ? this.data.label : [],
             colors: this.data ? this.data.color : [],
-            legend: {
-              customLegendItems: this.data ? this.data.legend : [],
-              width: 200,
-            },
           },
           series: this.data ? this.data.data : [],
         }
