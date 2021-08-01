@@ -3,7 +3,7 @@
     height="350"
   >
     <v-card-title class="text-h4 mb-2">
-      <div>Ficha clincial de obtetricia sin control prenantal</div>
+      <div>Fichas de obstetricia sin un control prenantal asignado</div>
     </v-card-title>
     <v-card-text>
       <v-list>
@@ -45,7 +45,7 @@
                         <v-icon>mdi-baby</v-icon>
                       </v-btn>
                     </template>
-                    <span>Control de ficha clinica de neonatología</span>
+                    <span>Iniciar control  de ficha de neonatología</span>
                   </v-tooltip>
                 </v-list-item-action>
               </v-list-item>

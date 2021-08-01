@@ -51,10 +51,13 @@
             },
             xaxis: {
               categories: this.label,
+              title: {
+                text: 'Cantidad de familias',
+              },
             },
           },
           series: [{
-            name: 'Parroquias',
+            name: 'Familias',
             data: this.data,
           }],
         }

@@ -41,6 +41,7 @@
             v-model="editedItem.pregnant_id"
             :items="miembro.prenatal_todos"
             item-text="numero_historia"
+            disabled
             item-value="id"
             outlined
             label="Ficha clínica de obstetricia asignada"

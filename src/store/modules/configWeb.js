@@ -85,7 +85,7 @@ import {
               const serviceResponse = await webContactAllApi()
               return serviceResponse
             },
-           async webOrganizationPostActions (commit, payload) {
+           async webOrganizationPostActions ({ commit }, payload) {
              const serviceResponse = await webOrganizationPostApi(payload)
              if (serviceResponse.ok) {
                commit('setOrganization', serviceResponse.data)

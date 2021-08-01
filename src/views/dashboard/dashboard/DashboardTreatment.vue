@@ -55,6 +55,9 @@
             chart: {
               id: 'vuechart-example',
             },
+            dataLabels: {
+              enabled: false,
+            },
             plotOptions: {
               bar: {
                 horizontal: false,
@@ -65,9 +68,14 @@
             xaxis: {
               categories: this.label,
             },
+            yaxis: {
+              title: {
+                text: 'Cantidad de pacientes',
+              },
+            },
           },
           series: [{
-            name: 'Medicamentos',
+            name: 'Pacientes',
             data: this.data,
           }],
         }

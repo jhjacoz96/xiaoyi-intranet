@@ -943,6 +943,24 @@
                     @change="captureMortality"
                   />
                 </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                >
+                  <v-select
+                    v-model="editedItemMortality.cause_mortality_id"
+                    v-validate="'required'"
+                    label="Causa de muerte (*)"
+                    outlined
+                    dense
+                    :items="causeMortality"
+                    item-text="nombre"
+                    item-value="id"
+                    :error-messages="errors.collect('mortality.causa')"
+                    data-vv-name="causa de muerte"
+                    validate-on-blur
+                  />
+                </v-col>
               </v-row>
               <v-subheader>
                 Datos del miembro familiar fallecido
@@ -1012,24 +1030,6 @@
                     disabled
                     :error-messages="errors.collect('mortality.parentesco')"
                     data-vv-name="parentesco"
-                    validate-on-blur
-                  />
-                </v-col>
-                <v-col
-                  cols="12"
-                  sm="6"
-                >
-                  <v-select
-                    v-model="editedItemMortality.cause_mortality_id"
-                    v-validate="'required'"
-                    label="Causa de muerte (*)"
-                    outlined
-                    dense
-                    :items="causeMortality"
-                    item-text="nombre"
-                    item-value="id"
-                    :error-messages="errors.collect('mortality.causa')"
-                    data-vv-name="causa de muerte"
                     validate-on-blur
                   />
                 </v-col>
@@ -1491,6 +1491,8 @@
         this.close()
       },
       addItemMortality () {
+        const member = this.miembros.find(item => item.cedula === this.editedItemMortality.member_id)
+        member.fallecido = 1
         this.mortalidad.push(this.editedItemMortality)
         this.closeMortality()
       },
@@ -1523,6 +1525,9 @@
         this.dialogDeleteMortlity = true
       },
       deleteItemMortalityConfirm () {
+        const mortality = this.mortalidad[this.editedIndexMortality]
+        const member = this.miembros.find(item => item.cedula === mortality.member_id)
+        member.fallecido = 0
         this.mortalidad.splice(this.editedIndexMortality, 1)
         this.closeDeleteMortality()
       },
@@ -1681,8 +1686,8 @@
       },
       captureMortality (val) {
         const member = this.miembros.find(item => item.cedula === val)
-        member.fallecido = 1
         this.editedItemMortality.nombre = member.nombre
+        this.editedItemMortality.apellido = member.apellido
         this.editedItemMortality.apellido = member.apellido
         this.editedItemMortality.relationship_id = member.relationship_id
         this.editedItemMortality.edad = calAge(member.fecha_nacimiento, this.editedItemMortality.fecha_fallecimiento)

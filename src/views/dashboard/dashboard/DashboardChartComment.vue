@@ -62,8 +62,16 @@
                 endingShape: 'rounded',
               },
             },
+            dataLabels: {
+              enabled: false,
+            },
             xaxis: {
               categories: this.label,
+            },
+            yaxis: {
+              title: {
+                text: 'Cantidad de Comentarios',
+              },
             },
           },
           series: [{

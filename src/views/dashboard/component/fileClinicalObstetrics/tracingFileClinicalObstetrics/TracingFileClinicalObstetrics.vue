@@ -243,7 +243,7 @@
           <template v-slot:item.fecha_nacimiento="{ item }">
             {{ age(item.fecha_nacimiento) }}
           </template>
-          <template v-slot:item.embarazo_planificado="{ item }">
+          <!-- <template v-slot:item.embarazo_planificado="{ item }">
             <span v-if="item.embarazo_planificado === null">
               -
             </span>
@@ -262,7 +262,7 @@
                 No
               </v-chip>
             </span>
-          </template>
+          </template> -->
           <template v-slot:item.created_at="{ item }">
             {{ moment(item.created_at).format('D-M-YYYY') }}
           </template>
@@ -344,6 +344,10 @@
             value: 'nombre',
           },
           {
+            text: 'Cédula',
+            value: 'cedula',
+          },
+          {
             text: 'Edad gestacional',
             value: 'descripcion_gestacion',
           },
@@ -354,10 +358,6 @@
           {
             text: 'Tipo de parto',
             value: 'tipo_parto',
-          },
-          {
-            text: '¿Embarazo planificado?',
-            value: 'embarazo_planificado',
           },
           {
             text: 'Causa de embarazo',

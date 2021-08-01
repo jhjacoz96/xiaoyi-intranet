@@ -135,7 +135,7 @@
       <v-col
         cols="12"
         md="6"
-        lg="4"
+        xl="4"
       >
         <dashboard-quick-access />
       </v-col>
@@ -168,7 +168,7 @@
       >
         <dashboard-data-interes
           :diabeticos="data ? data.dataInterest.diabeticos : 0"
-          :adultosMmayores="data ? data.dataInterest.adultosMayores : 0"
+          :adultosMayores="data ? data.dataInterest.adultosMayores : 0"
           :embarazoPrecoz="data ? data.dataInterest.embarazoPrecoz : 0"
           :promedioEmbarazo="data ? data.dataInterest.promedioEmbarazo : 0"
         />
@@ -321,7 +321,7 @@
             },
             yaxis: {
               title: {
-                text: 'Cantidades de familias',
+                text: 'Cantidad de mujeres',
               },
             },
             fill: {
@@ -329,7 +329,7 @@
             },
           },
           series: [{
-            name: 'Pacientes',
+            name: 'Mujeres',
             data: this.data ? this.data.estadisticaEmbarazadas.cantidades : [],
           }],
         }

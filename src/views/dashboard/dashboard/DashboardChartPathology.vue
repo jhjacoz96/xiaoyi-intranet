@@ -18,8 +18,8 @@
       <apexchart
         width="100%"
         type="bar"
-        :options="chart.data.options"
-        :series="chart.data.series"
+        :options="chart.options"
+        :series="chart.series"
       />
     </v-card-text>
   </v-card>
@@ -46,37 +46,35 @@
     computed: {
       chart () {
         return {
-          data: {
-            options: {
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: '40%',
-                  endingShape: 'rounded',
-                },
-              },
-              dataLabels: {
-                enabled: false,
-              },
-              stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent'],
-              },
-              xaxis: {
-                categories: this.response ? this.response.label : [],
-              },
-              yaxis: {
-                title: {
-                  text: 'Cantidades de miembros',
-                },
-              },
-              fill: {
-                opacity: 1,
+          options: {
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '40%',
+                endingShape: 'rounded',
               },
             },
-            series: this.response ? this.response.data : [],
+            dataLabels: {
+              enabled: false,
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent'],
+            },
+            xaxis: {
+              categories: this.response ? this.response.label : [],
+            },
+            yaxis: {
+              title: {
+                text: 'Cantidad de miembros',
+              },
+            },
+            fill: {
+              opacity: 1,
+            },
           },
+          series: this.response ? this.response.data : [],
         }
       },
     },
@@ -101,7 +99,7 @@
       async listItemGroupAge () {
         const serviceResponse = await this.groupAgeAllActions()
         if (serviceResponse.ok) {
-          this.groupAge = serviceResponse.data
+          this.groupAge = serviceResponse.data.m
         } else {
           this.alert({
             text: serviceResponse.message.text,
