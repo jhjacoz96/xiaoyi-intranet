@@ -276,6 +276,7 @@
     methods: {
       ...mapMutations('auth', ['can']),
       ...mapActions('configWeb', ['webOrganizationAllActions']),
+      ...mapMutations(['alert']),
       async listItem () {
         const serviceResponsee = await this.webOrganizationAllActions()
         if (!serviceResponsee.ok) {

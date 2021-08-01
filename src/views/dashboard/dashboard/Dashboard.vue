@@ -227,12 +227,14 @@
               v-if="embarazadaType === 'Barra'"
               width="100%"
               type="bar"
+              height="300"
               :options="embarazadasBarra.options"
               :series="embarazadasBarra.series"
             />
             <apexchart
               v-else
               width="100%"
+              height="300"
               type="pie"
               :options="embarazadasPie.options"
               :series="embarazadasPie.series"

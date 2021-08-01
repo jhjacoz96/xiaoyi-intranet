@@ -99,7 +99,7 @@
       async listItemGroupAge () {
         const serviceResponse = await this.groupAgeAllActions()
         if (serviceResponse.ok) {
-          this.groupAge = serviceResponse.data.m
+          this.groupAge = serviceResponse.data
         } else {
           this.alert({
             text: serviceResponse.message.text,
