@@ -97,7 +97,6 @@
           serviceResponse = await fileFamilySearchNumberApi(this.editedItem.numero_historia)
         } else if (this.search === 'Ficha clinica de obstetricia') {
           serviceResponse = await fileClinicalObstetricSearchNumberApi(this.editedItem.numero_historia)
-          console.log(serviceResponse)
         } else {
           serviceResponse = await fileClinicalNeonatologySearchNumberApi(this.editedItem.numero_historia)
         }
