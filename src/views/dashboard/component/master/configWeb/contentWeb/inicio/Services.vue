@@ -24,7 +24,7 @@
       <template v-slot:item.imagen="{ item }">
         <v-img
           v-if="item.image"
-          :src="item.image.url"
+          :src="item.image"
           width="60"
         />
       </template>
@@ -68,7 +68,7 @@
             text
             @click="editedConfirm"
           >
-            Editar
+            Confirmar
           </v-btn>
           <v-spacer />
         </v-card-actions>
@@ -170,7 +170,7 @@
       },
       async editedConfirm () {
         this.editedItem.view_web = !this.editedItem.view_web
-        this.editedItem.image = 'null'
+        this.editedItem.imagen = 'null'
         const serviceResponse = await serviceWebShowApi(this.editedItem, this.editedItem.id)
         if (serviceResponse.ok) {
           Object.assign(this.desserts[this.editedIndex], serviceResponse.data)
