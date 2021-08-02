@@ -29,6 +29,8 @@
           label="Comorbidades"
           outlined
           dense
+          item-text="name"
+          item-value="id"
           multiple
           :items="pathology"
         />

@@ -278,6 +278,7 @@
           zone: [],
           levelTotalRisk: [],
           culturalGroup: [],
+          contamination: [],
           startDate: null,
           endDate: null,
         },

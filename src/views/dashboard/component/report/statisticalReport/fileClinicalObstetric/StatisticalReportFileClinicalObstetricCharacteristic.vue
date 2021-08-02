@@ -62,7 +62,7 @@
           outlined
           dense
           multiple
-          item-text="name"
+          item-text="nombre"
           item-value="id"
           :items="pathologyPregnant"
         />
@@ -220,11 +220,11 @@
         typeBirth: [
           {
             name: 'Vaginal',
-            value: 'vaginal',
+            value: 'Vaginal',
           },
           {
             name: 'Cesarea',
-            value: 'cesarea',
+            value: 'Cesarea',
           },
         ],
         data: null,

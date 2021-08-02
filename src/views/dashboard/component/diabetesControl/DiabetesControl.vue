@@ -97,7 +97,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="$route.push(`/intranet/control-diabetes/${item.diabetic_patient.id}`)"
+                  @click="$router.push(`/intranet/control-diabetes/${item.diabetic_patient.id}`)"
                 >
                   <v-icon>mdi-doctor</v-icon>
                 </v-btn>

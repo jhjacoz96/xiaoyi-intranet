@@ -332,7 +332,7 @@
           pathology: [],
           groupAge: [],
           pregnant: undefined,
-          gender: null,
+          gender: [],
           vaccine: undefined,
           startDate: null,
           endDate: null,

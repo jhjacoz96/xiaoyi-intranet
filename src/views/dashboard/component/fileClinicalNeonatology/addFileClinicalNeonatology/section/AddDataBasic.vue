@@ -182,6 +182,9 @@
     mapActions,
     mapMutations,
   } from 'vuex'
+  import {
+    fileClinicalObstetricCheckPregnantApi,
+  } from '@/api/modules'
   export default {
     props: {
       click: {
@@ -287,7 +290,7 @@
           textTwo.indexOf(searchText) > -1
       },
       async checkMember (val) {
-        const serviceResponse = await this.fileClinicalObstetricCheckActions(val)
+        const serviceResponse = await fileClinicalObstetricCheckPregnantApi(val)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
         } else {

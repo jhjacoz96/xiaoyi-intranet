@@ -98,7 +98,7 @@
                   cols="12"
                 >
                   <v-checkbox
-                    v-model="editedItem.activity_evolutions"
+                    v-model="editedItem.activity_evolutions_id"
                     :label="item.compromiso_familiar"
                     :value="item.id"
                   />
@@ -148,6 +148,10 @@
             value: 'name',
           },
           {
+            text: 'Clasificación',
+            value: 'risk_classification_id.name',
+          },
+          {
             text: 'Acción',
             sortable: false,
             align: 'center',
@@ -160,12 +164,12 @@
         editedItem: {
           name: '',
           risk_classification: undefined,
-          activity_evolutions: [],
+          activity_evolutions_id: [],
         },
         defaultItem: {
           name: '',
           risk_classification: undefined,
-          activity_evolutions: [],
+          activity_evolutions_id: [],
         },
       }
     },
@@ -181,6 +185,7 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.riskAllActions()
+        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {

@@ -24,7 +24,7 @@
               <v-tabs-slider />
 
               <v-tab href="#tab-1">
-                Pacientes dibéticos por nivel de glucosa
+                Pacientes dibéticos por riesgos de niveles de glucosa
               </v-tab>
               <v-tab href="#tab-2">
                 Pacientes dibéticos por clasificación de imc

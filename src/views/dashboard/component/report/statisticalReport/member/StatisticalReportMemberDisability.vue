@@ -28,7 +28,7 @@
       >
         <v-select
           v-model="filter.pathology"
-          label="Discapacidades"
+          label="Patologías"
           outlined
           dense
           item-text="name"

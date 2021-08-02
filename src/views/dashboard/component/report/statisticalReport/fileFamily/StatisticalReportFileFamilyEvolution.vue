@@ -377,21 +377,13 @@
         const serviceResponse = await reportStadisticFilefamilyEvolutionApi(this.filter)
         if (serviceResponse.ok) {
           this.data = serviceResponse.data
-          this.close()
         } else {
-          this.close()
           this.alert({
             text: serviceResponse.message.text,
             color: 'warning',
           })
         }
-      },
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.loadingFilter = false
-          this.filter = Object.assign({}, this.defaultFilter)
-        })
+        this.loadingFilter = false
       },
     },
   }

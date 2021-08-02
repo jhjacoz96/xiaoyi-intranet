@@ -126,7 +126,7 @@
         const serviceResponse = await fileClinicalNeonatologyCheckPregnantApi(this.cedula)
         if (serviceResponse.ok) {
           this.setMiembro(serviceResponse.data)
-          this.$router.push('/agregar')
+          this.$router.push('/intranet/ficha-clinica-neonatologia/agregar')
           this.loading = false
         } else {
           this.alert({

@@ -137,6 +137,7 @@
         var id = this.$route.params.id
         if (id !== undefined) {
           const serviceResponse = await this.fileFamilyUpdateActions(this.fileFamily)
+          console.log(serviceResponse)
           if (serviceResponse.ok) {
             this.$router.push('/intranet/ficha-familiar')
             this.loading = false

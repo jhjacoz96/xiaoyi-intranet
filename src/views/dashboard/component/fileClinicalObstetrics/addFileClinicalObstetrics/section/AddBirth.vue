@@ -231,17 +231,6 @@
             item-value="value"
           />
         </v-col>
-        <v-col
-          cols="12"
-        >
-          <v-textarea
-            v-model="editedItem.observacion_parto"
-            :disabled="!history"
-            label="Observaciones del parto (*)"
-            outlined
-            dense
-          />
-        </v-col>
       </v-row>
       <div class="mt-4 my-3">
         <div class="d-inline-block">
@@ -336,6 +325,19 @@
           </td>
         </tr>
       </v-card-text>
+      <v-row>
+        <v-col
+          cols="12"
+        >
+          <v-textarea
+            v-model="editedItem.observacion_parto"
+            :disabled="!history"
+            label="Observaciones del parto (*)"
+            outlined
+            dense
+          />
+        </v-col>
+      </v-row>
       <div
         class="d-none"
       >

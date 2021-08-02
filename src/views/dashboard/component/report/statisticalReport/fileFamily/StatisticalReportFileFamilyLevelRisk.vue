@@ -53,7 +53,7 @@
             multiple
           />
         </v-col>
-        <v-col
+        <!-- <v-col
           sm="8"
           cols="12"
         >
@@ -90,7 +90,7 @@
           <div class="text-subtitle-1 font-weight-light">
             Rango de cantidad de mimbros
           </div>
-        </v-col>
+        </v-col> -->
       </v-row>
       <v-row
         class="justify-center mx-auto"
