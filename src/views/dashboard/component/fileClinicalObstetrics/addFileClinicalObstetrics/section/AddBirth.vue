@@ -89,7 +89,7 @@
           cols="6"
           sm="4"
         >
-          <v-slider
+          <!-- <v-slider
             v-model="editedItem.semana_gestacion"
             :disabled="!history"
             :thumb-size="24"
@@ -100,7 +100,16 @@
           />
           <v-subheader class="pl-0">
             Semana en que nace (*)
-          </v-subheader>
+          </v-subheader> -->
+          <v-text-field
+            v-model.number="editedItem.semana_gestacion"
+            label="Semana en que nace (*)"
+            outlined
+            :rules="rules"
+            type="number"
+            dense
+            disable
+          />
         </v-col>
         <v-col
           cols="6"
@@ -382,6 +391,7 @@
           grado_desgarro: '',
           tipo_parto: '',
           episiorria: false,
+          semana_gestacion: 28,
           descripcion_gestacion: '',
           hemorroides: false,
           dolor: false,
@@ -413,6 +423,8 @@
       availableSteps () {
         if (
           this.editedItem.observacion_parto &&
+          this.editedItem.tipo_parto &&
+          this.editedItem.semana_gestacion &&
           this.steps.includes(4)
         ) {
           this.setSteps(5)
@@ -428,6 +440,30 @@
           }
         }
         return ''
+      },
+      rules (v) {
+        const rules = []
+        if (this.editedItem.semana_gestacion <= 28) {
+          const rule = v => (v || '') >= 28 ||
+            'El valor mínimo es de 28'
+          rules.push(rule)
+        }
+        if (this.editedItem.semana_gestacion >= 50) {
+          const rule = v => (v || '') <= 50 ||
+            'El valor máximo es de 50'
+          rules.push(rule)
+        }
+        return rules
+      },
+    },
+    watch: {
+      editedItem: {
+        handler (val) {
+          if (val.semana_gestacion) {
+            this.calSestacion(val.semana_gestacion)
+          }
+        },
+        deep: true,
       },
     },
     created () {
@@ -530,6 +566,9 @@
         const textOne = item.name.toLowerCase()
         const searchText = queryText.toLowerCase()
         return textOne.indexOf(searchText) > -1
+      },
+      validateField () {
+        this.$refs.form.validate()
       },
     },
   }
