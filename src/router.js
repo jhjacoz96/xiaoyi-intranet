@@ -484,6 +484,16 @@ const router = new Router({
           component: () => import('@/views/dashboard/component/systemAdministration/SystemAdministration'),
         },
         {
+          name: 'Administración de base de datos',
+          path: 'adminsitracion-sistema/administracion-bd',
+          component: () => import('@/views/dashboard/component/systemAdministration/SystemAdministrationAdministrationDb'),
+        },
+        {
+          name: 'Auditoria',
+          path: 'adminsitracion-sistema/auditoria',
+          component: () => import('@/views/dashboard/component/systemAdministration/SystemAdministrationAudit'),
+        },
+        {
           name: 'User Profile',
           path: 'pages/user',
           component: () => import('@/views/dashboard/pages/UserProfile'),

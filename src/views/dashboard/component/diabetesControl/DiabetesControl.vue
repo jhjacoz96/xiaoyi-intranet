@@ -33,6 +33,9 @@
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
+          <template v-slot:item.nombre="{ item }">
+            {{ item.nombre }} {{ item.apellido }}
+          </template>
           <template v-slot:item.edad="{ item }">
             {{ age(item.fecha_nacimiento) }}
           </template>
@@ -747,10 +750,11 @@
         tabTreatment: 0,
         tabs: ['Signos vitales', 'Antropometría', 'Tratamientos'],
         headers: [
-          { text: 'Nombre', sortable: true, value: 'nombre' },
-          { text: 'Cédula', sortable: false, value: 'cedula' },
-          { text: 'Género', sortable: false, value: 'gender_id.nombre' },
-          { text: 'Edad', sortable: false, value: 'edad' },
+          { text: 'ID', sortable: true, value: 'id' },
+          { text: 'Nombres y apellidos', sortable: true, value: 'nombre' },
+          { text: 'Cédula', sortable: true, value: 'cedula' },
+          { text: 'Género', sortable: true, value: 'gender_id.nombre' },
+          { text: 'Edad', sortable: true, value: 'edad' },
           { text: 'Acción', sortable: false, value: 'accion' },
         ],
         desserts: [],

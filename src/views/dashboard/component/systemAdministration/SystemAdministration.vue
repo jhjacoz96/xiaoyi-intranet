@@ -16,10 +16,24 @@
       <v-card-text>
         <v-container fluid>
           <v-row>
-            <v-col cols="3">
+            <v-col
+              cols="6"
+              md="3"
+            >
               <base-item-master
-                title="Recuperción de la DB"
+                title="Adminitración de DB"
                 icon="mdi-36px mdi-database"
+                to="adminsitracion-sistema/administracion-bd"
+              />
+            </v-col>
+            <v-col
+              cols="6"
+              md="3"
+            >
+              <base-item-master
+                title="Auditoria de transacciones"
+                icon="mdi-36px mdi-database-search"
+                to="adminsitracion-sistema/auditoria"
               />
             </v-col>
           </v-row>

@@ -336,35 +336,48 @@
         loadingDataTable: false,
         headers: [
           {
+            text: 'ID',
+            sortable: true,
+            value: 'id',
+          },
+          {
             text: 'Número de historia',
+            sortable: true,
             value: 'numero_historia',
           },
           {
-            text: 'Nombre',
+            text: 'Nombres y apellidos',
+            sortable: true,
             value: 'nombre',
           },
           {
             text: 'Cédula',
+            sortable: true,
             value: 'cedula',
           },
           {
             text: 'Edad gestacional',
+            sortable: true,
             value: 'descripcion_gestacion',
           },
           {
             text: 'Edad',
+            sortable: true,
             value: 'fecha_nacimiento',
           },
           {
             text: 'Tipo de parto',
+            sortable: true,
             value: 'tipo_parto',
           },
           {
             text: 'Causa de embarazo',
+            sortable: true,
             value: 'causa_embarazo',
           },
           {
             text: 'Fecha de apertura de historia',
+            sortable: true,
             value: 'created_at',
           },
           {

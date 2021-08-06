@@ -5,42 +5,60 @@
     </v-subheader>
     <v-container fluid>
       <v-row>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Centro de salud"
             icon="mdi-36px mdi-home-edit"
             to="/intranet/configuracion-basica/datos-basicos"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Instituciones del sistema"
             icon="mdi-36px mdi-hospital"
             to="/intranet/configuracion-basica/institucion-sistema"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Servicios asistenciales"
             icon="mdi-36px mdi-medical-bag"
             to="/intranet/configuracion-basica/servicios"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Actividades de servicios"
             icon="mdi-36px mdi-medical-bag"
             to="/intranet/configuracion-basica/actividades-servicio"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Especialidades"
             icon="mdi-36px mdi-doctor"
             to="/intranet/configuracion-basica/especialidades"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Tipo de empleado"
             icon="mdi-36px mdi-doctor"
@@ -54,7 +72,10 @@
     </v-subheader>
     <v-container fluid>
       <v-row>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Grupo poblacional"
             icon="mdi-36px mdi-google-maps"

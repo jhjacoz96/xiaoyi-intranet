@@ -168,9 +168,9 @@
       >
         <dashboard-data-interes
           :diabeticos="data ? data.dataInterest.diabeticos : 0"
-          :adultosMayores="data ? data.dataInterest.adultosMayores : 0"
-          :embarazoPrecoz="data ? data.dataInterest.embarazoPrecoz : 0"
-          :promedioEmbarazo="data ? data.dataInterest.promedioEmbarazo : 0"
+          :adultos-mayores="data ? data.dataInterest.adultosMayores : 0"
+          :embarazo-precoz="data ? data.dataInterest.embarazoPrecoz : 0"
+          :promedio-embarazo="data ? data.dataInterest.promedioEmbarazo : 0"
         />
       </v-col>
     </v-row>

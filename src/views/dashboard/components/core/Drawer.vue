@@ -29,7 +29,7 @@
         two-line
       >
         <img
-          :src="organization.image"
+          :src="organization.image || '@/assets/fondoDefault.jpg'"
           width="60"
           max-width="60"
           class="mr-2"

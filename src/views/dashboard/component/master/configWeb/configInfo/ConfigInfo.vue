@@ -26,21 +26,30 @@
     </v-subheader>
     <v-container fluid>
       <v-row>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="¿A quién va dirigido?"
             icon="mdi-36px mdi-view-grid-plus-outline"
             to="configuracion-web/primer-filtro-busqueda"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Pratones funcionales generales"
             icon="mdi-36px mdi-view-grid-plus-outline"
             to="configuracion-web/segundo-filtro-busqueda"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Pratones funcionales específicos"
             icon="mdi-36px mdi-view-grid-plus-outline"
@@ -68,14 +77,20 @@
     </v-subheader>
     <v-container fluid>
       <v-row>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Publicaciones"
             icon="mdi-36px mdi-view-grid-plus-outline"
             to="configuracion-web/publicaciones"
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          cols="6"
+          md="3"
+        >
           <base-item-master
             title="Tipos de comentarios"
             icon="mdi-36px mdi-view-grid-plus-outline"

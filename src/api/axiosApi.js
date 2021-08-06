@@ -12,7 +12,6 @@ export const apiHttp = async (method, endpoint, data, options = {}, loading = tr
 
  // eslint-disable-next-line no-prototype-builtins
  if (!options.hasOwnProperty('headers')) options.headers = defaultHeaders
-
  let serviceResponse = {}
  method = method.toLowerCase()
  const servicePromise = axios({
