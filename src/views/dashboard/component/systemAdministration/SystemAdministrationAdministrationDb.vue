@@ -180,7 +180,6 @@
       async listItem () {
         this.loadingDataTable = true
         const serviceResponse = await backupAllApi()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -222,7 +221,6 @@
       },
       async deleteItemConfirm () {
         const serviceResponse = await backupDeleteApi(this.itemIndex)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.alert({
             text: serviceResponse.message,
