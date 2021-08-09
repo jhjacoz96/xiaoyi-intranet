@@ -255,7 +255,9 @@
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </div>
-      <v-card-text>
+      <v-card-text
+        v-if="editedItem.tratamiento.length > 0"
+      >
         <tr
           v-for="(item, k) in editedItem.tratamiento"
           :key="k"
@@ -334,7 +336,13 @@
           </td>
         </tr>
       </v-card-text>
-      <v-row>
+      <v-card-text
+        v-else
+        class="text-center"
+      >
+        <div>Sin registros</div>
+      </v-card-text>
+      <v-row class="mb-6">
         <v-col
           cols="12"
         >

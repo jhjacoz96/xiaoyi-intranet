@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
-      2. Miembros de la familia por grupos de edad
+      Miembros de la familia por grupos de edad
     </div>
     <div
       class="text-end"
@@ -775,7 +775,7 @@
       </v-card>
     </v-dialog>
     <div class="text-center text-h4 font-weight-bold my-6 blue--text">
-      3. Mortalidad Familiar
+      Mortalidad Familiar
     </div>
     <div
       class="text-end"

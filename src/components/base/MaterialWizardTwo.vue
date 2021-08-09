@@ -2,6 +2,7 @@
   <base-material-card
     elevation="12"
     color="primary"
+    class="v-card--wizardd"
   >
     <template
       v-slot:heading
@@ -144,7 +145,7 @@
 </script>
 
 <style lang="sass">
-  .v-card--wizard
+  .v-card--wizardd
     overflow: visible
 
     .v-tabs-bar

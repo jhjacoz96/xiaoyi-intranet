@@ -7,7 +7,7 @@
       Para avanzar al siguiente paso debe <strong>seleccionar un nivel de riesgo</strong> para cada riesgo
     </v-alert>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
-      5. Clasificación de riesgos familiares
+      Clasificación de riesgos familiares
       <v-btn
         class="float-right"
         fab
@@ -187,7 +187,7 @@
       </v-card-text> -->
       <v-card-text>
         <v-progress-linear
-          :value="total_risk"
+          :value="total_risk * 1.4"
           height="25"
           :color="colorRisk.color"
         >
@@ -318,6 +318,7 @@
               level_total_id: this.level_total_id,
               total_risk: this.total_risk,
             })
+            this.setEvolutionRisks(this.levelRisk)
             this.$emit('next')
           }
           this.setSteps(3)
@@ -347,7 +348,7 @@
       ...mapActions('levelTotal', ['levelTotalAllActions']),
       ...mapActions('risk', ['riskAllActions']),
       ...mapActions('riskClassification', ['riskClassificationAllActions']),
-      ...mapMutations('fileFamily', ['setRisks', 'setSteps']),
+      ...mapMutations('fileFamily', ['setRisks', 'setSteps', 'setEvolutionRisks']),
       ...mapMutations(['alert']),
       async ShowFileFamily () {
         this.id = this.$route.params.id

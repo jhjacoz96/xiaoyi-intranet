@@ -254,7 +254,9 @@
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </div>
-      <v-container>
+      <v-card-text
+        v-if="editedItem.telefonos.length > 0"
+      >
         <tr
           v-for="(item, index) in editedItem.telefonos"
           :key="index"
@@ -302,7 +304,13 @@
             </v-btn>
           </td>
         </tr>
-      </v-container>
+      </v-card-text>
+      <v-card-text
+        v-else
+        class="text-center"
+      >
+        <div>Sin registros</div>
+      </v-card-text>
     </v-form>
     <div
       class="d-none"

@@ -260,6 +260,10 @@
             name: 'Control de diabeticos',
             id: 'App\\DiabeticPatient',
           },
+          {
+            name: 'Publicaciones',
+            id: 'App\\Publication',
+          },
         ],
       }
     },

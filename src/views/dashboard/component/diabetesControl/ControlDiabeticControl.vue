@@ -169,7 +169,9 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card-text>
-        <v-card-text>
+        <v-card-text
+          v-if="editedItem.tratamiento_farmacologico.length > 0"
+        >
           <tr
             v-for="(item, k) in editedItem.tratamiento_farmacologico"
             :key="k"
@@ -267,8 +269,14 @@
             </td>
           </tr>
         </v-card-text>
+        <v-card-text
+          v-else
+          class="text-center"
+        >
+          <div>Sin registros</div>
+        </v-card-text>
         <div
-          class="text-center text-h4 d-fleX font-weight-bold mb-6 blue--text"
+          class="text-center text-h4 d-fleX font-weight-bold my-6 blue--text"
         >
           <div
             class=" d-inline-block"
@@ -302,7 +310,10 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card-text>
-        <v-card-text class="justify-center">
+        <v-card-text
+          v-if="editedItem.tratamiento_no_farmacologico.length > 0"
+          class="justify-center"
+        >
           <tr
             v-for="(item, k) in editedItem.tratamiento_no_farmacologico"
             :key="k"
@@ -372,6 +383,12 @@
               </v-btn>
             </td>
           </tr>
+        </v-card-text>
+        <v-card-text
+          v-else
+          class="text-center"
+        >
+          <div>Sin registros</div>
         </v-card-text>
       </v-tab-item>
     </base-material-wizard>

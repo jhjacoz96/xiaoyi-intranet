@@ -58,6 +58,9 @@ export default {
       sitios_tratamiento: [],
     },
   },
+  getters: {
+    fileFamilyGetter: (state) => state.fileFamily,
+  },
   mutations: {
     setFileFamily (state, payload) {
       state.fileFamily = Object.assign({}, payload)
@@ -82,9 +85,42 @@ export default {
       state.steps = [0]
     },
     setRisks (state, payload) {
-      state.fileFamily.riesgos = payload.riesgos
       state.fileFamily.level_total_id = payload.level_total_id
       state.fileFamily.total_risk = payload.total_risk
+      state.fileFamily.riesgos = payload.riesgos
+    },
+    setEvolutionRisks (state, payload) {
+      const evoluciones = state.fileFamily.evaluacion
+      state.fileFamily.evaluacion = state.fileFamily.riesgos
+      .filter(item => {
+        var levelRisk = payload.find(v => {
+          return item.level_risk_id === v.id
+        })
+        return levelRisk.value !== 0
+      })
+      .map(item => {
+        const ids = evoluciones.map(itemE => itemE.id)
+        if (ids.includes(item.id)) {
+          const evolucion = evoluciones.find(itemE => itemE.id === item.id)
+          return {
+            ...item,
+            fecha_evaluacion: evolucion.fecha_evaluacion,
+            fecha_programacion: evolucion.fecha_programacion,
+            compromiso_id: evolucion.compromiso_id,
+            cumplio: evolucion.cumplio,
+            causas: evolucion.causas,
+          }
+        } else {
+          return {
+            ...item,
+            fecha_evaluacion: null,
+            fecha_programacion: null,
+            compromiso_id: null,
+            cumplio: '',
+            causas: '',
+          }
+        }
+      })
     },
     setEvaluation (state, payload) {
       state.fileFamily.evaluacion = payload

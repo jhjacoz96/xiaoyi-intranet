@@ -6,7 +6,7 @@
       <div
         class=" d-inline-block"
       >
-        9. Contaminación ambiental
+        Contaminación ambiental
       </div>
       <v-btn
         fab
@@ -17,7 +17,7 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </div>
-    <v-card-text>
+    <v-card-text v-if="contaminacion.length > 0">
       <tr
         v-for="(item, index) in contaminacion"
         :key="index"
@@ -59,6 +59,12 @@
           </v-btn>
         </td>
       </tr>
+    </v-card-text>
+    <v-card-text
+      v-else
+      class="text-center"
+    >
+      <div>Sin registros</div>
     </v-card-text>
     <!-- <div
       class="text-center text-h4 d-fleX font-weight-bold mb-6 blue--text"

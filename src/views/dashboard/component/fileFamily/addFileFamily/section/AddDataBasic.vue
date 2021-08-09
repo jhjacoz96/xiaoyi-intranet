@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
-      1. Datos generales
+      Datos generales
     </div>
     <v-form
       ref="form"

@@ -226,7 +226,7 @@
         if (this.editedIndex > -1) {
           const serviceResponse = await this.riskUpdateActions(this.editedItem)
           if (serviceResponse.ok) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            Object.assign(this.desserts[this.editedIndex], serviceResponse.data)
             this.close()
             this.alert({
               text: serviceResponse.message,

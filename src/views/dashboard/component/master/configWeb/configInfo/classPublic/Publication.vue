@@ -225,7 +225,7 @@
                   <v-file-input
                     v-if="editedItem.type_resource==='image' || editedItem.type_resource==='document'"
                     v-model="editedItem.resource"
-                    label="Seleccione la imagen"
+                    :label="editedItem.type_resource==='image' ? 'Seleccione recurso' : 'Seleccione documento'"
                     outlined
                     dense
                     class="ml-2"

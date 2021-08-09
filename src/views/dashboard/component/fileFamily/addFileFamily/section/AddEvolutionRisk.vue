@@ -7,7 +7,7 @@
       Para avanzar al siguiente paso debe <strong>programar las actividades</strong> para cada riesgo
     </v-alert>
     <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
-      6. Evolución de la gestión del riesgo familiar
+      Evolución de la gestión del riesgo familiar
     </div>
     <v-card-text>
       <v-data-table
@@ -57,8 +57,29 @@
             <span class="mx-5 font-weight-bold">{{ group }}</span>
           </td>
         </template>
-        <template v-slot:item.name="{ item }">
-          {{ item.name }}
+        <template v-slot:item.level_risk_id="{ item }">
+          <v-chip
+            v-if="item.level_risk_id"
+            :color="getColorLevelRisk(item.level_risk_id)"
+          >
+            {{ getNameLevelRisk(item.level_risk_id) }}
+          </v-chip>
+        </template>
+        <template v-slot:item.compromiso_id="{ item }">
+          <v-chip
+            :color="item.compromiso_id ? 'success' : 'warning'"
+            outlined
+          >
+            {{ item.compromiso_id ? 'Programada' : 'Sin programar' }}
+          </v-chip>
+        </template>
+        <template v-slot:item.cumplio="{ item }">
+          <v-chip
+            :color="item.cumplio ? 'success' : 'warning'"
+            outlined
+          >
+            {{ item.cumplio ? 'Evaluada' : 'sin evaluar' }}
+          </v-chip>
         </template>
         <template v-slot:item.accion="{ item }">
           <v-tooltip bottom>
@@ -378,6 +399,27 @@
             groupable: false,
           },
           {
+            text: 'Nivel de riesgo',
+            value: 'level_risk_id',
+            sortable: false,
+            align: 'left',
+            groupable: false,
+          },
+          {
+            text: 'Programación de actividad',
+            value: 'compromiso_id',
+            sortable: false,
+            align: 'left',
+            groupable: false,
+          },
+          {
+            text: 'Evaluación de actividad',
+            value: 'cumplio',
+            sortable: false,
+            align: 'left',
+            groupable: false,
+          },
+          {
             text: 'Clasificación',
             value: 'risk_classification_id.name',
             sortable: false,
@@ -461,6 +503,13 @@
       dialogEvaluation (val) {
         val || this.closeEvaluation()
       },
+      fileFamily: {
+        handler (val) {
+          this.evolucion = val.evaluacion
+          this.l = val.evaluacion.length
+        },
+        deep: true,
+      },
     },
     created () {
       this.listItemLevelRisk()
@@ -473,7 +522,8 @@
         const serviceResponse = await this.levelRiskAllActions()
         if (serviceResponse.ok) {
           this.levelRisk = serviceResponse.data
-          this.filterEvolution()
+          this.evolucion = this.fileFamily.evaluacion
+          this.l = this.fileFamily.evaluacion.length
         } else {
           this.alert({
             text: serviceResponse.message.text,
@@ -483,58 +533,36 @@
       },
       filterEvolution () {
         this.id = this.$route.params.id
-        this.evolucion = this.fileFamily.riesgos.map(item => {
-          if (this.id !== undefined) {
-            return {
-              ...item,
-              fecha_evaluacion: item.fecha_evaluacion,
-              fecha_programacion: item.fecha_programacion,
-              compromiso_id: item.compromiso_id,
-              cumplio: item.cumplio,
-              causas: item.causas,
-            }
-          } else {
-            return {
-              ...item,
-              fecha_evaluacion: null,
-              fecha_programacion: null,
-              compromiso_id: null,
-              cumplio: '',
-              causas: '',
-            }
+        this.evolucion = this.fileFamily.riesgos.filter(this.filterFilterEvolution)
+        this.l = this.fileFamily.riesgos.filter(this.filterFilterEvolution).length
+      },
+      mapfilterEvolution (item) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (item.hasOwnProperty('compromiso_id')) {
+          return {
+            ...item,
+            fecha_evaluacion: item.fecha_evaluacion,
+            fecha_programacion: item.fecha_programacion,
+            compromiso_id: item.compromiso_id,
+            cumplio: item.cumplio,
+            causas: item.causas,
           }
-        }).filter(item => {
-          var levelRisk = this.levelRisk.find(v => {
-            return item.level_risk_id === v.id
-          })
-          return levelRisk.value !== 0
+        } else {
+          return {
+            ...item,
+            fecha_evaluacion: null,
+            fecha_programacion: null,
+            compromiso_id: null,
+            cumplio: '',
+            causas: '',
+          }
+        }
+      },
+      filterFilterEvolution (item) {
+        var levelRisk = this.levelRisk.find(v => {
+          return item.level_risk_id === v.id
         })
-        this.l = this.fileFamily.riesgos.map(item => {
-          if (this.id !== undefined) {
-            return {
-              ...item,
-              fecha_evaluacion: item.fecha_evaluacion,
-              fecha_programacion: item.fecha_programacion,
-              compromiso_id: item.compromiso_id,
-              cumplio: item.cumplio,
-              causas: item.causas,
-            }
-          } else {
-            return {
-              ...item,
-              fecha_evaluacion: null,
-              fecha_programacion: null,
-              compromiso_id: null,
-              cumplio: '',
-              causas: '',
-            }
-          }
-        }).filter(item => {
-          var levelRisk = this.levelRisk.find(v => {
-            return item.level_risk_id === v.id
-          })
-          return levelRisk.value !== 0
-        }).length
+        return levelRisk.value !== 0
       },
       closeActivity () {
         this.dialogActivity = false
@@ -564,22 +592,34 @@
       },
       addItemActivity () {
         Object.assign(this.evolucion[this.editedIndex], this.editedItem)
-        // this.setEvaluation(this.evolucion)
         this.compromiso_equipo = ''
         this.compromiso_familiar = ''
+        this.setEvaluation(this.evolucion)
         this.closeActivity()
       },
       addItemEvaluation () {
         Object.assign(this.evolucion[this.editedIndex], this.editedItem)
-        // this.setEvaluation(this.evolucion)
         this.compromiso_equipo = ''
         this.compromiso_familiar = ''
+        this.setEvaluation(this.evolucion)
         this.closeEvaluation()
       },
       getActivity (val) {
         const actvity = this.editedItem.activity_evolutions.find(item => item.id === val)
         this.compromiso_familiar = actvity.compromiso_familiar
         this.compromiso_equipo = actvity.compromiso_equipo
+      },
+      getNameLevelRisk (val) {
+        if (this.levelRisk.length >= 0) {
+          var levelRisk = this.levelRisk.find(item => item.id === val)
+          return levelRisk.name
+        }
+      },
+      getColorLevelRisk (val) {
+        if (this.levelRisk.length >= 0) {
+          var levelRisk = this.levelRisk.find(item => item.id === val)
+          return levelRisk.color
+        }
       },
     },
   }
