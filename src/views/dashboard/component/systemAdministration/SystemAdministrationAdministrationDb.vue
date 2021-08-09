@@ -222,16 +222,16 @@
       async deleteItemConfirm () {
         const serviceResponse = await backupDeleteApi(this.itemIndex)
         if (serviceResponse.ok) {
-          this.alert({
-            text: serviceResponse.message,
-            color: 'success',
-          })
           var item = this.desserts.find(item => item.file_name === this.itemIndex)
           var index = this.desserts.indexOf(item)
           this.desserts.splice(index, 1)
+          this.alert({
+            text: `${serviceResponse.message} , por favor recargue la página para visualizar el cambio`,
+            color: 'success',
+          })
         } else {
           this.alert({
-            text: serviceResponse.message.text + 'por favor recargue la página para visualizar el registro',
+            text: serviceResponse.message.text,
             color: 'warning',
           })
         }
@@ -248,7 +248,7 @@
         const serviceResponse = await backupCreateApi()
         if (serviceResponse.ok) {
           this.alert({
-            text: serviceResponse.message  + ', por favor recargue la página para visualizar el registro',
+            text: `${serviceResponse.message} , por favor recargue la página para visualizar el cambio`,
             color: 'success',
           })
         } else {
