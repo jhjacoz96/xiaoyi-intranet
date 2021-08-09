@@ -248,7 +248,7 @@
         const serviceResponse = await backupCreateApi()
         if (serviceResponse.ok) {
           this.alert({
-            text: serviceResponse.message,
+            text: serviceResponse.message  + ', por favor recargue la página para visualizar el registro',
             color: 'success',
           })
         } else {
