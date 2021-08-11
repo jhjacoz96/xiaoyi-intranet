@@ -232,6 +232,7 @@
           numero_historia: '',
           zone_id: undefined,
           cultural_group_id: undefined,
+          evaluacion: [],
         },
         organization: {},
         zone: [],
