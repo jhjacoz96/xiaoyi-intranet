@@ -172,6 +172,11 @@
         },
       }
     },
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+    },
     created () {
       this.listItem()
       this.listItemRole()
