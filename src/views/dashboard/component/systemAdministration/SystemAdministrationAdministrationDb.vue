@@ -21,7 +21,7 @@
               Administración de base de datos
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite realizar todas las operaciones básicas referente a la base de datos
+              Permite realizar todas las operaciones básicas referente a la base de datos.
             </div>
           </v-col>
         </v-row>
@@ -52,6 +52,29 @@
           :loading="loadingDataTable"
           loading-text="Cargando... Porfavor espere"
         >
+          <template v-slot:top>
+            <v-btn-toggle
+              v-model="disk"
+              :disabled="loadingDataTable"
+              mandatory
+              dense
+              color="primary"
+              @change="listItem"
+            >
+              <v-btn
+                text
+                value="local"
+              >
+                Local
+              </v-btn>
+              <v-btn
+                text
+                value="dropbox"
+              >
+                Dropbox
+              </v-btn>
+            </v-btn-toggle>
+          </template>
           <template v-slot:item.last_modified="{ item }">
             {{ moment(item.last_modified*1000, 'x').locale('es').format('DD MMM YYYY hh:mm') }}
           </template>
@@ -144,6 +167,8 @@
         loadingBackup: false,
         loadingDataTable: false,
         itemIndex: null,
+        disk: 'local',
+        allDisk: ['local', 'dropbox'],
         headers: [
           {
             text: 'Archivo',
@@ -177,9 +202,10 @@
     },
     methods: {
       ...mapMutations(['alert']),
-      async listItem () {
+      async listItem (val) {
+        this.desserts = []
         this.loadingDataTable = true
-        const serviceResponse = await backupAllApi()
+        const serviceResponse = await backupAllApi(val)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
@@ -199,7 +225,7 @@
           Authorization: 'Bearer ' + `${token}`,
         }
         axios({
-          url: this.$store.state.urlApi + `/api/administration-system/backup-db/download/${filename}`,
+          url: this.$store.state.urlApi + `/api/administration-system/backup-db/download/${filename}?select_disk=${this.disk}`,
           method: 'GET',
           headers: defaultHeaders,
           responseType: 'blob',
@@ -207,7 +233,7 @@
           const url = window.URL.createObjectURL(new Blob([response.data]))
           const link = document.createElement('a')
           link.href = url
-          link.setAttribute('download', 'KATHANI.zip')
+          link.setAttribute('download', filename)
           document.body.appendChild(link)
           link.click()
           this.loadingDownload = false
@@ -220,13 +246,13 @@
         this.dialogDelete = true
       },
       async deleteItemConfirm () {
-        const serviceResponse = await backupDeleteApi(this.itemIndex)
+        const serviceResponse = await backupDeleteApi(this.disk, this.itemIndex)
         if (serviceResponse.ok) {
           var item = this.desserts.find(item => item.file_name === this.itemIndex)
           var index = this.desserts.indexOf(item)
           this.desserts.splice(index, 1)
           this.alert({
-            text: `${serviceResponse.message} , por favor recargue la página para visualizar el cambio`,
+            text: serviceResponse.message,
             color: 'success',
           })
         } else {
@@ -245,8 +271,9 @@
       },
       async itemBackup () {
         this.loadingBackup = true
-        const serviceResponse = await backupCreateApi()
+        const serviceResponse = await backupCreateApi(this.disk)
         if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
           this.alert({
             text: `${serviceResponse.message} , por favor recargue la página para visualizar el cambio`,
             color: 'success',

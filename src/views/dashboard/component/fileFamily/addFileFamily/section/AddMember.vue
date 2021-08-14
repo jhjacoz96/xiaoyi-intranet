@@ -520,7 +520,7 @@
                           mandatory
                         >
                           <template v-slot:label>
-                            <div>¿Se encuentra usted embarazada?</div>
+                            <div>¿Se encuentra en estado de embarazo?</div>
                           </template>
                           <v-radio
                             :value="false"
@@ -546,6 +546,13 @@
                         cols="12"
                       >
                         <v-alert
+                          v-if="infoPregnant"
+                          dense
+                          type="warning"
+                        >
+                          Podrá habilitar nuevamente la opción <span>¿Se encuentra en estado de embarazo?</span> para esta miembro una vez su ficha clinica de obstetricia sea finalizada.
+                        </v-alert>
+                        <v-alert
                           text
                           color="info"
                         >
@@ -557,7 +564,6 @@
                             class="my-4 info"
                             style="opacity: 0.22"
                           />
-
                           <v-row
                             align="center"
                             no-gutters
