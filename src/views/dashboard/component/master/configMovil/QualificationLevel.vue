@@ -41,7 +41,6 @@
           :search="search"
         >
           <template v-slot:item.accion="{ item }">
-            >
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -93,8 +92,8 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.title"
-                    label="Titulo del nivel"
+                    v-model="editedItem.nombre"
+                    label="Nombre"
                     outlined
                   />
                 </v-col>
@@ -102,13 +101,13 @@
                   cols="12"
                 >
                   <v-subheader class="pl-0">
-                    Semana de gestación
+                    Nivel
                   </v-subheader>
                   <v-slider
                     v-model="editedItem.level"
                     :thumb-size="24"
                     max="5"
-                    min="0"
+                    min="1"
                     :thumb-label="true"
                   />
                 </v-col>
@@ -168,6 +167,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -180,11 +183,11 @@
         headers: [
           {
             text: 'Titulo',
-            value: 'title',
+            value: 'nombre',
           },
           {
             text: 'Nivel',
-            value: 'level',
+            value: 'nivel',
           },
           {
             text: 'Acción',
@@ -193,25 +196,20 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            title: 'Totalmente satisfecho',
-            level: 5,
-          },
-        ],
+        desserts: [],
         editedItem: {
-          title: '',
-          level: 0,
+          nombre: '',
+          nivel: 0,
         },
         defaultItem: {
-          title: '',
-          level: 0,
+          nombre: '',
+          nivel: 0,
         },
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Agregar nivel' : 'Editar nivel'
+        return this.editedIndex === -1 ? 'Agregar nivel de calificación' : 'Editar nivel de calificación'
       },
     },
     watch: {
@@ -222,33 +220,92 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('qualificationLevel', ['qualificationLevelPostActions', 'qualificationLevelAllActions', 'qualificationLevelDeleteActions', 'qualificationLevelGetActions', 'qualificationLevelUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.qualificationLevelAllActions()
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.qualificationLevelDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.qualificationLevelUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.qualificationLevelPostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -256,6 +313,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },

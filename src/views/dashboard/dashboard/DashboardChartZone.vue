@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="text-h4">
-      Parroquias
+      Familifas por parroquias
     </v-card-title>
     <v-card-text class="justify-center">
       <apexchart

@@ -137,12 +137,12 @@
               can: 'configuration_web_site_access',
               to: 'intranet/configuracion-web',
             },
-            // {
-            //   icon: '',
-            //   title: 'Configuración de la móvil',
-            //   can: 'configuration_mobile_access',
-            //   to: 'intranet/configuracion-movil',
-            // },
+            {
+              icon: '',
+              title: 'Configuración de la móvil',
+              can: 'configuration_mobile_access',
+              to: 'intranet/configuracion-movil',
+            },
           ],
         },
         {

@@ -6,7 +6,6 @@
       <v-select
         v-model="editedItem.group_age_id"
         label="Grupo de edad"
-        outlined
         dense
         item-value="id"
         item-text="name"

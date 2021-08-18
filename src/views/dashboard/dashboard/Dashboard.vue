@@ -264,6 +264,14 @@
           :data="data ? data.estadisticaComentarios.cantidades : []"
         />
       </v-col>
+      <v-col
+        v-if="permissions.includes('configuration_mobile_access')"
+        cols="12"
+        sm="6"
+        lg="6"
+      >
+        <dashboard-chart-qualification />
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -287,6 +295,7 @@
       DashboardChartComment: () => import('../dashboard/DashboardChartComment'),
       DashboardPregnantNotNeonatology: () => import('../dashboard/DashboardPregnantNotNeonatology'),
       DashboardChartZone: () => import('../dashboard/DashboardChartZone'),
+      DashboardChartQualification: () => import('../dashboard/DashboardChartQualification'),
     },
     data () {
       return {

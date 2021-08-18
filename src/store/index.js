@@ -28,6 +28,8 @@ import pathologyPregnant from './modules/pathologyPregnant'
 import pathologyNeonatal from './modules/pathologyNeonatal'
 import alterationPregnant from './modules/alterationPregnant'
 import reflex from './modules/reflex'
+import qualification from './modules/qualification'
+import qualificationLevel from './modules/qualificationLevel'
 import senalAlarm from './modules/senalAlarm'
 import disability from './modules/disability'
 import groupAge from './modules/groupAge'
@@ -104,5 +106,7 @@ export default new Vuex.Store({
     pathologyPregnant,
     pathologyNeonatal,
     alterationPregnant,
+    qualification,
+    qualificationLevel,
   },
 })

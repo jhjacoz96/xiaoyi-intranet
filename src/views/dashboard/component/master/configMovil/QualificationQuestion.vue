@@ -20,7 +20,7 @@
               Preguntas de calificación
             </div>
             <div class="text-subtitle-1 font-weight-light">
-              Permite administrar las preguntas que se haran cuando el usuario califique la aplicación móvil
+              Permite administrar las preguntas que se harán cuando el usuario califique la aplicación móvil
             </div>
           </v-col>
         </v-row>
@@ -92,7 +92,7 @@
                   cols="12"
                 >
                   <v-text-field
-                    v-model="editedItem.question"
+                    v-model="editedItem.nombre"
                     label="Nombre"
                     outlined
                   />
@@ -153,6 +153,10 @@
 </template>
 
 <script>
+  import {
+    mapActions,
+    mapMutations,
+  } from 'vuex'
   export default {
     data () {
       return {
@@ -165,7 +169,7 @@
         headers: [
           {
             text: 'Pregunta',
-            value: 'question',
+            value: 'nombre',
           },
           {
             text: 'Acción',
@@ -174,16 +178,12 @@
             value: 'accion',
           },
         ],
-        desserts: [
-          {
-            question: '¿Esta conforme con el control que le ofrece la aplición para su diabetes?',
-          },
-        ],
+        desserts: [],
         editedItem: {
-          question: '',
+          nombre: '',
         },
         defaultItem: {
-          question: '',
+          nombre: '',
         },
       }
     },
@@ -200,33 +200,93 @@
         val || this.closeDelete()
       },
     },
+    created () {
+      this.listItem()
+    },
     methods: {
-      deleteItem (item) {
+      ...mapActions('qualification', ['qualificationPostActions', 'qualificationAllActions', 'qualificationDeleteActions', 'qualificationGetActions', 'qualificationUpdateActions']),
+      ...mapMutations(['alert']),
+      async listItem () {
+        const serviceResponse = await this.qualificationAllActions()
+        console.log(serviceResponse)
+        if (serviceResponse.ok) {
+          this.desserts = serviceResponse.data
+        } else {
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
+      },
+      async deleteItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
+        this.editedId = item.id
         this.dialogDelete = true
       },
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
-        this.closeDelete()
+      async deleteItemConfirm () {
+        const serviceResponse = await this.qualificationDeleteActions(this.editedId)
+        if (serviceResponse.ok) {
+          this.desserts.splice(this.editedIndex, 1)
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message,
+            color: 'success',
+          })
+        } else {
+          this.closeDelete()
+          this.alert({
+            text: serviceResponse.message.text,
+            color: 'warning',
+          })
+        }
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.editedId = item.id
+        Object.assign(this.editedItem, item)
         this.dialog = true
       },
-      addItem () {
+      async addItem () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          const serviceResponse = await this.qualificationUpdateActions(this.editedItem)
+          if (serviceResponse.ok) {
+            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         } else {
-          this.desserts.push(this.editedItem)
+          const serviceResponse = await this.qualificationPostActions(this.editedItem)
+          if (serviceResponse.ok) {
+            this.desserts.push(serviceResponse.data)
+            this.close()
+            this.alert({
+              text: serviceResponse.message,
+              color: 'success',
+            })
+          } else {
+            this.close()
+            this.alert({
+              text: serviceResponse.message.text,
+              color: 'warning',
+            })
+          }
         }
-        this.close()
       },
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
       closeDelete () {
@@ -234,6 +294,7 @@
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
+          this.editedId = undefined
         })
       },
     },
