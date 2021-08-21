@@ -432,10 +432,10 @@
             lat: parseFloat(position.coords.latitude),
             lng: parseFloat(position.coords.longitude),
           }
+          this.coordinates.title = this.editedItem.numero_historia
+          this.editedItem.latitud = parseFloat(position.coords.latitude)
+          this.editedItem.longitud = parseFloat(position.coords.longitude)
         })
-        this.coordinates.title = this.editedItem.numero_historia
-        this.editedItem.latitud = this.coordinates.lat
-        this.editedItem.longitud = this.coordinates.lng
       },
       changeCoordinate (val) {
         this.coordinates.lat = val.lat
