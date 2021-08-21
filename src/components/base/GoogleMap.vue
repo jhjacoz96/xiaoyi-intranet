@@ -47,8 +47,8 @@
         return this.mapMarkers.map(item => {
           return {
             position: {
-              lat: item.lat,
-              lng: item.lng,
+              lat: parseFloat(parseFloatitem.lat),
+              lng: parseFloat(item.lng),
             },
             title: item.title,
           }
@@ -62,8 +62,8 @@
       geolocate () {
         navigator.geolocation.getCurrentPosition(position => {
           this.center = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lat: parseFloat(position.coords.latitude),
+            lng: parseFloat(position.coords.longitude),
           }
         })
       },
