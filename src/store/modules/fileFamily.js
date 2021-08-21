@@ -14,6 +14,8 @@ export default {
   state: {
     steps: [0],
     fileFamily: {
+      longitud: 0,
+      latitud: 0,
       manzana: '',
       direccion_habitual: '',
       barrio: '',
@@ -36,6 +38,8 @@ export default {
       sitios_tratamiento: [],
     },
     defaultfileFamily: {
+      longitud: 0,
+      latitud: 0,
       manzana: '',
       direccion_habitual: '',
       barrio: '',

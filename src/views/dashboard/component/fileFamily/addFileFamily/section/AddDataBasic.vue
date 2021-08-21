@@ -188,6 +188,65 @@
           />
         </v-col>
       </v-row>
+      <div class="text-center text-h4 font-weight-bold mb-6 blue--text">
+        Ubicación
+      </div>
+      <v-container>
+        <v-row class="justify-center">
+          <v-col
+            cols="6"
+            sm="4"
+          >
+            <v-text-field
+              v-model="editedItem.latitud"
+              v-validate="'required'"
+              :error-messages="errors.collect('basic.lat')"
+              data-vv-name="Latitud"
+              disabled
+              outlined
+              label="Latitud (*)"
+              dense
+              validate-on-blur
+            />
+          </v-col>
+          <v-col
+            cols="6"
+            sm="4"
+          >
+            <v-text-field
+              v-model="editedItem.longitud"
+              v-validate="'required'"
+              :error-messages="errors.collect('basic.lng')"
+              data-vv-name="Longitud"
+              disabled
+              outlined
+              label="Longitud (*)"
+              dense
+              validate-on-blur
+            />
+          </v-col>
+          <v-col
+            cols="6"
+            sm="4"
+          >
+            <v-btn
+              outlined
+              color="primary"
+              @click="loadGeolocation()"
+            >
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <div>
+          <base-google-map
+            :prop-markers="[coordinates]"
+            :clickable="true"
+            :draggable="true"
+            @change:coordinate="changeCoordinate($event)"
+          />
+        </div>
+      </v-container>
     </v-form>
     <div
       class="d-none"
@@ -220,6 +279,8 @@
         cuturalGroup: [],
         comunity: [],
         editedItem: {
+          longitud: 0,
+          latitud: 0,
           numero_familia: '',
           manzana: '',
           barrio: '',
@@ -237,6 +298,11 @@
         organization: {},
         zone: [],
         culturalGroup: [],
+        coordinates: {
+          lat: 0,
+          lng: 0,
+          title: null,
+        },
       }
     },
     computed: {
@@ -291,6 +357,7 @@
           if (serviceResponse.ok) {
             this.setFileFamily(serviceResponse.data)
             this.editedItem = Object.assign({}, serviceResponse.data)
+            this.getGeolocation()
           } else {
             this.alert({
               text: serviceResponse.message.text,
@@ -299,6 +366,7 @@
           }
         } else {
           this.generateCode()
+          this.getGeolocation()
         }
       },
       async listItem () {
@@ -336,6 +404,35 @@
       },
       generateCode () {
         this.editedItem.numero_historia = `FF000${Math.round(Math.random() * (900 - 100) + 100)}`
+      },
+      getGeolocation () {
+        if (this.$route.params.id === undefined) {
+          this.loadGeolocation()
+        } else {
+          this.coordinates.title = this.editedItem.numero_historia
+          this.coordinates.lat = this.editedItem.latitud
+          this.coordinates.lng = this.editedItem.longitud
+        }
+      },
+      loadGeolocation () {
+        this.$getLocation({})
+          .then(coordinates => {
+            Object.assign(this.coordinates, coordinates)
+            this.coordinates.title = this.editedItem.numero_historia
+            this.editedItem.latitud = this.coordinates.lat
+            this.editedItem.longitud = this.coordinates.lng
+          }).catch(e => {
+            this.alert({
+              text: e,
+              color: 'warning',
+            })
+          })
+      },
+      changeCoordinate (val) {
+        this.coordinates.lat = val.lat
+        this.coordinates.lng = val.lng
+        this.editedItem.latitud = val.lat
+        this.editedItem.longitud = val.lng
       },
     },
   }

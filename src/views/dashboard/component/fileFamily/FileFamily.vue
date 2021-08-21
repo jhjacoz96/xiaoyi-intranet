@@ -177,41 +177,40 @@
             </v-container>
           </v-card>
         </v-dialog>
-        <v-data-table
-          :headers="headers"
-          :items="desserts"
-          :items-per-page="5"
-          class="elevation-1"
-          :loading="loadingDataTable"
-          loading-text="Cargando... Porfavor espere"
-        >
-          <template v-slot:item.level_riesgo="{ item }">
-            <v-chip
-              v-if="item.level_total_id"
-              :color="item.level_total_id.color"
+        <v-card-text>
+          <v-btn-toggle
+            v-model="list"
+            :disabled="loadingDataTable"
+            mandatory
+            dense
+            color="primary"
+            @change="listItem"
+          >
+            <v-btn
+              text
+              value="list"
             >
-              {{ item.level_total_id.name }}
-            </v-chip>
-          </template>
-          <template v-slot:item.accion="{ item }">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  x-small
-                  fab
-                  color="info"
-                  v-bind="attrs"
-                  class="ml-2"
-                  v-on="on"
-                  @click="$router.push(`ficha-familiar/${item.id}`)"
-                >
-                  <v-icon>mdi-account-group</v-icon>
-                </v-btn>
-              </template>
-              <span>Control de ficha familiar</span>
-            </v-tooltip>
-          </template>
-        </v-data-table>
+              Lista
+            </v-btn>
+            <v-btn
+              text
+              value="map"
+            >
+              Google maps
+            </v-btn>
+          </v-btn-toggle>
+          <v-divider />
+        </v-card-text>
+        <list-file-family
+          v-if="list === 'list'"
+          :desserts="desserts"
+          :loadingdatatable="loadingDataTable"
+        />
+        <map-file-family
+          v-else
+          :desserts="desserts"
+          :loadingdatatable="loadingDataTable"
+        />
         <!-- <v-dialog
           v-model="dialog"
           max-width="500px"
@@ -228,23 +227,17 @@
     mapMutations,
   } from 'vuex'
   export default {
+    components: {
+      ListFileFamily: () => import('../fileFamily/tracingFileFamily/ListFileFamily'),
+      MapFileFamily: () => import('../fileFamily/tracingFileFamily/MapFileFamily'),
+    },
     data () {
       return {
         dialog: false,
         loadingSearch: false,
         loadingFilter: false,
         loadingDataTable: false,
-        headers: [
-          { text: 'ID', sortable: true, value: 'id' },
-          { text: 'Número de historia', sortable: true, value: 'numero_historia' },
-          { text: 'Número de familia', sortable: true, value: 'numero_familia' },
-          { text: 'Nivel de riesgo', sortable: true, value: 'level_riesgo' },
-          { text: 'Grupo cultural', sortable: true, value: 'cultural_group_id.name' },
-          { text: 'Parroquia', sortable: true, value: 'zone_id.name' },
-          { text: 'Barrio', sortable: true, value: 'barrio' },
-          { text: 'Manzana', sortable: true, value: 'manzana' },
-          { text: 'Acción', srtable: false, align: 'center', value: 'accion' },
-        ],
+        list: 'list',
         desserts: [],
         levelTotal: [],
         zone: [],

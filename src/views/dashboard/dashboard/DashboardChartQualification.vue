@@ -22,7 +22,7 @@
     </v-card-text>
     <v-card-text class="justify-center">
       <apexchart
-        v-if="commentType === 'Barra'"
+        v-if="qualificationType === 'Barra'"
         width="100%"
         height="300"
         type="bar"
@@ -113,7 +113,6 @@
       ...mapMutations(['alert']),
       async listItem (val) {
         const serviceResponse = await dashboardReportQualificationApi(this.editedItem.question)
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.response = serviceResponse.data
         } else {
@@ -125,7 +124,6 @@
       },
       async listItemQualificationLevel () {
         const serviceResponse = await this.qualificationAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.question = serviceResponse.data
         } else {

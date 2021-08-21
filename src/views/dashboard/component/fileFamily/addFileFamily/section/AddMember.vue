@@ -271,7 +271,7 @@
                         sm="4"
                       >
                         <v-menu
-                          v-model="show2Date"
+                          v-model="showDate"
                           :disabled="editedItem.fallecido === 1"
                           :close-on-content-click="false"
                           :nudge-right="40"
@@ -612,7 +612,7 @@
                           </template>
                           <v-date-picker
                             v-model="editedItem.prenatal.fum"
-                            @input="show6Date = false"
+                            @input="show5Date = false"
                           />
                         </v-menu>
                       </v-col>
@@ -928,7 +928,7 @@
                     </template>
                     <v-date-picker
                       v-model="editedItemMortality.fecha_fallecimiento"
-                      @input="show8Date = false"
+                      @input="show7Date = false"
                     />
                   </v-menu>
                 </v-col>

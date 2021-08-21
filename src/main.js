@@ -29,8 +29,11 @@ import Echo from 'laravel-echo'
 import VueApexCharts from 'vue-apexcharts'
 import moment from 'moment'
 import VueTimeago from 'vue-timeago'
+import * as VueGoogleMaps from 'vue2-google-maps'
+import VueGeolocation from 'vue-browser-geolocation'
 
 window.Pusher = require('pusher-js')
+Vue.use(VueGeolocation)
 
 Vue.use(VueTimeago, {
   name: 'Timeago', // Component name, `Timeago` by default
@@ -55,9 +58,18 @@ Vue.component('apexchart', VueApexCharts)
 Vue.use(VueQuillEditor)
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: '3a7bcec114b26feb536a',
+    // key: '3a7bcec114b26feb536a',
+    key: process.env.VUE_APP_API_MIX_PUSHER_APP_KEY,
     cluster: 'us2',
     forceTLS: true,
+})
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    // key: process.env.VUE_APP_API_GOOGLE_MAPS_API_KEY,
+    key: 'AIzaSyDjShWhr3NUYZmi9lFK-YkITnQtoHjJIBc',
+    libraries: 'places',
+  },
 })
 
 Vue.config.productionTip = false

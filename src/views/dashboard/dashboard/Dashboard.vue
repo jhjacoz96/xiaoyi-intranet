@@ -135,7 +135,7 @@
       <v-col
         cols="12"
         md="6"
-        xl="4"
+        lg="4"
       >
         <dashboard-quick-access />
       </v-col>
