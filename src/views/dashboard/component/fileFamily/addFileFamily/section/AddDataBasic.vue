@@ -415,7 +415,7 @@
         }
       },
       loadGeolocation () {
-        this.$getLocation({})
+        /* this.$getLocation({})
           .then(coordinates => {
             Object.assign(this.coordinates, coordinates)
             this.coordinates.title = this.editedItem.numero_historia
@@ -426,7 +426,15 @@
               text: e,
               color: 'warning',
             })
-          })
+          }) */
+        const c = {
+          lat: 10.0604243,
+          lng: -69.3617639,
+        }
+        Object.assign(this.coordinates, c)
+        this.coordinates.title = this.editedItem.numero_historia
+        this.editedItem.latitud = this.coordinates.lat
+        this.editedItem.longitud = this.coordinates.lng
       },
       changeCoordinate (val) {
         this.coordinates.lat = val.lat
