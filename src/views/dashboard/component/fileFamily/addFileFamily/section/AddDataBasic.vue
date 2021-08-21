@@ -427,11 +427,12 @@
               color: 'warning',
             })
           }) */
-        const c = {
-          lat: 10.0604243,
-          lng: -69.3617639,
-        }
-        Object.assign(this.coordinates, c)
+        navigator.geolocation.getCurrentPosition(position => {
+          this.coordinates = {
+            lat: parseFloat(position.coords.latitude),
+            lng: parseFloat(position.coords.longitude),
+          }
+        })
         this.coordinates.title = this.editedItem.numero_historia
         this.editedItem.latitud = this.coordinates.lat
         this.editedItem.longitud = this.coordinates.lng
