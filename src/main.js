@@ -66,8 +66,7 @@ window.Echo = new Echo({
 
 Vue.use(VueGoogleMaps, {
   load: {
-    // key: process.env.VUE_APP_API_GOOGLE_MAPS_API_KEY,
-    key: 'AIzaSyDjShWhr3NUYZmi9lFK-YkITnQtoHjJIBc',
+    key: process.env.VUE_APP_API_GOOGLE_MAPS_API_KEY,
     libraries: 'places',
   },
 })
