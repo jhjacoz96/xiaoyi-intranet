@@ -208,7 +208,6 @@
       ...mapMutations(['alert']),
       async listItem () {
         const serviceResponse = await this.qualificationAllActions()
-        console.log(serviceResponse)
         if (serviceResponse.ok) {
           this.desserts = serviceResponse.data
         } else {
