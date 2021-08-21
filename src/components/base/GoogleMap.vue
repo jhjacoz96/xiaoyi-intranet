@@ -47,7 +47,7 @@
         return this.mapMarkers.map(item => {
           return {
             position: {
-              lat: parseFloat(parseFloatitem.lat),
+              lat: parseFloat(item.lat),
               lng: parseFloat(item.lng),
             },
             title: item.title,
