@@ -86,9 +86,9 @@ export default {
             }
         },
         logoutAction ({ commit }, payload) {
+            router.push('/')
             localStorage.clear()
             commit('getUser', '')
-            router.push('/')
         },
     },
 }

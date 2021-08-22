@@ -58,6 +58,14 @@
         type: String,
         default: '',
       },
+      value: {
+        type: Boolean,
+        default: false,
+      },
+      type: {
+        type: String,
+        default: 'default',
+      },
     },
     data () {
       return {
@@ -68,6 +76,12 @@
     watch: {
       image (val) {
         if (val !== '') this.imagenPreview = val
+      },
+      value (val) {
+        if ((this.type === 'modal') && !val) {
+          this.imagenPreview = null
+          this.imagen = null
+        }
       },
     },
     methods: {

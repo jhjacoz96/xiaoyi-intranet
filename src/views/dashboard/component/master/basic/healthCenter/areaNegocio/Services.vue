@@ -29,7 +29,7 @@
           fab
           right
           color="secondary"
-          @click="dialog = true"
+          @click="openDialog"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -118,6 +118,8 @@
                 >
                   <base-preview-image
                     :image="typeof editedItem.image === 'object' ? editedItem.image.url : editedItem.image"
+                    :value="resetImagePreview"
+                    :type="'modal'"
                     @imagen="editedItem.image = $event"
                   />
                 </v-col>
@@ -200,6 +202,7 @@
         services: [],
         loaderDialog: false,
         loaderDialogDelete: false,
+        resetImagePreview: true,
         headers: [
           {
             text: 'Servicio',
@@ -294,7 +297,7 @@
         this.editedIndex = this.desserts.indexOf(item)
         this.editedId = item.id
         this.editedItem = Object.assign({}, item)
-        this.dialog = true
+        this.openDialog()
       },
       async addItem () {
         if (this.editedIndex > -1) {
@@ -349,6 +352,7 @@
           this.loaderDialog = false
           this.editedIndex = -1
           this.editedId = undefined
+          this.resetImagePreview = false
         })
       },
       closeDelete () {
@@ -359,6 +363,10 @@
           this.editedIndex = -1
           this.editedId = undefined
         })
+      },
+      openDialog () {
+        this.dialog = true
+        this.resetImagePreview = true
       },
     },
   }

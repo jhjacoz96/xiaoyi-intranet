@@ -452,6 +452,7 @@
         this.editedIndex = this.desserts.indexOf(item)
         this.editedId = item.id
         this.editedItem = Object.assign({}, item)
+        this.findCanton(this.editedItem.province_id)
         this.dialog = true
       },
       async addItem () {

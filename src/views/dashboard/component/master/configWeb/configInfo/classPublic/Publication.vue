@@ -29,7 +29,7 @@
           fab
           right
           color="secondary"
-          @click="dialog = true"
+          @click="openDialog"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -200,6 +200,8 @@
                   </p>
                   <base-preview-image
                     :image="typeof editedItem.image_mini === 'object' ? editedItem.image_mini.url : editedItem.image_mini"
+                    :value="resetImagePreview"
+                    :type="'modal'"
                     @imagen="editedItem.image_mini = $event"
                   />
                 </v-col>
@@ -407,6 +409,7 @@
         loadingDataTable: false,
         editedIndex: -1,
         editedId: undefined,
+        resetImagePreview: false,
         headers: [
           {
             text: 'Titulo',
@@ -572,9 +575,9 @@
         this.editedIndex = this.desserts.indexOf(item)
         Object.assign(this.editedItem, item)
         this.editedId = item.id
-        this.dialog = true
         if (this.editedItem.filter_one_publication_id) this.getFilterTwo(this.editedItem.filter_one_publication_id)
         if (this.editedItem.filter_two_publication_id) this.getFilterThree(this.editedItem.filter_two_publication_id)
+        this.openDialog()
       },
       async addItem () {
         this.loaderDialog = true
@@ -641,6 +644,7 @@
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
           this.editedId = undefined
+          this.resetImagePreview = false
         })
       },
       closeDelete () {
@@ -662,6 +666,10 @@
         if (this.editedItem.type_resource === 'video' && this.editedItem.resource.length > 11) {
           this.editedItem.resource = this.editedItem.resource.toString().split('').reverse().join('').slice(0, 11).split('').reverse().join('')
         }
+      },
+      openDialog () {
+        this.dialog = true
+        this.resetImagePreview = true
       },
     },
   }
