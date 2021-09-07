@@ -84,7 +84,7 @@
                   v-bind="attrs"
                   class="ml-2"
                   v-on="on"
-                  @click="listTreatment"
+                  @click="listTreatment(item.diabetic_patient)"
                 >
                   <v-icon>mdi-pill</v-icon>
                 </v-btn>
@@ -846,6 +846,12 @@
       dialogGlucose (val) {
         val || this.closeGlucose()
       },
+      closePeso (val) {
+        val || this.closePeso()
+      },
+      closeTreatment (val) {
+        val || this.closeTreatment()
+      },
     },
     created () {
       this.listItem()
@@ -994,6 +1000,7 @@
         this.controlPeso = val.registro_peso
       },
       listTreatment (val) {
+        console.log(val)
         this.dialogTreatment = true
         this.controlTreatment = val.registro_tratamiento
         this.controlActivity = val.registro_actividad

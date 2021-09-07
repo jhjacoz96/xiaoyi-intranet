@@ -173,7 +173,7 @@
                 id: null,
                 code: res.pregnant.numero_historia,
                 description: 'Ficha clinica de obstetría finalizada',
-                url: `/intranet/ficha-clinica-obstetricia/actualizar/${res.pregnant.id}`,
+                url: `/intranet/ficha-clinica-obstetricia/visualizar/${res.pregnant.id}`,
                 time: new Date(),
               })
             }
@@ -186,7 +186,7 @@
               id: null,
               code: res.diabeticPatient.member.cedula,
               description: 'Nuevo paciente diabético',
-              url: '/intranet/control-diabetes',
+              url: `/intranet/control-diabetes/${res.diabeticPatient.id}`,
               time: new Date(),
             })
           })
@@ -198,7 +198,7 @@
               id: null,
               code: res.registerGlucose.diabetic_patient.member.cedula,
               description: 'Paciente con nivel de glucosa crítico',
-              url: '/intranet/control-diabetes',
+              url: `/intranet/control-diabetes/${res.registerGlucose.diabetic_patient.id}`,
               time: new Date(),
             })
           })
@@ -263,7 +263,7 @@
             id: val.data.id,
             code: val.data.type_comment,
             description: 'Ficha clinica de obstetría finalizada',
-            url: `/intranet/ficha-clinica-obstetricia/actualizar/${val.data.id}`,
+            url: `/intranet/ficha-clinica-obstetricia/visualizar/${val.data.id}`,
             time: val.created_at,
           }
         } else if (val.data.type_notification === 'Registro glucosa"') {
@@ -271,7 +271,7 @@
             id: val.data.id,
             code: val.data.type_comment,
             description: 'Paciente con nivel de glucosa crítico',
-            url: '/intranet/control-diabetes',
+            url: `/intranet/control-diabetes/${val.data.id}`,
             time: val.created_at,
           }
         } else {
@@ -279,7 +279,7 @@
             id: val.data.id,
             code: val.data.type_comment,
             description: 'Nuevo paciente diabético',
-            url: '/intranet/control-diabetes',
+            url: `/intranet/control-diabetes/${val.data.id}`,
             time: val.created_at,
           }
         }

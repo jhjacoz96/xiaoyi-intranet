@@ -6,7 +6,7 @@
         <v-col cols="8">
           <base-material-card
             v-if="perfil"
-            class="arriba v-card-profile"
+            class="arriba v-card-profile elevation-6"
             :avatar="perfil.image ? perfil.image.url : 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png'"
           >
             <v-card-text class="text-center">
@@ -694,12 +694,9 @@
       height: 250px;
       border-bottom-left-radius: 30px;
       border-bottom-right-radius: 30px;
-      background-image: url( '../../../../assets/login.jpg');
-      background-repeat: no-repeat;
+      background-color: #00A0FF;
       background-position: center;
       background-size: cover;
-      background-attachment: fixed;
-      filter:  brightness(0.4);
    }
 
     #edit .v-speed-dial {
